@@ -1,4 +1,8 @@
-﻿using FEventopia.Services.Services.Interfaces;
+﻿using AutoMapper;
+using FEventopia.Repositories.EntityModels;
+using FEventopia.Repositories.Repositories.Interfaces;
+using FEventopia.Services.BussinessModels;
+using FEventopia.Services.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +13,54 @@ namespace FEventopia.Services.Services
 {
     public class UserService : IUserService
     {
+        private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
+
+        public UserService(IUserRepository userRepository, IMapper mapper)
+        {
+            _userRepository = userRepository;
+            _mapper = mapper;
+        }
+
+        public async Task<bool> ActivateAccountAsync(string username)
+        {
+            return await _userRepository.ActivateAccountAsync(username);
+        }
+
+        public async Task<AccountModel> GetAccountByUsernameAsync(string username)
+        {
+            var resultAcc = await _userRepository.GetAccountByUsernameAsync(username);
+            return _mapper.Map<AccountModel>(resultAcc);
+        }
+
+        public async Task<PageModel<AccountModel>> GetAllAccountAsync(PageParaModel pagePara)
+        {
+            var resultList = await _userRepository.GetAllAccountAsync();
+            var result = _mapper.Map<List<AccountModel>>(resultList);
+            return PageModel<AccountModel>.ToPagedList(result,
+                pagePara.PageNumber,
+                pagePara.PageSize);
+        }
+
+        public async Task<PageModel<AccountModel>> GetAllAccountByEmailAsync(string email, PageParaModel pagePara)
+        {
+            var resultList = await _userRepository.GetAllAccountByEmailAsync(email);
+            var result = _mapper.Map<List<AccountModel>>(resultList);
+            return PageModel<AccountModel>.ToPagedList(result,
+                pagePara.PageNumber,
+                pagePara.PageSize);
+        }
+
+        public async Task<bool> UnactivateAccountAsync(string username)
+        {
+            return await _userRepository.UnactivateAccountAsync(username);
+        }
+
+        public async Task<bool> UpdateAccountAsync(string username, AccountProcessModel accountModel)
+        {
+            var acc = await _userRepository.GetAccountByUsernameAsync(username);
+            var account = _mapper.Map(accountModel, acc);
+            return await _userRepository.UpdateAccountAsync(username, account);
+        }
     }
 }

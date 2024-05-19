@@ -63,7 +63,7 @@ namespace FEventopia.Controllers.Controllers
         }
 
         [HttpGet("ConfirmEmail")]
-        public async Task<IActionResult> ConfirmEmail(string token, string username)
+        public async Task<IActionResult> ConfirmEmailAsync(string token, string username)
         {
             try
             {
@@ -212,7 +212,7 @@ namespace FEventopia.Controllers.Controllers
                             //Send confirmation email
                             var tokenConfirm = accountManager.GenerateEmailConfirmationTokenAsync(user);
 
-                            var confirmationURL = Url.Action(nameof(ConfirmEmail), "Account", new { token = tokenConfirm.Result, username = model.Username }, Request.Scheme);
+                            var confirmationURL = Url.Action(nameof(ConfirmEmailAsync), "Account", new { token = tokenConfirm.Result, username = model.Username }, Request.Scheme);
 
                             var messageRequest = new MailRequestSetting
                             {
@@ -266,7 +266,7 @@ namespace FEventopia.Controllers.Controllers
 
         [HttpPost("SignUp-Inernal")]
         [Authorize(Roles = "ADMIN")]
-        public async Task<IActionResult> SignUpInternal(SignUpInternalRequestModel model, [Range(1,4)] Role role)
+        public async Task<IActionResult> SignUpInternal(SignUpInternalRequestModel model, Role role)
         {
             try
             {
@@ -442,24 +442,36 @@ namespace FEventopia.Controllers.Controllers
                 var username = GetCurrentLogin();
                 var user = await accountManager.FindByNameAsync(username);
 
-                var tokenConfirm = accountManager.GenerateEmailConfirmationTokenAsync(user);
-
-                var confirmationURL = Url.Action(nameof(ConfirmEmail), "Account", new { token = tokenConfirm.Result, username = user.UserName }, Request.Scheme);
-
-                var messageRequest = new MailRequestSetting
+                if (user.Email == null)
                 {
-                    ToEmail = user.Email,
-                    Subject = "FEventopia Confirmation Email",
-                    Body = confirmationURL
-                };
-
-                await mailService.SendConfirmationEmailAsync(messageRequest);
-                var response = new ResponseModel
+                    var response = new ResponseModel
+                    {
+                        Status = false,
+                        Message = "Please update your email!"
+                    };
+                    return BadRequest(response);
+                }
+                else
                 {
-                    Status = true,
-                    Message = "Confirmation Email Sent!"
-                };
-                return Ok(response);
+                    var tokenConfirm = accountManager.GenerateEmailConfirmationTokenAsync(user);
+
+                    var confirmationURL = Url.Action(nameof(ConfirmEmailAsync), "Account", new { token = tokenConfirm.Result, username = user.UserName }, Request.Scheme);
+
+                    var messageRequest = new MailRequestSetting
+                    {
+                        ToEmail = user.Email,
+                        Subject = "FEventopia Confirmation Email",
+                        Body = confirmationURL
+                    };
+
+                    await mailService.SendConfirmationEmailAsync(messageRequest);
+                    var response = new ResponseModel
+                    {
+                        Status = true,
+                        Message = "Confirmation Email Sent!"
+                    };
+                    return Ok(response);
+                }
             }
             catch
             {

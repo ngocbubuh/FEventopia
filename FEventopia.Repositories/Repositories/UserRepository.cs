@@ -33,7 +33,8 @@ namespace FEventopia.Repositories.Repositories
 
         public async Task<Account> GetAccountByUsernameAsync(string username)
         {
-            return await _context.Account.FirstAsync(p => p.UserName == username);
+            var result = await _context.Account.FirstAsync(p => p.UserName == username);
+            return result;
         }
 
         public async Task<List<Account>> GetAllAccountAsync()

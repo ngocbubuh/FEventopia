@@ -11,16 +11,21 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using FEventopia.Services.Services;
+using FEventopia.Services.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+// Add Mail Services
+builder.Services.Configure<MailSetting>(builder.Configuration.GetSection("MailSettings"));
 
-builder.Services.AddControllers();
+// Add AutoMapper
+builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddAutoMapper(typeof(AutoMapperSetting).Assembly);
+
+builder.Services.AddControllers(op => op.SuppressAsyncSuffixInActionNames = false);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "FEventopia API", Version = "v.10.24" });
@@ -53,7 +58,6 @@ builder.Services.AddSwaggerGen(c =>
 var connection = String.Empty;
 if (builder.Environment.IsDevelopment())
 {
-    builder.Configuration.AddEnvironmentVariables().AddJsonFile("appsettings.Development.json");
     /// --------------WARNING------------------ ///
     ///   SELECT CONNECTIONSTRING CAREFULLY    ///
     // ---------------------------------------- //
@@ -61,7 +65,7 @@ if (builder.Environment.IsDevelopment())
     //If test in LocalDB
     //connection = builder.Configuration.GetConnectionString("LOCAL_CONNECTION_STRING");
     //If test in AzureDB
-    connection = builder.Configuration.GetConnectionString("AZURE_CONNECTION_STRING");
+    connection = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
 
     // ---------------------------------------- //
     ///   SELECT CONNECTIONSTRING CAREFULLY    ///
@@ -69,7 +73,7 @@ if (builder.Environment.IsDevelopment())
 }
 else
 {
-    connection = Environment.GetEnvironmentVariable("AZURE_CONNECTION_STRING");
+    connection = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING");
 }
 
 builder.Services.AddDbContext<FEventopiaDbContext>(options => options.UseSqlServer(connection));
@@ -110,15 +114,12 @@ builder.Services.AddCors(options =>
         });
 });
 
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "FEventopia Web API", Version = "v.1.0" });
-});
-
 //Add Scope
 builder.Services.AddScoped<IMailService, MailService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+//builder.Services.AddSingleton<GlobalExceptionMiddleware>();
+//builder.Services.AddSingleton<PerformanceMiddleware>();
 
 var app = builder.Build();
 
@@ -130,14 +131,11 @@ var app = builder.Build();
 //}
 
 app.UseSwagger();
-app.UseSwaggerUI(c =>
-{
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "FEventopia API v.01");
-});
+app.UseSwaggerUI();
 
-app.UseMiddleware<GlobalExceptionMiddleware>();
+//app.UseMiddleware<GlobalExceptionMiddleware>();
 
-app.UseMiddleware<PerformanceMiddleware>();
+//app.UseMiddleware<PerformanceMiddleware>();
 
 app.UseHttpsRedirection();
 
