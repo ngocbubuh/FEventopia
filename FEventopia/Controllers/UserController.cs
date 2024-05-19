@@ -62,7 +62,7 @@ namespace FEventopia.Controllers.Controllers
 
         [HttpGet("GetAccountByEmail")]
         [Authorize(Roles = "ADMIN")]
-        public async Task<IActionResult> GetAccountByEmailAsync (string email, PageParaModel pageParaModel)
+        public async Task<IActionResult> GetAccountByEmailAsync (string email, [FromQuery] PageParaModel pageParaModel)
         {
             try
             {

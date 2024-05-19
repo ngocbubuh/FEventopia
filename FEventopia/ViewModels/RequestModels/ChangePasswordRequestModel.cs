@@ -5,11 +5,6 @@ namespace FEventopia.Controllers.ViewModels.RequestModels
 {
     public class ChangePasswordRequestModel
     {
-        [Required(ErrorMessage = "Username is required!")]
-        [EmailAddress(ErrorMessage = "Must be email formated!")]
-        [Display(Name = "Username")]
-        public required string Email { get; set; }
-
         [Required(ErrorMessage = "Current Password is required!")]
         [PasswordPropertyText]
         [DataType(DataType.Password)]

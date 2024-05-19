@@ -1,5 +1,5 @@
 ﻿using FEventopia.Repositories.EntityModels;
-using FEventopia.Repositories.EntityModels.EntityBase;
+using FEventopia.Repositories.EntityModels.Base;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;

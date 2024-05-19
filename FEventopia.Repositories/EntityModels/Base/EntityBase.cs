@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FEventopia.Repositories.EntityModels.EntityBase
+namespace FEventopia.Repositories.EntityModels.Base
 {
     public class EntityBase
     {
-        public int Id { get; set; }
+        public required string Id { get; set; }
         public required DateTime CreatedDate { get; set; }
         public required string CreatedBy { get; set; }
         public required DateTime UpdatedDate { get; set; }
