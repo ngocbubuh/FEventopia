@@ -1,0 +1,6 @@
+@FEventopia_HostAddress = http://localhost:5191
+
+GET {{FEventopia_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
