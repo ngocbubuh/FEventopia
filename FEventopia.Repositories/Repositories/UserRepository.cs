@@ -1,7 +1,6 @@
 ﻿using FEventopia.Repositories.DbContext;
 using FEventopia.Repositories.EntityModels;
 using FEventopia.Repositories.Repositories.Interfaces;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace FEventopia.Repositories.Repositories

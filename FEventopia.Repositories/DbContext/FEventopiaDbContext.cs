@@ -2,12 +2,6 @@
 using FEventopia.Repositories.EntityModels.Base;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FEventopia.Repositories.DbContext
 {
@@ -31,6 +25,7 @@ namespace FEventopia.Repositories.DbContext
                 entity.Property(x => x.Email).HasMaxLength(50).HasColumnType("nvarchar(50)").IsRequired(false);
                 entity.Property(x => x.PhoneNumber).HasMaxLength(10).HasColumnType("varchar(10)").IsRequired(false);
                 entity.Property(x => x.Avatar).HasColumnType("nvarchar(MAX)");
+                entity.Property(x => x.Role).HasColumnType("nvarchar(10)");
                 //The rest for Identity to generate
             });
         }

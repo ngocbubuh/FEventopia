@@ -1,13 +1,7 @@
 ﻿using AutoMapper;
-using FEventopia.Repositories.EntityModels;
 using FEventopia.Repositories.Repositories.Interfaces;
 using FEventopia.Services.BussinessModels;
 using FEventopia.Services.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FEventopia.Services.Services
 {

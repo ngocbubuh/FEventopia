@@ -1,5 +1,4 @@
-﻿using FEventopia.Controllers.Middlewares;
-using FEventopia.Repositories.DbContext;
+﻿using FEventopia.Repositories.DbContext;
 using FEventopia.Repositories.EntityModels;
 using FEventopia.Repositories.Repositories.Interfaces;
 using FEventopia.Repositories.Repositories;
@@ -118,20 +117,18 @@ builder.Services.AddCors(options =>
 builder.Services.AddScoped<IMailService, MailService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-//builder.Services.AddSingleton<GlobalExceptionMiddleware>();
-//builder.Services.AddSingleton<PerformanceMiddleware>();
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+//builder.Services.AddTransient<GlobalExceptionMiddleware>();
+//builder.Services.AddTransient<PerformanceMiddleware>();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{
-//app.UseSwagger();
-//app.UseSwaggerUI();
-//}
-
 app.UseSwagger();
 app.UseSwaggerUI();
+//}
 
 //app.UseMiddleware<GlobalExceptionMiddleware>();
 

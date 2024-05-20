@@ -27,6 +27,7 @@ namespace FEventopia.Repositories.EntityModels
         public override string? Email { get; set; } //Email
         public string? Avatar { get; set; } //Link to Avatar file
         public bool DeleteFlag { get; set; } //Delete Flag
+        public required string Role { get; set; }
 
         [Timestamp]
         public byte[]? Version { get; set; }
