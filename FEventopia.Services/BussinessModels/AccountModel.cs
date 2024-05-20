@@ -1,11 +1,6 @@
 ﻿using AutoMapper.Configuration.Annotations;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace FEventopia.Services.BussinessModels
 {
@@ -40,7 +35,9 @@ namespace FEventopia.Services.BussinessModels
         [Display(Name = "Email Address")]
         public required string Email { get; set; } //Email
         public string? Avatar { get; set; } //Link to Avatar file
+        public required string Role { get; set; }
         public bool EmailConfirmed { get; set; }
         public bool DeleteFlag { get; set; }
+        
     }
 }

@@ -31,7 +31,7 @@ namespace FEventopia.Controllers.ViewModels.RequestModels
 
         [Required(ErrorMessage = "Name is required!")]
         [Display(Name = "Name")]
-        [StringLength(15, MinimumLength = 7, ErrorMessage = "Username must be 4-15 Characters")]
+        [StringLength(15, MinimumLength = 4, ErrorMessage = "Username must be 4-15 Characters")]
         public required string Username { get; set; } //
 
         [Required(ErrorMessage = "Password is required!")]

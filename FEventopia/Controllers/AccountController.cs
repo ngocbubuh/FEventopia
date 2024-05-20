@@ -113,6 +113,16 @@ namespace FEventopia.Controllers.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    var acc = GetCurrentLogin();
+                    if (acc != null)
+                    {
+                        var response = new ResponseModel
+                        {
+                            Status = false,
+                            Message = "You are logged in!"
+                        };
+                        return BadRequest(response);
+                    }
                     var result = await signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
                     if (result.Succeeded)
                     {
@@ -192,7 +202,8 @@ namespace FEventopia.Controllers.Controllers
                             Name = model.Name,
                             PhoneNumber = model.PhoneNumber,
                             Email = model.Email,
-                            UserName = model.Username
+                            UserName = model.Username,
+                            Role = Role.VISITOR.ToString(),
                         };
                         //Create user in database
                         var result = await accountManager.CreateAsync(user, model.Password);
@@ -278,7 +289,8 @@ namespace FEventopia.Controllers.Controllers
                         var user = new Account
                         {
                             Name = model.Name,
-                            UserName = model.Username
+                            UserName = model.Username,
+                            Role = role.ToString(),
                         };
 
                         //Create user in database
@@ -448,6 +460,15 @@ namespace FEventopia.Controllers.Controllers
                     {
                         Status = false,
                         Message = "Please update your email!"
+                    };
+                    return BadRequest(response);
+                }
+                else if (user.EmailConfirmed == true)
+                {
+                    var response = new ResponseModel
+                    {
+                        Status = false,
+                        Message = "You are already confirmed your email!"
                     };
                     return BadRequest(response);
                 }

@@ -1,11 +1,6 @@
 ﻿using AutoMapper;
 using FEventopia.Repositories.EntityModels;
 using FEventopia.Services.BussinessModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FEventopia.Services.Settings
 {
@@ -18,6 +13,7 @@ namespace FEventopia.Services.Settings
                                               .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
                                               .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
                                               .ForMember(dest => dest.Avatar, opt => opt.MapFrom(src => src.Avatar))
+                                              .ForMember(dest => dest.Role, opt => opt.Ignore())
                                               .ForMember(dest => dest.DeleteFlag, opt => opt.Ignore())
                                               .ForMember(dest => dest.UserName, opt => opt.Ignore())
                                               .ForMember(dest => dest.NormalizedEmail, opt => opt.Ignore())

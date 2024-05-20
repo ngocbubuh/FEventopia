@@ -1,5 +1,4 @@
-﻿using FEventopia.Repositories.EntityModels;
-using FEventopia.Services.BussinessModels;
+﻿using FEventopia.Services.BussinessModels;
 
 namespace FEventopia.Services.Services.Interfaces
 {

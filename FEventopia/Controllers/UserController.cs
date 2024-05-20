@@ -2,9 +2,7 @@
 using FEventopia.Services.BussinessModels;
 using FEventopia.Services.Services.Interfaces;
 using FEventopia.Services.Settings;
-using FEventopia.Controllers.ViewModels.RequestModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Security.Claims;
@@ -50,7 +48,7 @@ namespace FEventopia.Controllers.Controllers
                         result.HasNext,
                         result.HasPrevious
                     };
-                    Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+                    Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
                     return Ok(result);
                 }
             }
@@ -72,6 +70,16 @@ namespace FEventopia.Controllers.Controllers
                     return NotFound();
                 } else
                 {
+                    var metadata = new
+                    {
+                        result.TotalCount,
+                        result.PageSize,
+                        result.CurrentPage,
+                        result.TotalPages,
+                        result.HasNext,
+                        result.HasPrevious
+                    };
+                    Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
                     return Ok(result);
                 }
             } catch
