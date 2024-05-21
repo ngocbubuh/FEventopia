@@ -88,7 +88,7 @@ namespace FEventopia.Controllers.Controllers
             }
         }
 
-        [HttpPut("UpdateAccountInfo")]
+        [HttpPut("UpdateAccountProfile")]
         [Authorize]
         public async Task<IActionResult> UpdateAccountAsync(AccountProcessModel model)
         {
@@ -113,6 +113,45 @@ namespace FEventopia.Controllers.Controllers
                         {
                             Status = true,
                             Message = "Update account fail!"
+                        };
+                        return BadRequest(response);
+                    }
+                }
+                else
+                {
+                    return ValidationProblem(ModelState);
+                }
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPut("UpdateAllAccount")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> UpdateAllAccountAsync(string username, AccountProcessModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var result = await _userService.UpdateAccountAsync(username, model);
+                    if (result)
+                    {
+                        var response = new ResponseModel
+                        {
+                            Status = true,
+                            Message = $"Update {username}'s account successfully!"
+                        };
+                        return Ok(response);
+                    }
+                    else
+                    {
+                        var response = new ResponseModel
+                        {
+                            Status = true,
+                            Message = $"Update {username}'s account fail!"
                         };
                         return BadRequest(response);
                     }
@@ -219,27 +258,28 @@ namespace FEventopia.Controllers.Controllers
 
         [HttpPatch("ReactivateAccount")]
         [Authorize(Roles = "ADMIN")]
-        public async Task<IActionResult> UpdateAllAccountAsync(string username, AccountProcessModel accountModel)
+        public async Task<IActionResult> ReactivateAccountAsync(string username)
         {
             try
             {
-                var result = await _userService.UpdateAccountAsync(username, accountModel);
+                var result = await _userService.ActivateAccountAsync(username);
                 if (result)
                 {
                     var response = new ResponseModel
                     {
                         Status = true,
-                        Message = "Update account successfully!"
+                        Message = "Re-activate account successfully!"
                     };
                     return Ok(response);
-                } else 
+                }
+                else
                 {
                     var response = new ResponseModel
                     {
-                        Status = true,
-                        Message = "Update account fail!"
+                        Status = false,
+                        Message = "Re-activate account fail!"
                     };
-                    return BadRequest(response); 
+                    return Ok(response);
                 }
                 
             } catch 
