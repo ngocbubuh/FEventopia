@@ -53,8 +53,14 @@ namespace FEventopia.Services.Services
         public async Task<bool> UpdateAccountAsync(string username, AccountProcessModel accountModel)
         {
             var acc = await _userRepository.GetAccountByUsernameAsync(username);
-            var account = _mapper.Map(accountModel, acc);
-            return await _userRepository.UpdateAccountAsync(username, account);
+            if (acc != null)
+            {
+                var account = _mapper.Map(accountModel, acc);
+                return await _userRepository.UpdateAccountAsync(username, account);
+            } else
+            {
+                return false;
+            }
         }
     }
 }
