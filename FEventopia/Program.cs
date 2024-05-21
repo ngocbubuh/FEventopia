@@ -1,16 +1,14 @@
 ﻿using FEventopia.Repositories.DbContext;
 using FEventopia.Repositories.EntityModels;
-using FEventopia.Repositories.Repositories.Interfaces;
-using FEventopia.Repositories.Repositories;
-using FEventopia.Services.Services.Interfaces;
+using FEventopia.Controllers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using FEventopia.Services.Services;
 using FEventopia.Services.Settings;
+using FEventopia.Controllers.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,6 +50,9 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+
+// Add Dependency Injection
+builder.Services.AddWebAPIService();
 
 // Add ConnectionStrings
 var connection = String.Empty;
@@ -113,14 +114,6 @@ builder.Services.AddCors(options =>
         });
 });
 
-//Add Scope
-builder.Services.AddScoped<IMailService, MailService>();
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-//builder.Services.AddTransient<GlobalExceptionMiddleware>();
-//builder.Services.AddTransient<PerformanceMiddleware>();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -130,9 +123,9 @@ app.UseSwagger();
 app.UseSwaggerUI();
 //}
 
-//app.UseMiddleware<GlobalExceptionMiddleware>();
+app.UseExceptionHandler();
 
-//app.UseMiddleware<PerformanceMiddleware>();
+app.UseMiddleware<PerformanceMiddleware>();
 
 app.UseHttpsRedirection();
 
