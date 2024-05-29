@@ -20,8 +20,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\FEventopia.DAO\FEventopia.DAO.csproj" />
-  </ItemGroup>
-
 </Project>

@@ -10,6 +10,13 @@
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/feventopiadbdbserver/databases/FEventopia_db",
       "type": "mssql.azure",
       "connectionId": "AZURE_SQL_CONNECTIONSTRING"
+    },
+    "mssql2": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/FEventopia/providers/Microsoft.ServiceLinker/linkers/AZURE_SQL_CONNECTION_STRING_35AA03F649",
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/feventopiadbdbserver/databases/FEventopia_db",
+      "type": "mssql.azure",
+      "connectionId": "AZURE_SQL_CONNECTION_STRING"
     }
   }
 }
