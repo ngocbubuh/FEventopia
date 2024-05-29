@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using FEventopia.Repositories.EntityModels;
+using FEventopia.DAO.EntityModels;
 using FEventopia.Services.BussinessModels;
 
 namespace FEventopia.Services.Settings

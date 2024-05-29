@@ -1,4 +1,4 @@
-﻿using FEventopia.Repositories.EntityModels;
+﻿using FEventopia.DAO.EntityModels;
 using FEventopia.Services.Services.Interfaces;
 using FEventopia.Services.Settings;
 using FEventopia.Services.Enum;
@@ -203,7 +203,7 @@ namespace FEventopia.Controllers.Controllers
                             PhoneNumber = model.PhoneNumber,
                             Email = model.Email,
                             UserName = model.Username,
-                            Role = Role.VISITOR.ToString(),
+                            Role = Role.VISITOR.ToString()
                         };
                         //Create user in database
                         var result = await accountManager.CreateAsync(user, model.Password);
@@ -244,7 +244,7 @@ namespace FEventopia.Controllers.Controllers
                         }
                         else
                         {
-                            string errorMessage = null;
+                            string errorMessage = string.Empty;
                             foreach (var error in result.Errors)
                             {
                                 errorMessage = error.Description;
@@ -290,7 +290,7 @@ namespace FEventopia.Controllers.Controllers
                         {
                             Name = model.Name,
                             UserName = model.Username,
-                            Role = role.ToString(),
+                            Role = role.ToString()
                         };
 
                         //Create user in database
@@ -354,7 +354,7 @@ namespace FEventopia.Controllers.Controllers
                         }
                         else
                         {
-                            string errorMessage = null;
+                            string errorMessage = string.Empty;
                             foreach (var error in result.Errors)
                             {
                                 errorMessage = error.Description;
@@ -411,7 +411,7 @@ namespace FEventopia.Controllers.Controllers
                     {
                         var result = await accountManager.ChangePasswordAsync(account, model.CurrentPassword, model.NewPassword);
 
-                        string errorMessage = null;
+                        string errorMessage = string.Empty;
                         if (!result.Succeeded)
                         {
                             foreach (var error in result.Errors)

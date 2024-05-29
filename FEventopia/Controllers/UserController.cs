@@ -4,7 +4,9 @@ using FEventopia.Services.Services.Interfaces;
 using FEventopia.Services.Settings;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
 namespace FEventopia.Controllers.Controllers
@@ -60,15 +62,16 @@ namespace FEventopia.Controllers.Controllers
 
         [HttpGet("GetAccountByEmail")]
         [Authorize(Roles = "ADMIN")]
-        public async Task<IActionResult> GetAccountByEmailAsync (string email, [FromQuery] PageParaModel pageParaModel)
+        public async Task<IActionResult> GetAllAccountByEmailAsync(string email, [FromQuery] PageParaModel pageParaModel)
         {
             try
             {
                 var result = await _userService.GetAllAccountByEmailAsync(email, pageParaModel);
-                if (result == null)
+                if (result.IsNullOrEmpty())
                 {
                     return NotFound();
-                } else
+                }
+                else
                 {
                     var metadata = new
                     {
@@ -82,6 +85,7 @@ namespace FEventopia.Controllers.Controllers
                     Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
                     return Ok(result);
                 }
+                
             } catch
             {
                 return BadRequest();
@@ -171,7 +175,7 @@ namespace FEventopia.Controllers.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> GetAccountByUsernameAsync(string username)
         {
-            try
+            //try
             {
                 if (ModelState.IsValid)
                 {
@@ -190,10 +194,10 @@ namespace FEventopia.Controllers.Controllers
                     return ValidationProblem(ModelState);
                 }
             }
-            catch
-            {
-                return BadRequest();
-            }
+            //catch
+            //{
+            //    return BadRequest();
+            //}
         }
 
         [HttpDelete("UnactivateAccount")]

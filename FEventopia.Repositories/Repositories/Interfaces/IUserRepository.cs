@@ -1,4 +1,4 @@
-﻿using FEventopia.Repositories.EntityModels;
+﻿using FEventopia.DAO.EntityModels;
 
 namespace FEventopia.Repositories.Repositories.Interfaces
 {

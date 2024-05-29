@@ -1,54 +1,41 @@
-﻿using FEventopia.Repositories.DbContext;
-using FEventopia.Repositories.EntityModels.Base;
+﻿using FEventopia.DAO.DAO.Interfaces;
+using FEventopia.DAO.EntityModels.Base;
 using FEventopia.Repositories.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace FEventopia.Repositories.Repositories
 {
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : EntityBase
     {
-        private readonly DbSet<TEntity> _dbSet;
-        private readonly FEventopiaDbContext _dbContext;
+        private readonly IGenericDAO<TEntity> _genericDAO;
 
-        public GenericRepository(DbSet<TEntity> dbSet, FEventopiaDbContext dbContext)
+        public GenericRepository(IGenericDAO<TEntity> genericDAO)
         {
-            _dbSet = dbSet;
-            _dbContext = dbContext;
+            this._genericDAO = genericDAO;
         }
 
         public async Task<TEntity> AddAsync(TEntity entity, string username)
         {
-            entity.CreatedBy = username;
-            await _dbSet.AddAsync(entity);
-            await _dbContext.SaveChangesAsync();
-            return entity;
+            return await _genericDAO.AddAsync(entity, username);
         }
 
         public async Task<bool> DeleteAsync(TEntity entity, string username)
         {
-            entity.UpdatedBy = username;
-            entity.DeleteFlag = true;
-            _dbSet.Update(entity);
-            await _dbContext.SaveChangesAsync();
-            return true;
+            return await _genericDAO.DeleteAsync(entity, username);
         }
 
-        public Task<List<TEntity>> GetAllAsync()
+        public async Task<List<TEntity>> GetAllAsync()
         {
-            return _dbSet.ToListAsync();
+            return await _genericDAO.GetAllAsync();
         }
 
         public async Task<TEntity> GetByIdAsync(string id)
         {
-            return await _dbSet.Where(p => p.Id == id).FirstAsync();
+            return await _genericDAO.GetByIdAsync(id);
         }
 
         public async Task<bool> UpdateAsync(TEntity entity, string username)
         {
-            entity.UpdatedBy = username;
-            _dbSet.Update(entity);
-            await _dbContext.SaveChangesAsync();
-            return true;
+            return await _genericDAO.UpdateAsync(entity, username);
         }
     }
 }

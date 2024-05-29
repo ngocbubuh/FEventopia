@@ -1,7 +1,14 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace FEventopia.Repositories.EntityModels
+namespace FEventopia.DAO.EntityModels
 {
     public class Account : IdentityUser
     {
@@ -28,10 +35,15 @@ namespace FEventopia.Repositories.EntityModels
         public string? Avatar { get; set; } //Link to Avatar file
         public bool DeleteFlag { get; set; } //Delete Flag
         public required string Role { get; set; }
+        public double? CreditAmount { get; set; }
 
         [Timestamp]
         public byte[]? Version { get; set; }
-
-        //Will be update soon...
+        public virtual ICollection<Transaction>? Transaction { get; }
+        public virtual ICollection<Ticket>? Ticket { get; }
+        public virtual ICollection<SponsorEvent>? SponsorEvents { get; }
+        public virtual ICollection<EventStall>? EventStall { get; }
+        public virtual ICollection<Event>? Event { get; }
+        public virtual ICollection<Task>? Task { get; }
     }
 }

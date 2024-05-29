@@ -1,79 +1,51 @@
-﻿using FEventopia.Repositories.DbContext;
-using FEventopia.Repositories.EntityModels;
+﻿using FEventopia.DAO.DAO.Interfaces;
+using FEventopia.DAO.EntityModels;
 using FEventopia.Repositories.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace FEventopia.Repositories.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly FEventopiaDbContext _context;
+        private readonly IUserDAO _userDAO;
 
-        public UserRepository(FEventopiaDbContext context)
+        public UserRepository(IUserDAO userDAO)
         {
-            _context = context;
+            _userDAO = userDAO;
         }
 
         public async Task<bool> ActivateAccountAsync(string username)
         {
-            var acc = await _context.Account.FirstAsync(p => p.UserName == username);
-            if (acc == null)
-            {
-                return false;
-            }
-            else
-            {
-                acc.DeleteFlag = false;
-                _context.Account.Update(acc);
-                await _context.SaveChangesAsync();
-                return true;
-            }
+            var acc = await _userDAO.GetAccountByUsernameAsync(username);
+            acc.DeleteFlag = false;
+            return await _userDAO.UpdateAccountAsync(username, acc);
         }
 
         public async Task<Account> GetAccountByUsernameAsync(string username)
         {
-            var result = await _context.Account.FirstAsync(p => p.UserName == username);
-            return result;
+            return await _userDAO.GetAccountByUsernameAsync(username);
         }
 
         public async Task<List<Account>> GetAllAccountAsync()
         {
-            return await _context.Account.ToListAsync();
+            return await _userDAO.GetAllAccountAsync();
         }
 
         public async Task<List<Account>> GetAllAccountByEmailAsync(string email)
         {
-            return await _context.Account.Where(p => p.Email == email).ToListAsync();
+            var acc = await _userDAO.GetAllAccountAsync();
+            return acc.Where(a => email.Equals(a.Email)).ToList();
         }
 
         public async Task<bool> UnactivateAccountAsync(string username)
         {
-            var acc = await _context.Account.FirstAsync(p => p.UserName == username);
-            if (acc == null)
-            {
-                return false;
-            }
-            else
-            {
-                acc.DeleteFlag = true;
-                _context.Account.Update(acc);
-                await _context.SaveChangesAsync();
-                return true;
-            }
+            var acc = await _userDAO.GetAccountByUsernameAsync(username);
+            acc.DeleteFlag = true;
+            return await _userDAO.UpdateAccountAsync(username, acc);
         }
 
         public async Task<bool> UpdateAccountAsync(string username, Account account)
         {
-            if (username == account.UserName)
-            {
-                _context.Account.Update(account);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return await _userDAO.UpdateAccountAsync(username, account);
         }
     }
 }

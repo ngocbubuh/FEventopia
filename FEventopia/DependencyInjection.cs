@@ -5,6 +5,8 @@ using FEventopia.Repositories.Repositories;
 using FEventopia.Services.Services.Interfaces;
 using FEventopia.Services.Services;
 using System.Diagnostics;
+using FEventopia.DAO.DAO.Interfaces;
+using FEventopia.DAO.DAO;
 
 namespace FEventopia.Controllers
 {
@@ -18,7 +20,12 @@ namespace FEventopia.Controllers
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
+            services.AddScoped<IUserDAO, UserDAO>();
+            services.AddScoped(typeof(IGenericDAO<>), typeof(GenericDAO<>));
+
             //Add Exception Handler
+            //services.AddExceptionHandler<BadRequestExceptionHandler>();
+            services.AddExceptionHandler<NotFoundExceptionHandler>();
             services.AddExceptionHandler<GlobalExceptionHandler>();
             
             //Add Middleware
