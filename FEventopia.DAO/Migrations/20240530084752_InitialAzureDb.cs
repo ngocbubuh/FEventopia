@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FEventopia.DAO.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialAzureDB : Migration
+    public partial class InitialAzureDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -60,7 +60,7 @@ namespace FEventopia.DAO.Migrations
                 name: "Location",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "varchar(15)", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     LocationName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LocationDescription = table.Column<string>(type: "nvarchar(MAX)", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "date", nullable: false),
@@ -140,7 +140,7 @@ namespace FEventopia.DAO.Migrations
                 name: "Event",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "varchar(15)", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     EventName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     EventDescription = table.Column<string>(type: "nvarchar(MAX)", nullable: false),
                     Category = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
@@ -168,7 +168,7 @@ namespace FEventopia.DAO.Migrations
                 name: "Transaction",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "varchar(15)", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AccountID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     TransactionType = table.Column<string>(type: "varchar(3)", maxLength: 3, nullable: false),
                     Amount = table.Column<double>(type: "float", nullable: false),
@@ -242,11 +242,11 @@ namespace FEventopia.DAO.Migrations
                 name: "EventDetail",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "varchar(15)", nullable: false),
-                    EventID = table.Column<string>(type: "varchar(15)", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EventID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     EventDate = table.Column<DateTime>(type: "date", nullable: false),
                     EventTime = table.Column<TimeSpan>(type: "time", nullable: false),
-                    LocationID = table.Column<string>(type: "varchar(15)", nullable: false),
+                    LocationID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TicketForSaleInventory = table.Column<int>(type: "int", nullable: false),
                     TicketPrice = table.Column<double>(type: "float", nullable: false),
                     EstimateCost = table.Column<double>(type: "float", nullable: false),
@@ -278,10 +278,10 @@ namespace FEventopia.DAO.Migrations
                 name: "SponsorEvent",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "varchar(15)", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SponsorID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    EventID = table.Column<string>(type: "varchar(15)", nullable: false),
-                    TransactionID = table.Column<string>(type: "varchar(15)", nullable: false),
+                    EventID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TransactionID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "date", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "date", nullable: false),
@@ -316,8 +316,8 @@ namespace FEventopia.DAO.Migrations
                 name: "Cost",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "varchar(15)", nullable: false),
-                    EventDetailID = table.Column<string>(type: "varchar(15)", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EventDetailID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CostAmount = table.Column<double>(type: "float", nullable: false),
                     CostPurpose = table.Column<string>(type: "nvarchar(MAX)", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "date", nullable: false),
@@ -342,10 +342,10 @@ namespace FEventopia.DAO.Migrations
                 name: "EventStall",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "varchar(15)", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SponsorID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    EventDetailID = table.Column<string>(type: "varchar(15)", nullable: false),
-                    TransactionID = table.Column<string>(type: "varchar(15)", nullable: false),
+                    EventDetailID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TransactionID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     StallNumber = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "date", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(50)", nullable: false),
@@ -381,11 +381,11 @@ namespace FEventopia.DAO.Migrations
                 name: "Task",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "varchar(15)", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(MAX)", nullable: false),
                     StaffID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
-                    EventDetailID = table.Column<string>(type: "varchar(15)", nullable: false),
+                    EventDetailID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "date", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "date", nullable: false),
@@ -414,10 +414,10 @@ namespace FEventopia.DAO.Migrations
                 name: "Ticket",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "varchar(15)", nullable: false),
-                    EventDetailID = table.Column<string>(type: "varchar(15)", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EventDetailID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     VisitorID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    TransactionID = table.Column<string>(type: "varchar(15)", nullable: false),
+                    TransactionID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CheckInStatus = table.Column<bool>(type: "bit", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "date", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(50)", nullable: false),

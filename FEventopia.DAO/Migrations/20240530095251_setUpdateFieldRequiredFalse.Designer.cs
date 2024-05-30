@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FEventopia.DAO.Migrations
 {
     [DbContext(typeof(FEventopiaDbContext))]
-    [Migration("20240529094252_InitialAzureDB")]
-    partial class InitialAzureDB
+    [Migration("20240530095251_setUpdateFieldRequiredFalse")]
+    partial class setUpdateFieldRequiredFalse
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -116,8 +116,9 @@ namespace FEventopia.DAO.Migrations
 
             modelBuilder.Entity("FEventopia.DAO.EntityModels.Cost", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(15)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<double>("CostAmount")
                         .HasColumnType("float");
@@ -136,15 +137,13 @@ namespace FEventopia.DAO.Migrations
                     b.Property<bool>("DeleteFlag")
                         .HasColumnType("bit");
 
-                    b.Property<string>("EventDetailID")
-                        .IsRequired()
-                        .HasColumnType("varchar(15)");
+                    b.Property<Guid>("EventDetailID")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("date");
 
                     b.Property<byte[]>("Version")
@@ -161,8 +160,9 @@ namespace FEventopia.DAO.Migrations
 
             modelBuilder.Entity("FEventopia.DAO.EntityModels.Event", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(15)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Banner")
                         .IsRequired()
@@ -197,10 +197,9 @@ namespace FEventopia.DAO.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("date");
 
                     b.Property<byte[]>("Version")
@@ -217,8 +216,9 @@ namespace FEventopia.DAO.Migrations
 
             modelBuilder.Entity("FEventopia.DAO.EntityModels.EventDetail", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(15)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -236,16 +236,14 @@ namespace FEventopia.DAO.Migrations
                     b.Property<DateTime>("EventDate")
                         .HasColumnType("date");
 
-                    b.Property<string>("EventID")
-                        .IsRequired()
-                        .HasColumnType("varchar(15)");
+                    b.Property<Guid>("EventID")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<TimeSpan>("EventTime")
                         .HasColumnType("time");
 
-                    b.Property<string>("LocationID")
-                        .IsRequired()
-                        .HasColumnType("varchar(15)");
+                    b.Property<Guid>("LocationID")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("TicketForSaleInventory")
                         .HasColumnType("int");
@@ -254,10 +252,9 @@ namespace FEventopia.DAO.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("date");
 
                     b.Property<byte[]>("Version")
@@ -277,8 +274,9 @@ namespace FEventopia.DAO.Migrations
 
             modelBuilder.Entity("FEventopia.DAO.EntityModels.EventStall", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(15)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -290,9 +288,8 @@ namespace FEventopia.DAO.Migrations
                     b.Property<bool>("DeleteFlag")
                         .HasColumnType("bit");
 
-                    b.Property<string>("EventDetailID")
-                        .IsRequired()
-                        .HasColumnType("varchar(15)");
+                    b.Property<Guid>("EventDetailID")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("SponsorID")
                         .IsRequired()
@@ -303,15 +300,13 @@ namespace FEventopia.DAO.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("varchar(10)");
 
-                    b.Property<string>("TransactionID")
-                        .IsRequired()
-                        .HasColumnType("varchar(15)");
+                    b.Property<Guid>("TransactionID")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("date");
 
                     b.Property<byte[]>("Version")
@@ -334,8 +329,9 @@ namespace FEventopia.DAO.Migrations
 
             modelBuilder.Entity("FEventopia.DAO.EntityModels.Location", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(15)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -357,10 +353,9 @@ namespace FEventopia.DAO.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("date");
 
                     b.Property<byte[]>("Version")
@@ -375,8 +370,9 @@ namespace FEventopia.DAO.Migrations
 
             modelBuilder.Entity("FEventopia.DAO.EntityModels.SponsorEvent", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(15)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -388,23 +384,20 @@ namespace FEventopia.DAO.Migrations
                     b.Property<bool>("DeleteFlag")
                         .HasColumnType("bit");
 
-                    b.Property<string>("EventID")
-                        .IsRequired()
-                        .HasColumnType("varchar(15)");
+                    b.Property<Guid>("EventID")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("SponsorID")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("TransactionID")
-                        .IsRequired()
-                        .HasColumnType("varchar(15)");
+                    b.Property<Guid>("TransactionID")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("date");
 
                     b.Property<byte[]>("Version")
@@ -427,8 +420,9 @@ namespace FEventopia.DAO.Migrations
 
             modelBuilder.Entity("FEventopia.DAO.EntityModels.Task", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(15)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -444,9 +438,8 @@ namespace FEventopia.DAO.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(MAX)");
 
-                    b.Property<string>("EventDetailID")
-                        .IsRequired()
-                        .HasColumnType("varchar(15)");
+                    b.Property<Guid>("EventDetailID")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("StaffID")
                         .IsRequired()
@@ -456,10 +449,9 @@ namespace FEventopia.DAO.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("date");
 
                     b.Property<byte[]>("Version")
@@ -478,8 +470,9 @@ namespace FEventopia.DAO.Migrations
 
             modelBuilder.Entity("FEventopia.DAO.EntityModels.Ticket", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(15)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("CheckInStatus")
                         .HasColumnType("bit");
@@ -494,19 +487,16 @@ namespace FEventopia.DAO.Migrations
                     b.Property<bool>("DeleteFlag")
                         .HasColumnType("bit");
 
-                    b.Property<string>("EventDetailID")
-                        .IsRequired()
-                        .HasColumnType("varchar(15)");
+                    b.Property<Guid>("EventDetailID")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("TransactionID")
-                        .IsRequired()
-                        .HasColumnType("varchar(15)");
+                    b.Property<Guid>("TransactionID")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("date");
 
                     b.Property<byte[]>("Version")
@@ -533,8 +523,9 @@ namespace FEventopia.DAO.Migrations
 
             modelBuilder.Entity("FEventopia.DAO.EntityModels.Transaction", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(15)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AccountID")
                         .IsRequired()
@@ -560,6 +551,10 @@ namespace FEventopia.DAO.Migrations
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
+                    b.Property<string>("TransactionCode")
+                        .IsRequired()
+                        .HasColumnType("varchar(36)");
+
                     b.Property<DateTime>("TransactionDate")
                         .HasColumnType("date");
 
@@ -569,10 +564,9 @@ namespace FEventopia.DAO.Migrations
                         .HasColumnType("varchar(3)");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("date");
 
                     b.Property<byte[]>("Version")

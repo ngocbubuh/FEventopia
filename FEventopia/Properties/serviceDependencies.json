@@ -6,10 +6,6 @@
     "mssql1": {
       "type": "mssql",
       "connectionId": "AZURE_SQL_CONNECTIONSTRING"
-    },
-    "mssql2": {
-      "type": "mssql",
-      "connectionId": "AZURE_SQL_CONNECTION_STRING"
     }
   }
 }

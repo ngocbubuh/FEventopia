@@ -115,7 +115,7 @@ namespace FEventopia.Controllers.Controllers
                     {
                         var response = new ResponseModel
                         {
-                            Status = true,
+                            Status = false,
                             Message = "Update account fail!"
                         };
                         return BadRequest(response);
@@ -175,7 +175,7 @@ namespace FEventopia.Controllers.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> GetAccountByUsernameAsync(string username)
         {
-            //try
+            try
             {
                 if (ModelState.IsValid)
                 {
@@ -194,10 +194,10 @@ namespace FEventopia.Controllers.Controllers
                     return ValidationProblem(ModelState);
                 }
             }
-            //catch
-            //{
-            //    return BadRequest();
-            //}
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         [HttpDelete("UnactivateAccount")]

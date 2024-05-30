@@ -10,10 +10,10 @@ namespace FEventopia.DAO.EntityModels
 {
     public class EventDetail : EntityBase
     {
-        public required string EventID { get; set; }
+        public required Guid EventID { get; set; }
         public DateTime EventDate { get; set; }
         public TimeSpan EventTime { get; set; }
-        public required string LocationID { get; set; }
+        public required Guid LocationID { get; set; }
         public int TicketForSaleInventory { get; set; }
         public double TicketPrice { get; set; }
         public double EstimateCost { get; set; }

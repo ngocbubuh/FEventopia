@@ -26,15 +26,16 @@ namespace FEventopia.Services.BussinessModels
         public required string PhoneNumber { get; set; } //Số điện thoại
 
         [DataType(DataType.EmailAddress,
-                  ErrorMessage = "Email Address is not valid")]
-        [EmailAddress(ErrorMessage = "Email Address is not valid")]
+                  ErrorMessage = "Email Address is not valid!")]
+        [EmailAddress(ErrorMessage = "Email Address is not valid!")]
         [RegularExpression(@"^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$",
-                  ErrorMessage = "Email Address is not valid")]
+                  ErrorMessage = "Email Address is not valid!")]
         [Required(AllowEmptyStrings = false,
                   ErrorMessage = "Email Address required!")]
         [Display(Name = "Email Address")]
         public required string Email { get; set; } //Email
         public string? Avatar { get; set; } //Link to Avatar file
+        public double CreditAmount { get; set; }
         public required string Role { get; set; }
         public bool EmailConfirmed { get; set; }
         public bool DeleteFlag { get; set; }
