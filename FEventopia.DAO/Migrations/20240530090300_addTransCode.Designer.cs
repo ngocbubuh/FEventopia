@@ -4,6 +4,7 @@ using FEventopia.DAO.DbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FEventopia.DAO.Migrations
 {
     [DbContext(typeof(FEventopiaDbContext))]
-    partial class FEventopiaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240530090300_addTransCode")]
+    partial class addTransCode
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -138,9 +141,10 @@ namespace FEventopia.DAO.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime?>("UpdatedDate")
+                    b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("date");
 
                     b.Property<byte[]>("Version")
@@ -194,9 +198,10 @@ namespace FEventopia.DAO.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime?>("UpdatedDate")
+                    b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("date");
 
                     b.Property<byte[]>("Version")
@@ -249,9 +254,10 @@ namespace FEventopia.DAO.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime?>("UpdatedDate")
+                    b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("date");
 
                     b.Property<byte[]>("Version")
@@ -301,9 +307,10 @@ namespace FEventopia.DAO.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime?>("UpdatedDate")
+                    b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("date");
 
                     b.Property<byte[]>("Version")
@@ -350,9 +357,10 @@ namespace FEventopia.DAO.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime?>("UpdatedDate")
+                    b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("date");
 
                     b.Property<byte[]>("Version")
@@ -392,9 +400,10 @@ namespace FEventopia.DAO.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime?>("UpdatedDate")
+                    b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("date");
 
                     b.Property<byte[]>("Version")
@@ -446,9 +455,10 @@ namespace FEventopia.DAO.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime?>("UpdatedDate")
+                    b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("date");
 
                     b.Property<byte[]>("Version")
@@ -491,9 +501,10 @@ namespace FEventopia.DAO.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime?>("UpdatedDate")
+                    b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("date");
 
                     b.Property<byte[]>("Version")
@@ -561,9 +572,10 @@ namespace FEventopia.DAO.Migrations
                         .HasColumnType("varchar(3)");
 
                     b.Property<string>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime?>("UpdatedDate")
+                    b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("date");
 
                     b.Property<byte[]>("Version")

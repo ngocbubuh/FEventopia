@@ -10,8 +10,8 @@ namespace FEventopia.DAO.EntityModels
     public class EventStall : EntityBase
     {
         public required string SponsorID { get; set; }
-        public required string EventDetailID { get; set; }
-        public required string TransactionID { get; set; }
+        public required Guid EventDetailID { get; set; }
+        public required Guid TransactionID { get; set; }
         public required string StallNumber { get; set; }
         public required virtual Account Account { get; set; } //FK SponsorID
         public required virtual Transaction Transaction { get; set; } //FK TransactionID

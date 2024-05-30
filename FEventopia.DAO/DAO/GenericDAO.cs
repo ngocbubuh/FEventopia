@@ -12,18 +12,19 @@ namespace FEventopia.DAO.DAO
 {
     public class GenericDAO<TEntity> : IGenericDAO<TEntity> where TEntity : EntityBase
     {
-        private readonly DbSet<TEntity> _dbSet;
+        protected DbSet<TEntity> _dbSet;
         private readonly FEventopiaDbContext _dbContext;
 
-        public GenericDAO(DbSet<TEntity> dbSet, FEventopiaDbContext dbContext)
+        public GenericDAO(FEventopiaDbContext dbContext)
         {
-            _dbSet = dbSet;
+            _dbSet = dbContext.Set<TEntity>();
             _dbContext = dbContext;
         }
 
         public async Task<TEntity> AddAsync(TEntity entity, string username)
         {
             entity.CreatedBy = username;
+            entity.UpdatedBy = username;
             await _dbSet.AddAsync(entity);
             await _dbContext.SaveChangesAsync();
             return entity;
@@ -45,7 +46,7 @@ namespace FEventopia.DAO.DAO
 
         public async Task<TEntity> GetByIdAsync(string id)
         {
-            return await _dbSet.FirstOrDefaultAsync(p => id.Equals(p.Id));
+            return await _dbSet.FirstOrDefaultAsync(p => id.Equals(p.Id.ToString()));
         }
 
         public async Task<bool> UpdateAsync(TEntity entity, string username)

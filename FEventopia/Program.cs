@@ -16,6 +16,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add Mail Services
 builder.Services.Configure<MailSetting>(builder.Configuration.GetSection("MailSettings"));
 
+// Add VNPay Services
+builder.Services.Configure<VnPaySetting>(builder.Configuration.GetSection("Vnpay"));
+
 // Add AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddAutoMapper(typeof(AutoMapperSetting).Assembly);

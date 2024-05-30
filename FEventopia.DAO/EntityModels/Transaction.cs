@@ -14,7 +14,7 @@ namespace FEventopia.DAO.EntityModels
         public required double Amount { get; set; }
         public required string Description { get; set; }
         public required DateTime TransactionDate { get; set; }
-        public bool Status { get; set; }
+        public required bool Status { get; set; }
         public required virtual Account Account { get; set; } //FK AccountID
         public virtual Ticket? Ticket { get; set; } //FK 1 to 1
         public virtual EventStall? EventStall { get; set; }

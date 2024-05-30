@@ -5,22 +5,22 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FEventopia.DAO.EntityModels.Base
 {
     public class EntityBase
     {
-        [Column(TypeName = "varchar(15)")]
-        public required string Id { get; set; }
+        public Guid Id { get; set; }
         [Column(TypeName = "date")]
-        public required DateTime CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
         [Column(TypeName = "nvarchar(50)")]
-        public required string CreatedBy { get; set; }
+        public string? CreatedBy { get; set; } = string.Empty;
         [Column(TypeName = "date")]
-        public required DateTime UpdatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
         [Column(TypeName = "nvarchar(50)")]
-        public required string UpdatedBy { get; set; }
-        public required bool DeleteFlag { get; set; }
+        public string? UpdatedBy { get; set; } = string.Empty;
+        public bool DeleteFlag { get; set; }
         [Timestamp]
         public byte[]? Version { get; set; }
     }

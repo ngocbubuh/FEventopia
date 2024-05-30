@@ -26,7 +26,7 @@ namespace FEventopia.DAO.DAO
 
         public async Task<bool> UpdateAccountAsync(string username, Account account)
         {
-            if (username == account.UserName)
+            if (username.ToLower().Equals(account.UserName.ToLower()))
             {
                 _context.Account.Update(account);
                 await _context.SaveChangesAsync();

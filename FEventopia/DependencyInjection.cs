@@ -7,6 +7,7 @@ using FEventopia.Services.Services;
 using System.Diagnostics;
 using FEventopia.DAO.DAO.Interfaces;
 using FEventopia.DAO.DAO;
+using Microsoft.EntityFrameworkCore;
 
 namespace FEventopia.Controllers
 {
@@ -15,16 +16,20 @@ namespace FEventopia.Controllers
         public static IServiceCollection AddWebAPIService(this IServiceCollection services)
         {
             //Add Scope
+            services.AddScoped(typeof(IGenericDAO<>), typeof(GenericDAO<>));
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
             services.AddScoped<IMailService, MailService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddScoped<IVnPayService, VnPayService>();
+            services.AddScoped<ITransactionRepository, TransactionRepository>();
+            services.AddScoped<ITransactionService, TransactionService>();
 
             services.AddScoped<IUserDAO, UserDAO>();
-            services.AddScoped(typeof(IGenericDAO<>), typeof(GenericDAO<>));
-
+            
             //Add Exception Handler
-            //services.AddExceptionHandler<BadRequestExceptionHandler>();
+            services.AddExceptionHandler<BadRequestExceptionHandler>();
             services.AddExceptionHandler<NotFoundExceptionHandler>();
             services.AddExceptionHandler<GlobalExceptionHandler>();
             

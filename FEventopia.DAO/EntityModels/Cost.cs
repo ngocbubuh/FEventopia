@@ -9,7 +9,7 @@ namespace FEventopia.DAO.EntityModels
 {
     public class Cost : EntityBase
     {
-        public required string EventDetailID { get; set; }
+        public required Guid EventDetailID { get; set; }
         public required double CostAmount { get; set; }
         public required double CostPurpose { get; set; }
 
