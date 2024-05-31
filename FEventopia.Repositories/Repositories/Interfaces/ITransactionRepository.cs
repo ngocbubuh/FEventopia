@@ -9,6 +9,5 @@ namespace FEventopia.Repositories.Repositories.Interfaces
 {
     public interface ITransactionRepository : IGenericRepository<Transaction>
     {
-        public Task<Transaction> GetTransactionByCodeAsync(string code);
     }
 }

@@ -12,18 +12,15 @@ namespace FEventopia.Controllers.Controllers
     [ApiController]
     public class TransactionController : ControllerBase
     {
-        private readonly IVnPayService _vnPayService;
+        private readonly IPaymentService _vnPayService;
         private readonly ITransactionService _transactionService;
+        private readonly IAuthenService _authenService;
 
-        public TransactionController(IVnPayService vnPayService, ITransactionService transactionService)
+        public TransactionController(IPaymentService vnPayService, ITransactionService transactionService, IAuthenService authenService)
         {
             _vnPayService = vnPayService;
             _transactionService = transactionService;
-        }
-        private string GetCurrentLogin()
-        {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            return AuthenToolSetting.GetCurrentUsername(identity);
+            _authenService = authenService;
         }
 
         [HttpPost("Recharge")]
@@ -32,14 +29,14 @@ namespace FEventopia.Controllers.Controllers
         {
             try
             {
-                var username = GetCurrentLogin();
+                var username = _authenService.GetCurrentLogin;
                 var transaction = await _transactionService.AddTransactionByVNPAYAsync(amount, username);
-                var paymentURL = _vnPayService.CreatePaymentUrl(amount, transaction, HttpContext);
+                var paymentURL = _vnPayService.CreatePaymentUrl(transaction, HttpContext);
                 return Ok(paymentURL);
             }
             catch
             {
-                return BadRequest();
+                throw;
             }
         }
 
@@ -49,18 +46,12 @@ namespace FEventopia.Controllers.Controllers
             try
             {
                 var transaction = await _transactionService.UpdateTransactionByVNPAYStatusAsync(model);
-                if (transaction != null)
-                {
-                    var urlParameter = transaction.ToUrlParameters();
-                    return Ok(urlParameter);
-                } else
-                {
-                    return BadRequest();
-                }
-                
+                var urlParameter = transaction.ToUrlParameters();
+                //return Redirect("https://feventopia.vercel.app/payment?" + urlParameter)
+                return Ok(urlParameter);
             } catch 
             {
-                return BadRequest();    
+                throw;    
             }
         }
     }

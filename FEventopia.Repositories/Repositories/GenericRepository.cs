@@ -13,14 +13,14 @@ namespace FEventopia.Repositories.Repositories
             this._genericDAO = genericDAO;
         }
 
-        public async Task<TEntity> AddAsync(TEntity entity, string username)
+        public async Task<TEntity> AddAsync(TEntity entity)
         {
-            return await _genericDAO.AddAsync(entity, username);
+            return await _genericDAO.AddAsync(entity);
         }
 
-        public async Task<bool> DeleteAsync(TEntity entity, string username)
+        public async Task<bool> DeleteAsync(TEntity entity)
         {
-            return await _genericDAO.DeleteAsync(entity, username);
+            return await _genericDAO.DeleteAsync(entity);
         }
 
         public async Task<List<TEntity>> GetAllAsync()
@@ -33,9 +33,9 @@ namespace FEventopia.Repositories.Repositories
             return await _genericDAO.GetByIdAsync(id);
         }
 
-        public async Task<bool> UpdateAsync(TEntity entity, string username)
+        public async Task<bool> UpdateAsync(TEntity entity)
         {
-            return await _genericDAO.UpdateAsync(entity, username);
+            return await _genericDAO.UpdateAsync(entity);
         }
     }
 }

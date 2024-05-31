@@ -17,7 +17,7 @@ namespace FEventopia.Repositories.Repositories
         {
             var acc = await _userDAO.GetAccountByUsernameAsync(username);
             acc.DeleteFlag = false;
-            return await _userDAO.UpdateAccountAsync(username, acc);
+            return await _userDAO.UpdateAccountAsync(acc);
         }
 
         public async Task<Account> GetAccountByUsernameAsync(string username)
@@ -40,12 +40,12 @@ namespace FEventopia.Repositories.Repositories
         {
             var acc = await _userDAO.GetAccountByUsernameAsync(username);
             acc.DeleteFlag = true;
-            return await _userDAO.UpdateAccountAsync(username, acc);
+            return await _userDAO.UpdateAccountAsync(acc);
         }
 
-        public async Task<bool> UpdateAccountAsync(string username, Account account)
+        public async Task<bool> UpdateAccountAsync(Account account)
         {
-            return await _userDAO.UpdateAccountAsync(username, account);
+            return await _userDAO.UpdateAccountAsync(account);
         }
     }
 }

@@ -22,16 +22,17 @@ namespace FEventopia.Controllers
             services.AddScoped<IMailService, MailService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IVnPayService, VnPayService>();
+            services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<IAuthenService, AuthenService>();
             services.AddScoped<ITransactionRepository, TransactionRepository>();
             services.AddScoped<ITransactionService, TransactionService>();
 
             services.AddScoped<IUserDAO, UserDAO>();
-            
+
             //Add Exception Handler
+            services.AddExceptionHandler<GlobalExceptionHandler>();
             services.AddExceptionHandler<BadRequestExceptionHandler>();
             services.AddExceptionHandler<NotFoundExceptionHandler>();
-            services.AddExceptionHandler<GlobalExceptionHandler>();
             
             //Add Middleware
             services.AddSingleton<PerformanceMiddleware>();
