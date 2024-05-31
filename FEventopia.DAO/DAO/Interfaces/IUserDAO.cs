@@ -11,6 +11,6 @@ namespace FEventopia.DAO.DAO.Interfaces
     {
         public Task<List<Account>> GetAllAccountAsync();
         public Task<Account> GetAccountByUsernameAsync(string username);
-        public Task<bool> UpdateAccountAsync(string username, Account account);
+        public Task<bool> UpdateAccountAsync(Account account);
     }
 }

@@ -11,15 +11,8 @@ namespace FEventopia.Repositories.Repositories
 {
     public class TransactionRepository : GenericRepository<Transaction>, ITransactionRepository
     {
-        private readonly IGenericDAO<Transaction> _transactionDAO;
         public TransactionRepository(IGenericDAO<Transaction> genericDAO) : base(genericDAO)
         {
-            _transactionDAO = genericDAO;
-        }
-
-        public async Task<Transaction> GetTransactionByCodeAsync(string code)
-        {
-            return await _transactionDAO.GetByIdAsync(code);
         }
     }
 }

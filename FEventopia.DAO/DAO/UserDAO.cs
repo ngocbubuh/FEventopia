@@ -16,7 +16,7 @@ namespace FEventopia.DAO.DAO
 
         public async Task<Account> GetAccountByUsernameAsync(string username)
         {
-            return await _context.Account.FirstAsync(p => username.Equals(p.UserName));
+            return await _context.Account.FirstAsync(p => username.ToLower().Equals(p.UserName.ToLower()));
         }
 
         public async Task<List<Account>> GetAllAccountAsync()
@@ -24,18 +24,11 @@ namespace FEventopia.DAO.DAO
             return await _context.Account.ToListAsync();
         }
 
-        public async Task<bool> UpdateAccountAsync(string username, Account account)
+        public async Task<bool> UpdateAccountAsync(Account account)
         {
-            if (username.ToLower().Equals(account.UserName.ToLower()))
-            {
-                _context.Account.Update(account);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            _context.Account.Update(account);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

@@ -35,7 +35,7 @@ namespace FEventopia.DAO.EntityModels
         public string? Avatar { get; set; } //Link to Avatar file
         public bool DeleteFlag { get; set; } //Delete Flag
         public required string Role { get; set; }
-        public double? CreditAmount { get; set; } = 0;
+        public double CreditAmount { get; set; } = 0;
 
         [Timestamp]
         public byte[]? Version { get; set; }

@@ -11,7 +11,7 @@ namespace FEventopia.DAO.EntityModels
     {
         public required string Description { get; set; }
         public required string StaffID { get; set; }
-        public bool Status { get; set; }
+        public required string Status { get; set; }
         public required Guid EventDetailID { get; set; }
 
         public virtual required Account Account { get; set; } //FK StaffID

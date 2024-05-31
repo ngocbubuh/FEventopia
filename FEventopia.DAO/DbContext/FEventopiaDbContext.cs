@@ -105,6 +105,7 @@ namespace FEventopia.DAO.DbContext
                 entity.Property(x => x.EventDescription).HasColumnType("nvarchar(MAX)");
                 entity.Property(x => x.Category).HasMaxLength(10).HasColumnType("nvarchar(10)");
                 entity.Property(x => x.Banner).HasColumnType("varchar(MAX)");
+                entity.Property(x => x.Status).HasColumnType("nvarchar(20)");
 
                 entity.HasOne(e => e.Account).WithMany(a => a.Event)
                       .HasForeignKey(e => e.OperatorID).OnDelete(DeleteBehavior.Restrict);
@@ -133,7 +134,7 @@ namespace FEventopia.DAO.DbContext
                 entity.HasKey(x => x.Id);
 
                 entity.Property(x => x.Description).HasColumnType("nvarchar(MAX)");
-                entity.Property(x => x.Status).HasColumnType("bit");
+                entity.Property(x => x.Status).HasColumnType("nvarchar(20)");
 
                 entity.HasOne(t => t.Account).WithMany(a => a.Task)
                       .HasForeignKey(t => t.StaffID).OnDelete(DeleteBehavior.Restrict);

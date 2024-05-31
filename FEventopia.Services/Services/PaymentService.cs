@@ -13,22 +13,22 @@ using System.Threading.Tasks;
 
 namespace FEventopia.Services.Services
 {
-    public class VnPayService : IVnPayService
+    public class PaymentService : IPaymentService
     {
         private readonly VnPaySetting _vnPaySetting;
 
-        public VnPayService(IOptions<VnPaySetting> vnPaySetting)
+        public PaymentService(IOptions<VnPaySetting> vnPaySetting)
         {
             this._vnPaySetting = vnPaySetting.Value;
         }
-        public string CreatePaymentUrl(double amount, TransactionModel transaction, HttpContext context)
+        public string CreatePaymentUrl(TransactionModel transaction, HttpContext context)
         {
             var pay = new VnPayLibrary();
 
             pay.AddRequestData("vnp_Version", _vnPaySetting.Version);
             pay.AddRequestData("vnp_Command", _vnPaySetting.Command);
             pay.AddRequestData("vnp_TmnCode", _vnPaySetting.TmnCode);
-            pay.AddRequestData("vnp_Amount", ((int) Math.Round(amount, 2) * 100).ToString());
+            pay.AddRequestData("vnp_Amount", ((int) Math.Round(transaction.Amount, 2) * 100).ToString());
             pay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
             pay.AddRequestData("vnp_CurrCode", _vnPaySetting.CurrCode);
             pay.AddRequestData("vnp_IpAddr", Utils.Utils.GetIpAddress(context));

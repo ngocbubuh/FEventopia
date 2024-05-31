@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace FEventopia.Services.Services.Interfaces
 {
-    public interface IVnPayService
+    public interface IPaymentService
     {
-        string CreatePaymentUrl(double amount, TransactionModel model, HttpContext context);
+        string CreatePaymentUrl(TransactionModel model, HttpContext context);
     }
 }

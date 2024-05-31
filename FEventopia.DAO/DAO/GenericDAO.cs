@@ -21,18 +21,15 @@ namespace FEventopia.DAO.DAO
             _dbContext = dbContext;
         }
 
-        public async Task<TEntity> AddAsync(TEntity entity, string username)
+        public async Task<TEntity> AddAsync(TEntity entity)
         {
-            entity.CreatedBy = username;
-            entity.UpdatedBy = username;
             await _dbSet.AddAsync(entity);
             await _dbContext.SaveChangesAsync();
             return entity;
         }
 
-        public async Task<bool> DeleteAsync(TEntity entity, string username)
+        public async Task<bool> DeleteAsync(TEntity entity)
         {
-            entity.UpdatedBy = username;
             entity.DeleteFlag = true;
             _dbSet.Update(entity);
             await _dbContext.SaveChangesAsync();
@@ -46,13 +43,19 @@ namespace FEventopia.DAO.DAO
 
         public async Task<TEntity> GetByIdAsync(string id)
         {
-            return await _dbSet.FirstOrDefaultAsync(p => id.Equals(p.Id.ToString()));
+            return await _dbSet.FirstOrDefaultAsync(p => id.ToLower().Equals(p.Id.ToString().ToLower()));
         }
 
-        public async Task<bool> UpdateAsync(TEntity entity, string username)
+        public async Task<bool> UpdateAsync(TEntity entity)
         {
-            entity.UpdatedBy = username;
             _dbSet.Update(entity);
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> AddRangeAsync(List<TEntity> entities)
+        {
+            await _dbSet.AddRangeAsync(entities);
             await _dbContext.SaveChangesAsync();
             return true;
         }
