@@ -54,5 +54,48 @@ namespace FEventopia.Controllers.Controllers
                 throw;    
             }
         }
+
+        [HttpGet("GetAllTransaction")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> GetAllTransactionAsync([FromQuery] PageParaModel pageParaModel)
+        {
+            try
+            {
+                var result = await _transactionService.GetAllTransactionsAsync(pageParaModel);
+                return Ok(result);
+            } catch
+            {
+                throw;
+            }
+        }
+
+        [HttpGet("GetAllProfileTransaction")]
+        [Authorize]
+        public async Task<IActionResult> GetAllProfileTransaction([FromQuery] PageParaModel pageParaModel)
+        {
+            try
+            {
+                var username = _authenService.GetCurrentLogin;
+                var result = await _transactionService.GetAllTransactionByUsernameAsync(username, pageParaModel);
+                return Ok(result);
+            } catch
+            {
+                throw;
+            }
+        }
+
+        [HttpGet("GetAllUserTransaction")]
+        [Authorize]
+        public async Task<IActionResult> GetAllUserTransactionAsync([FromQuery] PageParaModel model, string username)
+        {
+            try
+            {
+                var result = await _transactionService.GetAllTransactionByUsernameAsync(username, model);
+                return Ok(result);
+            } catch
+            {
+                throw;
+            }
+        }
     }
 }

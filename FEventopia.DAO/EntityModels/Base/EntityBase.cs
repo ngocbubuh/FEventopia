@@ -16,7 +16,7 @@ namespace FEventopia.DAO.EntityModels.Base
         public DateTime? CreatedDate { get; set; }
         [Column(TypeName = "date")]
         public DateTime? UpdatedDate { get; set; }
-        public bool DeleteFlag { get; set; }
+        public bool DeleteFlag { get; set; } = false;
         [Timestamp]
         public byte[]? Version { get; set; }
     }

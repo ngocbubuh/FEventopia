@@ -29,7 +29,7 @@ namespace FEventopia.Services.Services
             pay.AddRequestData("vnp_Command", _vnPaySetting.Command);
             pay.AddRequestData("vnp_TmnCode", _vnPaySetting.TmnCode);
             pay.AddRequestData("vnp_Amount", ((int) Math.Round(transaction.Amount, 2) * 100).ToString());
-            pay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
+            pay.AddRequestData("vnp_CreateDate", transaction.TransactionDate.ToString("yyyyMMddHHmmss"));
             pay.AddRequestData("vnp_CurrCode", _vnPaySetting.CurrCode);
             pay.AddRequestData("vnp_IpAddr", Utils.Utils.GetIpAddress(context));
             pay.AddRequestData("vnp_Locale", _vnPaySetting.Locale);
