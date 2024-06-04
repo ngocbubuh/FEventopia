@@ -44,6 +44,25 @@ namespace FEventopia.Services.Services
             return _mapper.Map<TransactionModel>(result);
         }
 
+        public async Task<PageModel<TransactionModel>> GetAllTransactionByUsernameAsync(string username, PageParaModel pagePara)
+        {
+            var user = await _userRepository.GetAccountByUsernameAsync(username);
+            var transactionList = await _transactionRepository.GetByIdAsync(user.Id);
+            var result = _mapper.Map<List<TransactionModel>>(transactionList);
+            return PageModel<TransactionModel>.ToPagedList(result,
+                pagePara.PageNumber,
+                pagePara.PageSize);
+        }
+
+        public async Task<PageModel<TransactionModel>> GetAllTransactionsAsync(PageParaModel pagePara)
+        {
+            var transactionList = await _transactionRepository.GetAllAsync();
+            var result = _mapper.Map<List<TransactionModel>>(transactionList);
+            return PageModel<TransactionModel>.ToPagedList(result,
+                pagePara.PageNumber,
+                pagePara.PageSize);
+        }
+
         public async Task<TransactionModel> UpdateTransactionByVNPAYStatusAsync(VnPayModel model)
         {
             if(model.vnp_ResponseCode == "00")

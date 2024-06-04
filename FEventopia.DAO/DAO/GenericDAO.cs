@@ -36,9 +36,9 @@ namespace FEventopia.DAO.DAO
             return true;
         }
 
-        public Task<List<TEntity>> GetAllAsync()
+        public async Task<List<TEntity>> GetAllAsync()
         {
-            return _dbSet.ToListAsync();
+            return await _dbSet.ToListAsync();
         }
 
         public async Task<TEntity> GetByIdAsync(string id)
