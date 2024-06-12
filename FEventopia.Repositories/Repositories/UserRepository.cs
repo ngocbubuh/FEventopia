@@ -20,6 +20,11 @@ namespace FEventopia.Repositories.Repositories
             return await _userDAO.UpdateAccountAsync(acc);
         }
 
+        public async Task<Account> GetAccountByIdAsync(string id)
+        {
+            return await _userDAO.GetAccountByIdAsync(id);
+        }
+
         public async Task<Account> GetAccountByUsernameAsync(string username)
         {
             return await _userDAO.GetAccountByUsernameAsync(username);

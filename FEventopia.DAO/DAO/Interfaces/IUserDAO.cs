@@ -9,6 +9,7 @@ namespace FEventopia.DAO.DAO.Interfaces
 {
     public interface IUserDAO
     {
+        public Task<Account> GetAccountByIdAsync(string id);
         public Task<List<Account>> GetAllAccountAsync();
         public Task<Account> GetAccountByUsernameAsync(string username);
         public Task<bool> UpdateAccountAsync(Account account);

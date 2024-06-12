@@ -12,8 +12,8 @@ namespace FEventopia.DAO.EntityModels
         public required string SponsorID { get; set; }
         public required Guid EventID { get; set; }
         public required Guid TransactionID { get; set; }
-        public required virtual Account Account { get; set; } //FK SponsorID
-        public required virtual Transaction Transaction { get; set; } //FK TransactionID
-        public required virtual Event Event { get; set; }
+        public virtual Account? Account { get; } //FK SponsorID
+        public virtual Transaction? Transaction { get; } //FK TransactionID
+        public virtual Event? Event { get; }
     }
 }

@@ -4,6 +4,7 @@ using FEventopia.DAO.DbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FEventopia.DAO.Migrations
 {
     [DbContext(typeof(FEventopiaDbContext))]
-    partial class FEventopiaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240612120813_ModifyDbAddSponsorBR")]
+    partial class ModifyDbAddSponsorBR
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -395,11 +398,9 @@ namespace FEventopia.DAO.Migrations
 
             modelBuilder.Entity("FEventopia.DAO.EntityModels.SponsorManagement", b =>
                 {
-                    b.Property<Guid>("EventId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("SponsorId")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<double>("Amount")
                         .HasColumnType("float");
@@ -410,12 +411,16 @@ namespace FEventopia.DAO.Migrations
                     b.Property<bool>("DeleteFlag")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("EventId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Rank")
                         .IsRequired()
                         .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("SponsorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -429,7 +434,9 @@ namespace FEventopia.DAO.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
-                    b.HasKey("EventId", "SponsorId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId");
 
                     b.HasIndex("SponsorId");
 

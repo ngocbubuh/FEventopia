@@ -37,8 +37,6 @@ namespace FEventopia.Services.Services
                 TransactionDate = DateTime.Now,
                 Amount = amount,
                 Description = $"FEventopia {username.ToUpper()}: Recharge +{amount}.",
-                Status = false,
-                Account = user,
             };
             var result = await _transactionRepository.AddAsync(transaction);
             return _mapper.Map<TransactionModel>(result);
@@ -72,7 +70,7 @@ namespace FEventopia.Services.Services
                 await _transactionRepository.UpdateAsync(transaction);
 
                 //Update credit for user
-                var user = transaction.Account;
+                var user = await _userRepository.GetAccountByIdAsync(transaction.AccountID);
                 user.CreditAmount += double.Parse(model.vnp_Amount)/100;
                 await _userRepository.UpdateAccountAsync(user);
                 return _mapper.Map<TransactionModel>(transaction);
