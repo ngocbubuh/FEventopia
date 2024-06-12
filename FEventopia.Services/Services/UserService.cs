@@ -56,7 +56,7 @@ namespace FEventopia.Services.Services
             if (acc != null)
             {
                 var account = _mapper.Map(accountModel, acc);
-                return await _userRepository.UpdateAccountAsync(username, account);
+                return await _userRepository.UpdateAccountAsync(account);
             } else
             {
                 return false;

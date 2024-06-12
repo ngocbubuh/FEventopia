@@ -4,7 +4,7 @@ namespace FEventopia.Services.Settings
 {
     public class AuthenToolSetting
     {
-        public static string? GetCurrentUsername(ClaimsIdentity identity)
+        public static string GetCurrentUsername(ClaimsIdentity identity)
         {
             if (identity != null)
             {

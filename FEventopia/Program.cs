@@ -1,5 +1,5 @@
-﻿using FEventopia.Repositories.DbContext;
-using FEventopia.Repositories.EntityModels;
+﻿using FEventopia.DAO.DbContext;
+using FEventopia.DAO.EntityModels;
 using FEventopia.Controllers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -15,6 +15,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Add Mail Services
 builder.Services.Configure<MailSetting>(builder.Configuration.GetSection("MailSettings"));
+
+// Add VNPay Services
+builder.Services.Configure<VnPaySetting>(builder.Configuration.GetSection("Vnpay"));
 
 // Add AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
@@ -73,7 +76,7 @@ if (builder.Environment.IsDevelopment())
 }
 else
 {
-    connection = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING");
+    connection = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION_STRING");
 }
 
 builder.Services.AddDbContext<FEventopiaDbContext>(options => options.UseSqlServer(connection));
@@ -110,6 +113,7 @@ builder.Services.AddCors(options =>
             builder.AllowAnyOrigin()
             .AllowAnyHeader()
             .WithExposedHeaders("X-Pagination")
+            .WithExposedHeaders("JSON-Web-Token")
             .AllowAnyMethod();
         });
 });
@@ -122,6 +126,8 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 //}
+
+app.UseStatusCodePages();
 
 app.UseExceptionHandler();
 

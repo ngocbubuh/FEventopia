@@ -4,7 +4,9 @@ using FEventopia.Services.Services.Interfaces;
 using FEventopia.Services.Settings;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
 namespace FEventopia.Controllers.Controllers
@@ -14,16 +16,12 @@ namespace FEventopia.Controllers.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IAuthenService _authenService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IAuthenService authenService)
         {
             _userService = userService;
-        }
-
-        private string GetCurrentLogin()
-        {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            return AuthenToolSetting.GetCurrentUsername(identity);
+            _authenService = authenService;
         }
 
         [HttpGet("GetAllAccount")]
@@ -33,58 +31,45 @@ namespace FEventopia.Controllers.Controllers
             try
             {
                 var result = await _userService.GetAllAccountAsync(pagePara);
-                if (result == null)
+                var metadata = new
                 {
-                    return NotFound();
-                }
-                else
-                {
-                    var metadata = new
-                    {
-                        result.TotalCount,
-                        result.PageSize,
-                        result.CurrentPage,
-                        result.TotalPages,
-                        result.HasNext,
-                        result.HasPrevious
-                    };
-                    Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
-                    return Ok(result);
-                }
+                    result.TotalCount,
+                    result.PageSize,
+                    result.CurrentPage,
+                    result.TotalPages,
+                    result.HasNext,
+                    result.HasPrevious
+                };
+                Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
+                return Ok(result);
             }
             catch
             {
-                return BadRequest();
+                throw;
             }
         }
 
         [HttpGet("GetAccountByEmail")]
         [Authorize(Roles = "ADMIN")]
-        public async Task<IActionResult> GetAccountByEmailAsync (string email, [FromQuery] PageParaModel pageParaModel)
+        public async Task<IActionResult> GetAllAccountByEmailAsync(string email, [FromQuery] PageParaModel pageParaModel)
         {
             try
             {
                 var result = await _userService.GetAllAccountByEmailAsync(email, pageParaModel);
-                if (result == null)
+                var metadata = new
                 {
-                    return NotFound();
-                } else
-                {
-                    var metadata = new
-                    {
-                        result.TotalCount,
-                        result.PageSize,
-                        result.CurrentPage,
-                        result.TotalPages,
-                        result.HasNext,
-                        result.HasPrevious
-                    };
-                    Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
-                    return Ok(result);
-                }
+                    result.TotalCount,
+                    result.PageSize,
+                    result.CurrentPage,
+                    result.TotalPages,
+                    result.HasNext,
+                    result.HasPrevious
+                };
+                Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
+                return Ok(result);
             } catch
             {
-                return BadRequest();
+                throw;
             }
         }
 
@@ -96,7 +81,7 @@ namespace FEventopia.Controllers.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var username = GetCurrentLogin();
+                    var username = _authenService.GetCurrentLogin;
                     var result = await _userService.UpdateAccountAsync(username, model);
                     if (result)
                     {
@@ -111,7 +96,7 @@ namespace FEventopia.Controllers.Controllers
                     {
                         var response = new ResponseModel
                         {
-                            Status = true,
+                            Status = false,
                             Message = "Update account fail!"
                         };
                         return BadRequest(response);
@@ -124,7 +109,7 @@ namespace FEventopia.Controllers.Controllers
             }
             catch
             {
-                return BadRequest();
+                throw;
             }
         }
 
@@ -163,7 +148,7 @@ namespace FEventopia.Controllers.Controllers
             }
             catch
             {
-                return BadRequest();
+                throw;
             }
         }
 
@@ -176,14 +161,7 @@ namespace FEventopia.Controllers.Controllers
                 if (ModelState.IsValid)
                 {
                     var result = await _userService.GetAccountByUsernameAsync(username);
-                    if (result != null)
-                    {
-                        return Ok(result);
-                    }
-                    else
-                    {
-                        return NotFound();
-                    }
+                    return Ok(result);
                 }
                 else
                 {
@@ -192,7 +170,7 @@ namespace FEventopia.Controllers.Controllers
             }
             catch
             {
-                return BadRequest();
+                throw;
             }
         }
 
@@ -202,8 +180,8 @@ namespace FEventopia.Controllers.Controllers
         {
             try
             {
-                var CurrentUsername = GetCurrentLogin();
-                if (CurrentUsername != username)
+                var CurrentUsername = _authenService.GetCurrentLogin;
+                if (!CurrentUsername.ToLower().Equals(username.ToLower()))
                 {
                     var result = await _userService.UnactivateAccountAsync(username);
                     if (result)
@@ -237,7 +215,7 @@ namespace FEventopia.Controllers.Controllers
             }
             catch
             {
-                return BadRequest();
+                throw;
             }
         }
 
@@ -247,12 +225,12 @@ namespace FEventopia.Controllers.Controllers
         {
             try
             {
-                var username = GetCurrentLogin();
+                var username = _authenService.GetCurrentLogin;
                 var account = await _userService.GetAccountByUsernameAsync(username);
                 return Ok(account);
             } catch 
             {
-                return BadRequest();
+                throw;
             }
         }
 
@@ -284,7 +262,7 @@ namespace FEventopia.Controllers.Controllers
                 
             } catch 
             {
-                return BadRequest();
+                throw;
             }
         }
     }

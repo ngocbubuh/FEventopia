@@ -2,18 +2,18 @@
 
 #nullable disable
 
-namespace FEventopia.Repositories.Migrations
+namespace FEventopia.DAO.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateRoleToAccountDB : Migration
+    public partial class addTransCode : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "Role",
-                table: "Account",
-                type: "nvarchar(10)",
+                name: "TransactionCode",
+                table: "Transaction",
+                type: "varchar(36)",
                 nullable: false,
                 defaultValue: "");
         }
@@ -22,8 +22,8 @@ namespace FEventopia.Repositories.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Role",
-                table: "Account");
+                name: "TransactionCode",
+                table: "Transaction");
         }
     }
 }

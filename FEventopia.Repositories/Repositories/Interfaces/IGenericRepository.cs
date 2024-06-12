@@ -1,4 +1,4 @@
-﻿using FEventopia.Repositories.EntityModels.Base;
+﻿using FEventopia.DAO.EntityModels.Base;
 
 namespace FEventopia.Repositories.Repositories.Interfaces
 {
@@ -6,8 +6,8 @@ namespace FEventopia.Repositories.Repositories.Interfaces
     {
         public Task<List<TEntity>> GetAllAsync();
         public Task<TEntity> GetByIdAsync(string id);
-        public Task<TEntity> AddAsync(TEntity entity, string username);
-        public Task<bool> UpdateAsync(TEntity entity, string username);
-        public Task<bool> DeleteAsync(TEntity entity, string username);
+        public Task<TEntity> AddAsync(TEntity entity);
+        public Task<bool> UpdateAsync(TEntity entity);
+        public Task<bool> DeleteAsync(TEntity entity);
     }
 }

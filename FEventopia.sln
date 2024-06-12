@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FEventopia.Controllers", "FEventopia\FEventopia.Controllers.csproj", "{598A674D-9B82-4FA1-A8B9-03A28F65DD4B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FEventopia.Controllers", "FEventopia\FEventopia.Controllers.csproj", "{598A674D-9B82-4FA1-A8B9-03A28F65DD4B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FEventopia.Repositories", "FEventopia.Repositories\FEventopia.Repositories.csproj", "{657C7AC0-4725-4ED5-9A2C-FBBFD455DD77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FEventopia.Repositories", "FEventopia.Repositories\FEventopia.Repositories.csproj", "{657C7AC0-4725-4ED5-9A2C-FBBFD455DD77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FEventopia.Services", "FEventopia.Services\FEventopia.Services.csproj", "{BDF188FD-FA84-46DA-AD2A-9759C4962032}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FEventopia.Services", "FEventopia.Services\FEventopia.Services.csproj", "{BDF188FD-FA84-46DA-AD2A-9759C4962032}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FEventopia.DAO", "FEventopia.DAO\FEventopia.DAO.csproj", "{EB1B9F4B-879F-4896-AE09-8AAEF257E2DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{BDF188FD-FA84-46DA-AD2A-9759C4962032}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDF188FD-FA84-46DA-AD2A-9759C4962032}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDF188FD-FA84-46DA-AD2A-9759C4962032}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB1B9F4B-879F-4896-AE09-8AAEF257E2DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB1B9F4B-879F-4896-AE09-8AAEF257E2DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB1B9F4B-879F-4896-AE09-8AAEF257E2DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB1B9F4B-879F-4896-AE09-8AAEF257E2DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

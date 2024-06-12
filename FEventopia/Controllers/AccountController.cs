@@ -1,4 +1,4 @@
-﻿using FEventopia.Repositories.EntityModels;
+﻿using FEventopia.DAO.EntityModels;
 using FEventopia.Services.Services.Interfaces;
 using FEventopia.Services.Settings;
 using FEventopia.Services.Enum;
@@ -25,19 +25,22 @@ namespace FEventopia.Controllers.Controllers
         private readonly SignInManager<Account> signInManager;
         private readonly IConfiguration configuration;
         private readonly RoleManager<IdentityRole> roleManager;
+        private readonly IAuthenService authenService;
 
         public AccountController(
             IMailService mailService,
             UserManager<Account> accountManager,
             SignInManager<Account> signInManager,
             IConfiguration configuration,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            IAuthenService authenService)
         {
             this.mailService = mailService;
             this.accountManager = accountManager;
             this.signInManager = signInManager;
             this.configuration = configuration;
             this.roleManager = roleManager;
+            this.authenService = authenService;
         }
 
         private string CreateToken(List<Claim> authClaims)
@@ -56,12 +59,6 @@ namespace FEventopia.Controllers.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private string GetCurrentLogin()
-        {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            return AuthenToolSetting.GetCurrentUsername(identity);
-        }
-
         [HttpGet("ConfirmEmail")]
         public async Task<IActionResult> ConfirmEmailAsync(string token, string username)
         {
@@ -78,6 +75,8 @@ namespace FEventopia.Controllers.Controllers
                             Status = true,
                             Message = "Email Verification Successfully!"
                         };
+                        //var urlParameter = response.ToUrlParameters();
+                        //return Redirect("https://feventopia.vercel.app/confirmEmail?" + urlParameter);
                         return Ok(response);
                     }
                     else
@@ -87,6 +86,8 @@ namespace FEventopia.Controllers.Controllers
                             Status = false,
                             Message = "Email Verification Failed!"
                         };
+                        //var urlParameter = response.ToUrlParameters();
+                        //return Redirect("https://feventopia.vercel.app/confirmEmail?" + urlParameter);
                         return BadRequest(response);
                     }
                 }
@@ -97,12 +98,14 @@ namespace FEventopia.Controllers.Controllers
                         Status = false,
                         Message = "User does not existed!"
                     };
+                    //var urlParameter = response.ToUrlParameters();
+                    //return Redirect("https://feventopia.vercel.app/confirmEmail?" + urlParameter);
                     return BadRequest(response);
                 }
             }
             catch
             {
-                return BadRequest();
+                throw;
             }
         }
 
@@ -113,7 +116,7 @@ namespace FEventopia.Controllers.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var acc = GetCurrentLogin();
+                    var acc = authenService.GetCurrentLogin;
                     if (acc != null)
                     {
                         var response = new ResponseModel
@@ -129,7 +132,7 @@ namespace FEventopia.Controllers.Controllers
                         var account = await accountManager.FindByNameAsync(model.Username);
 
                         //If account has been disable, then no login
-                        if (account.DeleteFlag == false)
+                        if (!account.DeleteFlag)
                         {
                             var roles = await accountManager.GetRolesAsync(account);
 
@@ -162,7 +165,7 @@ namespace FEventopia.Controllers.Controllers
                                 Status = false,
                                 Message = "Login Failed! Your account has been disable!"
                             };
-                            return Unauthorized(response);
+                            return BadRequest(response);
                         }
                     }
                     else
@@ -182,7 +185,7 @@ namespace FEventopia.Controllers.Controllers
             }
             catch
             {
-                return BadRequest();
+                throw;
             }
 
         }
@@ -203,7 +206,7 @@ namespace FEventopia.Controllers.Controllers
                             PhoneNumber = model.PhoneNumber,
                             Email = model.Email,
                             UserName = model.Username,
-                            Role = Role.VISITOR.ToString(),
+                            Role = Role.VISITOR.ToString()
                         };
                         //Create user in database
                         var result = await accountManager.CreateAsync(user, model.Password);
@@ -244,7 +247,7 @@ namespace FEventopia.Controllers.Controllers
                         }
                         else
                         {
-                            string errorMessage = null;
+                            string errorMessage = string.Empty;
                             foreach (var error in result.Errors)
                             {
                                 errorMessage = error.Description;
@@ -254,7 +257,7 @@ namespace FEventopia.Controllers.Controllers
                                 Status = false,
                                 Message = errorMessage
                             };
-                            return Unauthorized(response);
+                            return BadRequest(response);
                         }
                     }
                     else
@@ -272,7 +275,7 @@ namespace FEventopia.Controllers.Controllers
                     return ValidationProblem(ModelState);
                 }
             }
-            catch { return BadRequest(); }
+            catch { throw; }
         }
 
         [HttpPost("SignUp-Inernal")]
@@ -290,7 +293,7 @@ namespace FEventopia.Controllers.Controllers
                         {
                             Name = model.Name,
                             UserName = model.Username,
-                            Role = role.ToString(),
+                            Role = role.ToString()
                         };
 
                         //Create user in database
@@ -354,7 +357,7 @@ namespace FEventopia.Controllers.Controllers
                         }
                         else
                         {
-                            string errorMessage = null;
+                            string errorMessage = string.Empty;
                             foreach (var error in result.Errors)
                             {
                                 errorMessage = error.Description;
@@ -384,7 +387,7 @@ namespace FEventopia.Controllers.Controllers
             }
             catch
             {
-                return BadRequest();
+                throw;
             }
         }
 
@@ -396,7 +399,7 @@ namespace FEventopia.Controllers.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var username = GetCurrentLogin();
+                    var username = authenService.GetCurrentLogin;
                     var account = await accountManager.FindByNameAsync(username);
                     if (account == null)
                     {
@@ -411,7 +414,7 @@ namespace FEventopia.Controllers.Controllers
                     {
                         var result = await accountManager.ChangePasswordAsync(account, model.CurrentPassword, model.NewPassword);
 
-                        string errorMessage = null;
+                        string errorMessage = string.Empty;
                         if (!result.Succeeded)
                         {
                             foreach (var error in result.Errors)
@@ -442,7 +445,7 @@ namespace FEventopia.Controllers.Controllers
                     return ValidationProblem(ModelState);
                 }
             }
-            catch { return BadRequest(); }
+            catch { throw; }
         }
 
         [HttpPost("SendConfirmationEmail")]
@@ -451,7 +454,7 @@ namespace FEventopia.Controllers.Controllers
         {
             try
             {
-                var username = GetCurrentLogin();
+                var username = authenService.GetCurrentLogin;
                 var user = await accountManager.FindByNameAsync(username);
 
                 if (user.Email == null)
@@ -496,7 +499,7 @@ namespace FEventopia.Controllers.Controllers
             }
             catch
             {
-                return BadRequest();
+                throw;
             }
         }
     }

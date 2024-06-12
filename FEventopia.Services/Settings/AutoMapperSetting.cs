@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using FEventopia.Repositories.EntityModels;
+using FEventopia.DAO.EntityModels;
 using FEventopia.Services.BussinessModels;
 
 namespace FEventopia.Services.Settings
@@ -13,6 +13,7 @@ namespace FEventopia.Services.Settings
                                               .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
                                               .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
                                               .ForMember(dest => dest.Avatar, opt => opt.MapFrom(src => src.Avatar))
+                                              .ForMember(dest => dest.CreditAmount, opt => opt.Ignore())
                                               .ForMember(dest => dest.Role, opt => opt.Ignore())
                                               .ForMember(dest => dest.DeleteFlag, opt => opt.Ignore())
                                               .ForMember(dest => dest.UserName, opt => opt.Ignore())
@@ -29,6 +30,7 @@ namespace FEventopia.Services.Settings
                                               .ForMember(dest => dest.Id, opt => opt.Ignore())
                                               .ForMember(dest => dest.PhoneNumberConfirmed, opt => opt.Ignore())
                                               .ForMember(dest => dest.Version, opt => opt.Ignore());
+            CreateMap<Transaction, TransactionModel>().ReverseMap();
         }
     }
 }
