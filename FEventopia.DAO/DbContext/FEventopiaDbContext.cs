@@ -16,11 +16,12 @@ namespace FEventopia.DAO.DbContext
         public DbSet<Ticket> Ticket { get; set; }
         public DbSet<SponsorEvent> SponsorEvent { get; set; }
         public DbSet<EventStall> EventStall { get; set; }
-        public DbSet<Cost> Cost { get; set; }
         public DbSet<Event> Event { get; set; }
         public DbSet<EventDetail> EventDetail { get; set; }
         public DbSet<Location> Location { get; set; }
         public DbSet<EntityModels.Task> Task { get; set; }
+        public DbSet<Feedback> Feedback { get; set; }
+        public DbSet<SponsorManagement> sponsorManagement { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -33,7 +34,7 @@ namespace FEventopia.DAO.DbContext
                 entity.Property(x => x.Name).HasMaxLength(50).HasColumnType("nvarchar(50)");
                 entity.Property(x => x.Email).HasMaxLength(50).HasColumnType("nvarchar(50)").IsRequired(false);
                 entity.Property(x => x.PhoneNumber).HasMaxLength(10).HasColumnType("varchar(10)").IsRequired(false);
-                entity.Property(x => x.Avatar).HasColumnType("nvarchar(MAX)");
+                entity.Property(x => x.Avatar).HasColumnType("nvarchar(MAX)").IsRequired(false);
                 entity.Property(x => x.Role).HasColumnType("nvarchar(10)");
                 entity.Property(x => x.CreditAmount).HasColumnType("float");
             });
@@ -46,7 +47,7 @@ namespace FEventopia.DAO.DbContext
                 entity.Property(x => x.TransactionType).HasMaxLength(3).HasColumnType("varchar(3)");
                 entity.Property(x => x.Amount).HasColumnType("float");
                 entity.Property(x => x.Description).HasColumnType("nvarchar(MAX)");
-                entity.Property(x => x.TransactionDate).HasColumnType("date");
+                entity.Property(x => x.TransactionDate).HasColumnType("datetime");
                 entity.Property(x => x.Status).HasColumnType("bit");
 
                 entity.HasOne(t => t.Account).WithMany(a => a.Transaction)
@@ -103,8 +104,11 @@ namespace FEventopia.DAO.DbContext
 
                 entity.Property(x => x.EventName).HasMaxLength(50).HasColumnType("nvarchar(50)");
                 entity.Property(x => x.EventDescription).HasColumnType("nvarchar(MAX)");
-                entity.Property(x => x.Category).HasMaxLength(10).HasColumnType("nvarchar(10)");
+                entity.Property(x => x.Category).HasMaxLength(10).HasColumnType("nvarchar(20)");
                 entity.Property(x => x.Banner).HasColumnType("varchar(MAX)");
+                entity.Property(x => x.InitialCapital).HasColumnType("float");
+                entity.Property(x => x.SponsorCapital).HasColumnType("float");
+                entity.Property(x => x.TicketSaleIncome).HasColumnType("float");
                 entity.Property(x => x.Status).HasColumnType("nvarchar(20)");
 
                 entity.HasOne(e => e.Account).WithMany(a => a.Event)
@@ -116,8 +120,8 @@ namespace FEventopia.DAO.DbContext
                 entity.ToTable("EventDetail");
                 entity.HasKey(x => x.Id);
 
-                entity.Property(x => x.EventDate).HasColumnType("date");
-                entity.Property(x => x.EventTime).HasColumnType("time");
+                entity.Property(x => x.StartDate).HasColumnType("datetime");
+                entity.Property(x => x.EndDate).HasColumnType("datetime");
                 entity.Property(x => x.TicketForSaleInventory).HasColumnType("int");
                 entity.Property(x => x.TicketPrice).HasColumnType("float");
                 entity.Property(x => x.EstimateCost).HasColumnType("float");
@@ -135,23 +139,13 @@ namespace FEventopia.DAO.DbContext
 
                 entity.Property(x => x.Description).HasColumnType("nvarchar(MAX)");
                 entity.Property(x => x.Status).HasColumnType("nvarchar(20)");
+                entity.Property(x => x.PlanCost).HasColumnType("float");
+                entity.Property(x => x.ActualCost).HasColumnType("float");
 
                 entity.HasOne(t => t.Account).WithMany(a => a.Task)
                       .HasForeignKey(t => t.StaffID).OnDelete(DeleteBehavior.Restrict);
                 entity.HasOne(t => t.EventDetail).WithMany(e => e.Task)
                       .HasForeignKey(t => t.EventDetailID).OnDelete(DeleteBehavior.Restrict);
-            });
-
-            builder.Entity<Cost>(entity =>
-            {
-                entity.ToTable("Cost");
-                entity.HasKey(x => x.Id);
-
-                entity.Property(x => x.CostPurpose).HasColumnType("nvarchar(MAX)");
-                entity.Property(x => x.CostAmount).HasColumnType("float");
-
-                entity.HasOne(c => c.EventDetail).WithMany(e => e.Cost)
-                      .HasForeignKey(c => c.EventDetailID).OnDelete(DeleteBehavior.Restrict);
             });
 
             builder.Entity<Location>(entity =>
@@ -161,9 +155,40 @@ namespace FEventopia.DAO.DbContext
 
                 entity.Property(x => x.LocationName).HasMaxLength(50).HasColumnType("nvarchar(50)");
                 entity.Property(x => x.LocationDescription).HasColumnType("nvarchar(MAX)");
+                entity.Property(x => x.Capacity).HasColumnType("int");
 
                 entity.HasOne(l => l.EventDetail).WithOne(ed => ed.Location)
                       .HasForeignKey<EventDetail>(ed => ed.LocationID).OnDelete(DeleteBehavior.Restrict);
+            });
+
+            builder.Entity<Feedback>(entity =>
+            {
+                entity.ToTable("Feedback");
+                entity.HasKey(x => x.Id);
+
+                entity.Property(x => x.Rate).HasColumnType("int");
+                entity.Property(x => x.Description).HasColumnType("nvarchar(MAX)");
+
+                entity.HasOne(f => f.Account).WithMany(a => a.Feedback)
+                      .HasForeignKey(f => f.AccountId).OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(f => f.EventDetail).WithMany(ed => ed.Feedbacks)
+                      .HasForeignKey(f => f.EventDetailId).OnDelete(DeleteBehavior.Restrict);
+            });
+
+            builder.Entity<SponsorManagement>(entity =>
+            {
+                entity.ToTable("SponsorManagement");
+                entity.HasKey(p => new { p.EventId, p.SponsorId });
+
+                entity.Property(x => x.Amount).HasColumnType("float");
+                entity.Property(x => x.Status).HasColumnType("nvarchar(20)");
+                entity.Property(x => x.Rank).HasColumnType("nvarchar(20)");
+
+                entity.HasOne(sm => sm.Account).WithMany(a => a.SponsorManagement)
+                      .HasForeignKey(sm => sm.SponsorId).OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(sm => sm.Event).WithMany(e => e.SponsorManagement)
+                      .HasForeignKey(sm => sm.EventId).OnDelete(DeleteBehavior.Restrict);
             });
         }
 

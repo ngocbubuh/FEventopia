@@ -45,5 +45,7 @@ namespace FEventopia.DAO.EntityModels
         public virtual ICollection<EventStall>? EventStall { get; }
         public virtual ICollection<Event>? Event { get; }
         public virtual ICollection<Task>? Task { get; }
+        public virtual ICollection<Feedback>? Feedback { get; } 
+        public virtual ICollection<SponsorManagement>? SponsorManagement { get; }
     }
 }

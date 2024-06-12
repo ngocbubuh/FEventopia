@@ -18,10 +18,10 @@ namespace FEventopia.DAO.EntityModels
 
         [Required(ErrorMessage = "Price required!")]
         public required Guid TransactionID { get; set; }
-        public bool CheckInStatus { get; set; } = false;
+        public bool? CheckInStatus { get; set; } = false;
 
-        public required virtual Account Account { get; set; } //FK VisitorID
-        public required virtual Transaction Transaction { get; set; } //FK TransactionID
-        public virtual required EventDetail EventDetail { get; set; }
+        public virtual Account? Account { get; } //FK VisitorID
+        public virtual Transaction? Transaction { get; } //FK TransactionID
+        public virtual EventDetail? EventDetail { get; }
     }
 }
