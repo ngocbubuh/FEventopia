@@ -19,6 +19,9 @@ namespace FEventopia.Controllers
             services.AddScoped(typeof(IGenericDAO<>), typeof(GenericDAO<>));
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
+            services.AddScoped<ILocationService, LocationService>();
+            services.AddScoped<ILocationRepository, LocationRepository>();
+
             services.AddScoped<IMailService, MailService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserRepository, UserRepository>();
