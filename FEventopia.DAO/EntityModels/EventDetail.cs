@@ -15,14 +15,16 @@ namespace FEventopia.DAO.EntityModels
         public required DateTime StartDate { get; set; }
         public required DateTime EndDate { get; set; }
         public required int TicketForSaleInventory { get; set; }
-        public required double TicketPrice { get; set; }
+        public int? StallForSaleInventory { get; set; } = 0;
+        public double? TicketPrice { get; set; } = 0;
         public double? EstimateCost { get; set; }
 
-        public required virtual Location Location { get; set; }
-        public required virtual Event Event { get; set; }
+        public virtual Location? Location { get; }
+        public virtual Event? Event { get; }
         public virtual Ticket? Ticket { get; }
         public virtual EventStall? EventStall { get; }
         public virtual ICollection<Task>? Task { get; }
         public virtual ICollection<Feedback>? Feedbacks { get; }
+        public virtual ICollection<EventAssignee>? EventAssignee  { get;}
     }
 }
