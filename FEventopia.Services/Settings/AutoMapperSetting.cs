@@ -31,6 +31,7 @@ namespace FEventopia.Services.Settings
                                               .ForMember(dest => dest.PhoneNumberConfirmed, opt => opt.Ignore())
                                               .ForMember(dest => dest.Version, opt => opt.Ignore());
             CreateMap<Transaction, TransactionModel>().ReverseMap();
+            CreateMap<Location, LocationModel>().ReverseMap();
         }
     }
 }
