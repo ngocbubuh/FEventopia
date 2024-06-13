@@ -16,17 +16,17 @@ namespace FEventopia.DAO.DAO
 
         public async Task<Account> GetAccountByIdAsync(string id)
         {
-            return await _context.Account.FirstOrDefaultAsync(p => id.ToLower().Equals(p.Id.ToString().ToLower()));
+            return await _context.Account.FirstOrDefaultAsync(p => id.ToLower().Equals(p.Id.ToString().ToLower())) ?? null;
         }
 
         public async Task<Account> GetAccountByUsernameAsync(string username)
         {
-            return await _context.Account.FirstAsync(p => username.ToLower().Equals(p.UserName.ToLower()));
+            return await _context.Account.FirstAsync(p => username.ToLower().Equals(p.UserName.ToLower())) ?? null;
         }
 
         public async Task<List<Account>> GetAllAccountAsync()
         {
-            return await _context.Account.ToListAsync();
+            return await _context.Account.ToListAsync() ?? new List<Account>();
         }
 
         public async Task<bool> UpdateAccountAsync(Account account)

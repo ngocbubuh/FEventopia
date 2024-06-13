@@ -110,9 +110,6 @@ namespace FEventopia.DAO.DbContext
                 entity.Property(x => x.SponsorCapital).HasColumnType("float");
                 entity.Property(x => x.TicketSaleIncome).HasColumnType("float");
                 entity.Property(x => x.Status).HasColumnType("nvarchar(20)");
-
-                entity.HasOne(e => e.Account).WithMany(a => a.Event)
-                      .HasForeignKey(e => e.OperatorID).OnDelete(DeleteBehavior.Restrict);
             });
 
             builder.Entity<EventDetail>(entity =>
@@ -189,6 +186,19 @@ namespace FEventopia.DAO.DbContext
 
                 entity.HasOne(sm => sm.Event).WithMany(e => e.SponsorManagement)
                       .HasForeignKey(sm => sm.EventId).OnDelete(DeleteBehavior.Restrict);
+            });
+
+            builder.Entity<EventAssignee>(entity =>
+            {
+                entity.ToTable("EventAssignee");
+                entity.HasKey(p => new { p.AccountId, p.EventDetailId });
+
+                entity.Property(x => x.Role).HasColumnType("nvarchar(10)");
+
+                entity.HasOne(ea => ea.EventDetail).WithMany(ed => ed.EventAssignee)
+                      .HasForeignKey(ea => ea.EventDetailId).OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(ea => ea.Account).WithMany(a => a.EventAssignee)
+                      .HasForeignKey(ea => ea.AccountId).OnDelete(DeleteBehavior.Restrict);
             });
         }
 

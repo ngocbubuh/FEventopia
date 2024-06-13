@@ -1,14 +1,14 @@
-﻿using FEventopia.DAO.EntityModels.Base;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FEventopia.DAO.EntityModels
+namespace FEventopia.Services.BussinessModels
 {
-    public class Event : EntityBase
+    public class EventOperatorModel
     {
+        public string? Id { get; set; }
         public required string EventName { get; set; }
         public required string EventDescription { get; set; }
         public required string Category { get; set; }
@@ -17,8 +17,5 @@ namespace FEventopia.DAO.EntityModels
         public double? SponsorCapital { get; set; } = 0; //No manually update
         public double? TicketSaleIncome { get; set; } = 0; //No manually update
         public required string Status { get; set; }
-        public virtual SponsorEvent? SponsorEvent { get; }
-        public virtual ICollection<EventDetail>? EventDetail { get; }
-        public virtual ICollection<SponsorManagement>? SponsorManagement { get; }
     }
 }

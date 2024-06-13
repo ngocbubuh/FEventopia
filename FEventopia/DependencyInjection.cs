@@ -29,6 +29,8 @@ namespace FEventopia.Controllers
             services.AddScoped<IAuthenService, AuthenService>();
             services.AddScoped<ITransactionRepository, TransactionRepository>();
             services.AddScoped<ITransactionService, TransactionService>();
+            services.AddScoped<IEventRepository, EventRepository>();
+            services.AddScoped<IEventService, EventService>();
 
             services.AddScoped<IUserDAO, UserDAO>();
 
