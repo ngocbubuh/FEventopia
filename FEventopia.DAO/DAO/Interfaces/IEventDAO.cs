@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FEventopia.Repositories.Repositories.Interfaces
+namespace FEventopia.DAO.DAO.Interfaces
 {
-    public interface IEventRepository : IGenericRepository<Event>
+    public interface IEventDAO : IGenericDAO<Event>
     {
         public Task<Event?> GetEventWithDetailByIdAsync(string id);
     }

@@ -41,7 +41,7 @@ namespace FEventopia.DAO.DAO
             return await _dbSet.Where(p => p.DeleteFlag == false).ToListAsync() ?? new List<TEntity>();
         }
 
-        public async Task<TEntity>? GetByIdAsync(string id)
+        public async Task<TEntity?> GetByIdAsync(string id)
         {
             return await _dbSet.FirstOrDefaultAsync(p => id.ToLower().Equals(p.Id.ToString().ToLower()) && p.DeleteFlag == false) ?? null;
         }

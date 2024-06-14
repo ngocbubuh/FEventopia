@@ -12,6 +12,6 @@ namespace FEventopia.DAO.EntityModels
         public required string LocationName { get; set; }
         public required string LocationDescription { get; set; }
         public required int Capacity { get; set; }
-        public virtual EventDetail? EventDetail { get; }
+        public virtual ICollection<EventDetail>? EventDetail { get; }
     }
 }

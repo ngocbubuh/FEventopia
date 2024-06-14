@@ -32,13 +32,18 @@ namespace FEventopia.Services.Services
 
         public async Task<bool> DeleteLocation(string id)
         {
+            //If location is assign with EventDetail, cannot delete
             var location = await _locationRepository.GetByIdAsync(id);
             return await _locationRepository.DeleteAsync(location);
         }
 
         public async Task<bool> UpdateLocation(string id, LocationProcessModel model)
         {
-            var location = await _locationRepository.GetByNameAsync(model.LocationName);
+            var location = await _locationRepository.GetByIdAsync(id);
+            if (location == null)
+            {
+                return false;
+            }
             var result = _mapper.Map(model, location);
             return await _locationRepository.UpdateAsync(result);
         }

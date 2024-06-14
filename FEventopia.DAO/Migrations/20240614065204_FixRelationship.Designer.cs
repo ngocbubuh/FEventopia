@@ -4,6 +4,7 @@ using FEventopia.DAO.DbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FEventopia.DAO.Migrations
 {
     [DbContext(typeof(FEventopiaDbContext))]
-    partial class FEventopiaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240614065204_FixRelationship")]
+    partial class FixRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -433,7 +436,7 @@ namespace FEventopia.DAO.Migrations
                     b.Property<string>("SponsorId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<double>("ActualAmount")
+                    b.Property<double>("Amount")
                         .HasColumnType("float");
 
                     b.Property<DateTime?>("CreatedDate")
@@ -444,9 +447,6 @@ namespace FEventopia.DAO.Migrations
 
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<double>("PledgeAmount")
-                        .HasColumnType("float");
 
                     b.Property<string>("Rank")
                         .IsRequired()

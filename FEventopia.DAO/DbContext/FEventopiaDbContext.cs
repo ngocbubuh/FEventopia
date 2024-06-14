@@ -117,6 +117,8 @@ namespace FEventopia.DAO.DbContext
                 entity.ToTable("EventDetail");
                 entity.HasKey(x => x.Id);
 
+                entity.HasIndex(x => x.LocationID).IsUnique(false);
+                entity.HasIndex(x => x.EventID).IsUnique(false);
                 entity.Property(x => x.StartDate).HasColumnType("datetime");
                 entity.Property(x => x.EndDate).HasColumnType("datetime");
                 entity.Property(x => x.TicketForSaleInventory).HasColumnType("int");
@@ -125,8 +127,8 @@ namespace FEventopia.DAO.DbContext
 
                 entity.HasOne(ed => ed.Event).WithMany(e => e.EventDetail)
                       .HasForeignKey(ed => ed.EventID).OnDelete(DeleteBehavior.Restrict);
-                entity.HasOne(ed => ed.Location).WithOne(l => l.EventDetail)
-                      .HasForeignKey<EventDetail>(ed => ed.LocationID).OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(ed => ed.Location).WithMany(l => l.EventDetail)
+                      .HasForeignKey(ed => ed.LocationID).OnDelete(DeleteBehavior.Restrict);
             });
 
             builder.Entity<EntityModels.Task>(entity =>
@@ -153,9 +155,6 @@ namespace FEventopia.DAO.DbContext
                 entity.Property(x => x.LocationName).HasMaxLength(50).HasColumnType("nvarchar(50)");
                 entity.Property(x => x.LocationDescription).HasColumnType("nvarchar(MAX)");
                 entity.Property(x => x.Capacity).HasColumnType("int");
-
-                entity.HasOne(l => l.EventDetail).WithOne(ed => ed.Location)
-                      .HasForeignKey<EventDetail>(ed => ed.LocationID).OnDelete(DeleteBehavior.Restrict);
             });
 
             builder.Entity<Feedback>(entity =>
@@ -177,7 +176,8 @@ namespace FEventopia.DAO.DbContext
                 entity.ToTable("SponsorManagement");
                 entity.HasKey(p => new { p.EventId, p.SponsorId });
 
-                entity.Property(x => x.Amount).HasColumnType("float");
+                entity.Property(x => x.PledgeAmount).HasColumnType("float");
+                entity.Property(x => x.ActualAmount).HasColumnType("float");
                 entity.Property(x => x.Status).HasColumnType("nvarchar(20)");
                 entity.Property(x => x.Rank).HasColumnType("nvarchar(20)");
 

@@ -11,20 +11,21 @@ namespace FEventopia.DAO.EntityModels
     {
         public required Guid EventId { get; set; }
         public required string SponsorId { get; set; }
-        public double Amount { get; private set; }
+        public double PledgeAmount { get; set; }
+        public double ActualAmount { get; set; }
         public string Rank { get; private set; }
         public required string Status { get; set; }
 
         public virtual Account? Account { get; }
         public virtual Event? Event { get; }
 
-        public SponsorManagement(Guid eventId, string sponsorId, double amount, string status = "")
+        public SponsorManagement(Guid eventId, string sponsorId, double pledgeAmount, string status = "")
         {
             EventId = eventId;
             SponsorId = sponsorId;
-            Amount = amount;
+            PledgeAmount = pledgeAmount;
             Status = status;
-            Rank = SetRank(amount); // Call set_rank during initialization
+            Rank = SetRank(pledgeAmount); // Call set_rank during initialization
         }
 
         private string SetRank(double amount)
@@ -49,8 +50,8 @@ namespace FEventopia.DAO.EntityModels
 
         public void SetAmount(double newAmount)
         {
-            Amount = newAmount;
-            Rank = SetRank(Amount);
+            PledgeAmount = newAmount;
+            Rank = SetRank(PledgeAmount);
         }
     }
 }
