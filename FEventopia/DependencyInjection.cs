@@ -7,6 +7,7 @@ using FEventopia.Services.Services;
 using System.Diagnostics;
 using FEventopia.DAO.DAO.Interfaces;
 using FEventopia.DAO.DAO;
+using FEventopia.Repositories.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace FEventopia.Controllers
@@ -31,8 +32,12 @@ namespace FEventopia.Controllers
             services.AddScoped<ITransactionService, TransactionService>();
             services.AddScoped<IEventRepository, EventRepository>();
             services.AddScoped<IEventService, EventService>();
+            services.AddScoped<IEventDetailRepository, EventDetailRepository>();
+            services.AddScoped<IEventDetailService, EventDetailService>();
 
             services.AddScoped<IUserDAO, UserDAO>();
+            services.AddScoped<IEventDAO, EventDAO>();
+            services.AddScoped<IEventDetailDAO, EventDetailDAO>();
 
             //Add Exception Handler
             services.AddExceptionHandler<GlobalExceptionHandler>();

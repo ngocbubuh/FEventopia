@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.Formats.Asn1;
 using System.Net.WebSockets;
 
 namespace FEventopia.Controllers.Controllers
@@ -92,7 +93,11 @@ namespace FEventopia.Controllers.Controllers
                 {
                     model.Category = category.ToString();
                     var result = await _eventService.UpdateEventAsync(id, model);
-                    return Ok(result);
+                    if (result != null)
+                    {
+                        return Ok(result);
+                    }
+                    return BadRequest();
                 } else
                 {
                     return ValidationProblem(ModelState);
@@ -124,6 +129,36 @@ namespace FEventopia.Controllers.Controllers
                     {
                         Status = result,
                         Message = "Move to next phase failed!"
+                    };
+                    return BadRequest(response);
+                }
+            } catch
+            {
+                throw;
+            }
+        }
+
+        [HttpDelete("DeleteEvent")]
+        [Authorize(Roles = "ADMIN, EVENTOPERATOR")]
+        public async Task<IActionResult> DeleteEventAsync(string id)
+        {
+            try
+            {
+                var result = await _eventService.DeleteEventAsync(id);
+                if (result)
+                {
+                    var response = new ResponseModel
+                    {
+                        Status = result,
+                        Message = "Delete successfully!"
+                    };
+                    return Ok(response);
+                } else
+                {
+                    var response = new ResponseModel
+                    {
+                        Status = result,
+                        Message = "Delete failed!"
                     };
                     return BadRequest(response);
                 }

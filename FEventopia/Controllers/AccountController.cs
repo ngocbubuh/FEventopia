@@ -427,7 +427,7 @@ namespace FEventopia.Controllers.Controllers
                                 Status = false,
                                 Message = errorMessage
                             };
-                            return BadRequest(response);
+                            return Unauthorized(response);
                         }
                         else
                         {

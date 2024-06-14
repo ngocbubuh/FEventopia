@@ -11,8 +11,15 @@ namespace FEventopia.Repositories.Repositories
 {
     public class EventRepository : GenericRepository<Event>, IEventRepository
     {
-        public EventRepository(IGenericDAO<Event> genericDAO) : base(genericDAO)
+        private readonly IEventDAO _eventDAO;
+        public EventRepository(IGenericDAO<Event> genericDAO, IEventDAO eventDAO) : base(genericDAO)
         {
+            _eventDAO = eventDAO;
+        }
+
+        public async Task<Event?> GetEventWithDetailByIdAsync(string id)
+        {
+            return await _eventDAO.GetEventWithDetailByIdAsync(id);
         }
     }
 }

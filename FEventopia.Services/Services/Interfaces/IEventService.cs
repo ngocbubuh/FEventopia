@@ -17,5 +17,6 @@ namespace FEventopia.Services.Services.Interfaces
         public Task<bool> CancelEventAsync(string id);
         public Task<EventOperatorModel> GetEventByIdOperatorAsync(string id);
         public Task<bool> UpdateEventNextPhaseAsync(string id);
+        public Task<bool> DeleteEventAsync(string id);
     }
 }
