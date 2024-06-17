@@ -4,6 +4,7 @@ using FEventopia.Services.Settings;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Security.Claims;
 
 namespace FEventopia.Controllers.Controllers
@@ -62,6 +63,16 @@ namespace FEventopia.Controllers.Controllers
             try
             {
                 var result = await _transactionService.GetAllTransactionsAsync(pageParaModel);
+                var metadata = new
+                {
+                    result.TotalCount,
+                    result.PageSize,
+                    result.CurrentPage,
+                    result.TotalPages,
+                    result.HasNext,
+                    result.HasPrevious
+                };
+                Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
                 return Ok(result);
             } catch
             {
@@ -77,6 +88,16 @@ namespace FEventopia.Controllers.Controllers
             {
                 var username = _authenService.GetCurrentLogin;
                 var result = await _transactionService.GetAllTransactionByUsernameAsync(username, pageParaModel);
+                var metadata = new
+                {
+                    result.TotalCount,
+                    result.PageSize,
+                    result.CurrentPage,
+                    result.TotalPages,
+                    result.HasNext,
+                    result.HasPrevious
+                };
+                Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
                 return Ok(result);
             } catch
             {
@@ -91,6 +112,16 @@ namespace FEventopia.Controllers.Controllers
             try
             {
                 var result = await _transactionService.GetAllTransactionByUsernameAsync(username, model);
+                var metadata = new
+                {
+                    result.TotalCount,
+                    result.PageSize,
+                    result.CurrentPage,
+                    result.TotalPages,
+                    result.HasNext,
+                    result.HasPrevious
+                };
+                Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
                 return Ok(result);
             } catch
             {

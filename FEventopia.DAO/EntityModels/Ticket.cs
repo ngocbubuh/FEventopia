@@ -10,18 +10,13 @@ namespace FEventopia.DAO.EntityModels
 {
     public class Ticket : EntityBase
     {
-        [Required(ErrorMessage = "EventDetailID required!")]
-        public required Guid EventDetailID { get; set; }
-
-        [Required(ErrorMessage = "StudentID required!")]
+        public Guid EventDetailID { get; set; }
         public required string VisitorID { get; set; }
-
-        [Required(ErrorMessage = "Price required!")]
-        public required Guid TransactionID { get; set; }
+        public Guid TransactionID { get; set; }
         public bool? CheckInStatus { get; set; } = false;
 
-        public virtual Account? Account { get; } //FK VisitorID
-        public virtual Transaction? Transaction { get; } //FK TransactionID
-        public virtual EventDetail? EventDetail { get; }
+        public virtual Account Account { get; } //FK VisitorID
+        public virtual Transaction Transaction { get; } //FK TransactionID
+        public virtual EventDetail EventDetail { get; }
     }
 }

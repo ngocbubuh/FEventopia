@@ -5,6 +5,7 @@ using FEventopia.Services.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using System.Formats.Asn1;
 using System.Net.WebSockets;
@@ -28,6 +29,16 @@ namespace FEventopia.Controllers.Controllers
             try
             {
                 var result = await _eventService.GetAllEventAsync(pageParaModel);
+                var metadata = new
+                {
+                    result.TotalCount,
+                    result.PageSize,
+                    result.CurrentPage,
+                    result.TotalPages,
+                    result.HasNext,
+                    result.HasPrevious
+                };
+                Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
                 return Ok(result);
             } catch
             {

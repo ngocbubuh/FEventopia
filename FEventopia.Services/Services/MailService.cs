@@ -1,4 +1,5 @@
-﻿using FEventopia.Services.Services.Interfaces;
+﻿using AutoMapper.Internal;
+using FEventopia.Services.Services.Interfaces;
 using FEventopia.Services.Settings;
 using MailKit.Net.Smtp;
 using MailKit.Security;
@@ -10,24 +11,14 @@ namespace FEventopia.Services.Services
     public class MailService : IMailService
     {
         private readonly MailSetting _mailSettings;
+
         public MailService(IOptions<MailSetting> mailSettings)
         {
             _mailSettings = mailSettings.Value;
         }
-        public Task SendAdvertisementEmailAsync(MailRequestSetting request)
-        {
-            throw new NotImplementedException();
-        }
 
-        public async Task SendConfirmationEmailAsync(MailRequestSetting request)
+        public async Task SendEmailAsync(MailRequestSetting request)
         {
-            ////Html Mail
-            //string FilePath = Directory.GetCurrentDirectory() + "\\Templates\\WelcomeTemplate.html";
-            //StreamReader str = new StreamReader(FilePath);
-            //string MailText = str.ReadToEnd();
-            //str.Close();
-            //MailText = MailText.Replace("[ConfirmLink]", request.Body);
-
             //Setup email
             var email = new MimeMessage();
             email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
@@ -43,16 +34,6 @@ namespace FEventopia.Services.Services
             smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
             await smtp.SendAsync(email);
             smtp.Disconnect(true);
-        }
-
-        public Task SendFeedbackEmailAsync(MailRequestSetting request)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task SendTicketEmailAsync(MailRequestSetting request)
-        {
-            throw new NotImplementedException();
         }
     }
 }

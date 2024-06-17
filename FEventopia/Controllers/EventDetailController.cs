@@ -4,6 +4,7 @@ using FEventopia.Services.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace FEventopia.Controllers.Controllers
 {
@@ -24,6 +25,16 @@ namespace FEventopia.Controllers.Controllers
             try
             {
                 var result = await _eventDetailService.GetAllEventDetailByEventIdAsync(eventId, pageParaModel);
+                var metadata = new
+                {
+                    result.TotalCount,
+                    result.PageSize,
+                    result.CurrentPage,
+                    result.TotalPages,
+                    result.HasNext,
+                    result.HasPrevious
+                };
+                Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
                 return Ok(result);
             } catch
             {
