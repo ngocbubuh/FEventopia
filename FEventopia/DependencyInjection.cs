@@ -34,10 +34,13 @@ namespace FEventopia.Controllers
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<IEventDetailRepository, EventDetailRepository>();
             services.AddScoped<IEventDetailService, EventDetailService>();
+            services.AddScoped<ITicketRepository, TicketRepository>();
+            services.AddScoped<ITicketService, TicketService>();
 
             services.AddScoped<IUserDAO, UserDAO>();
             services.AddScoped<IEventDAO, EventDAO>();
             services.AddScoped<IEventDetailDAO, EventDetailDAO>();
+            services.AddScoped<ITicketDAO, TicketDAO>();
 
             //Add Exception Handler
             services.AddExceptionHandler<GlobalExceptionHandler>();

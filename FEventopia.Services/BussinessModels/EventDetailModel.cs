@@ -10,7 +10,6 @@ namespace FEventopia.Services.BussinessModels
     public class EventDetailModel
     {
         public string? Id { get; set; }
-        public Guid LocationId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public int TicketForSaleInventory { get; set; }
