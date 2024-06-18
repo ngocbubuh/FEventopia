@@ -23,22 +23,27 @@ namespace FEventopia.Services.Services
         }
 
 
-        public async Task<LocationModel> CreateLocation(LocationModel model)
+        public async Task<LocationModel> CreateLocation(LocationProcessModel model)
         {
             var location = _mapper.Map<Location>(model);
             var result = await _locationRepository.AddAsync(location);
             return _mapper.Map<LocationModel>(result);
         }
 
-        public async Task<bool> DeleteLocation(string name)
+        public async Task<bool> DeleteLocation(string id)
         {
-            var location = await _locationRepository.GetByNameAsync(name);
+            //If location is assign with EventDetail, cannot delete
+            var location = await _locationRepository.GetByIdAsync(id);
             return await _locationRepository.DeleteAsync(location);
         }
 
-        public async Task<bool> UpdateLocation(LocationModel model)
+        public async Task<bool> UpdateLocation(string id, LocationProcessModel model)
         {
-            var location = await _locationRepository.GetByNameAsync(model.LocationName);
+            var location = await _locationRepository.GetByIdAsync(id);
+            if (location == null)
+            {
+                return false;
+            }
             var result = _mapper.Map(model, location);
             return await _locationRepository.UpdateAsync(result);
         }
@@ -53,6 +58,12 @@ namespace FEventopia.Services.Services
         {
             var location = await _locationRepository.GetByNameAsync(name);
             return _mapper.Map<LocationModel>(location);
+        }
+
+        public async Task<LocationModel> GetLocationById(string id)
+        {
+            var result = await _locationRepository.GetByIdAsync(id);
+            return _mapper.Map<LocationModel>(result);
         }
     }
 }

@@ -13,6 +13,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using FEventopia.Controllers.ViewModels.RequestModels;
+using FEventopia.Services.Utils;
 
 namespace FEventopia.Controllers.Controllers
 {
@@ -232,10 +233,10 @@ namespace FEventopia.Controllers.Controllers
                             {
                                 ToEmail = model.Email,
                                 Subject = "FEventopia Confirmation Email",
-                                Body = confirmationURL
+                                Body = ConfirmationEmail.EmailContent(user.Name, confirmationURL)
                             };
 
-                            await mailService.SendConfirmationEmailAsync(messageRequest);
+                            await mailService.SendEmailAsync(messageRequest);
 
                             //Response
                             var response = new ResponseModel
@@ -302,6 +303,17 @@ namespace FEventopia.Controllers.Controllers
                         //Add role
                         if (result.Succeeded)
                         {
+                            if (role == Role.VISITOR)
+                            {
+                                if (!await roleManager.RoleExistsAsync(Role.VISITOR.ToString()))
+                                {
+                                    await roleManager.CreateAsync(new IdentityRole(Role.VISITOR.ToString()));
+                                }
+                                if (await roleManager.RoleExistsAsync(Role.VISITOR.ToString()))
+                                {
+                                    await accountManager.AddToRoleAsync(user, Role.VISITOR.ToString());
+                                }
+                            }
                             if (role == Role.SPONSOR)
                             {
                                 if (!await roleManager.RoleExistsAsync(Role.SPONSOR.ToString()))
@@ -427,7 +439,7 @@ namespace FEventopia.Controllers.Controllers
                                 Status = false,
                                 Message = errorMessage
                             };
-                            return BadRequest(response);
+                            return Unauthorized(response);
                         }
                         else
                         {
@@ -485,10 +497,10 @@ namespace FEventopia.Controllers.Controllers
                     {
                         ToEmail = user.Email,
                         Subject = "FEventopia Confirmation Email",
-                        Body = confirmationURL
+                        Body = ConfirmationEmail.EmailContent(user.Name, confirmationURL)
                     };
 
-                    await mailService.SendConfirmationEmailAsync(messageRequest);
+                    await mailService.SendEmailAsync(messageRequest);
                     var response = new ResponseModel
                     {
                         Status = true,

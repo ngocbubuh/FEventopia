@@ -79,7 +79,7 @@ else
     connection = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION_STRING");
 }
 
-builder.Services.AddDbContext<FEventopiaDbContext>(options => options.UseSqlServer(connection));
+builder.Services.AddDbContext<FEventopiaDbContext>(options => { options.UseSqlServer(connection); options.EnableSensitiveDataLogging(); });
 
 // Add Authentication
 builder.Services.AddIdentity<Account, IdentityRole>()

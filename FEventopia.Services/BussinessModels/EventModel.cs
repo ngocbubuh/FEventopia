@@ -13,5 +13,7 @@ namespace FEventopia.Services.BussinessModels
         public required string EventDescription { get; set; }
         public required string Category { get; set; }
         public string? Banner { get; set; }
+
+        public ICollection<EventDetailModel>? EventDetail { get; set; }
     }
 }

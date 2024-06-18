@@ -197,6 +197,8 @@ namespace FEventopia.DAO.Migrations
 
                     b.HasKey("AccountId", "EventDetailId");
 
+                    b.HasIndex("AccountId");
+
                     b.HasIndex("EventDetailId");
 
                     b.ToTable("EventAssignee", (string)null);
@@ -217,7 +219,7 @@ namespace FEventopia.DAO.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime");
 
-                    b.Property<double?>("EstimateCost")
+                    b.Property<double>("EstimateCost")
                         .HasColumnType("float");
 
                     b.Property<Guid>("EventID")
@@ -235,7 +237,7 @@ namespace FEventopia.DAO.Migrations
                     b.Property<int>("TicketForSaleInventory")
                         .HasColumnType("int");
 
-                    b.Property<double?>("TicketPrice")
+                    b.Property<double>("TicketPrice")
                         .HasColumnType("float");
 
                     b.Property<DateTime?>("UpdatedDate")
@@ -250,8 +252,7 @@ namespace FEventopia.DAO.Migrations
 
                     b.HasIndex("EventID");
 
-                    b.HasIndex("LocationID")
-                        .IsUnique();
+                    b.HasIndex("LocationID");
 
                     b.ToTable("EventDetail", (string)null);
                 });
@@ -293,13 +294,11 @@ namespace FEventopia.DAO.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EventDetailID")
-                        .IsUnique();
+                    b.HasIndex("EventDetailID");
 
                     b.HasIndex("SponsorID");
 
-                    b.HasIndex("TransactionID")
-                        .IsUnique();
+                    b.HasIndex("TransactionID");
 
                     b.ToTable("EventStall", (string)null);
                 });
@@ -415,13 +414,11 @@ namespace FEventopia.DAO.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EventID")
-                        .IsUnique();
+                    b.HasIndex("EventID");
 
                     b.HasIndex("SponsorID");
 
-                    b.HasIndex("TransactionID")
-                        .IsUnique();
+                    b.HasIndex("TransactionID");
 
                     b.ToTable("SponsorEvent", (string)null);
                 });
@@ -434,7 +431,7 @@ namespace FEventopia.DAO.Migrations
                     b.Property<string>("SponsorId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<double>("Amount")
+                    b.Property<double>("ActualAmount")
                         .HasColumnType("float");
 
                     b.Property<DateTime?>("CreatedDate")
@@ -445,6 +442,9 @@ namespace FEventopia.DAO.Migrations
 
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("PledgeAmount")
+                        .HasColumnType("float");
 
                     b.Property<string>("Rank")
                         .IsRequired()
@@ -463,6 +463,8 @@ namespace FEventopia.DAO.Migrations
                         .HasColumnType("rowversion");
 
                     b.HasKey("EventId", "SponsorId");
+
+                    b.HasIndex("EventId");
 
                     b.HasIndex("SponsorId");
 
@@ -554,11 +556,9 @@ namespace FEventopia.DAO.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EventDetailID")
-                        .IsUnique();
+                    b.HasIndex("EventDetailID");
 
-                    b.HasIndex("TransactionID")
-                        .IsUnique();
+                    b.HasIndex("TransactionID");
 
                     b.HasIndex("VisitorID");
 
@@ -775,8 +775,8 @@ namespace FEventopia.DAO.Migrations
                         .IsRequired();
 
                     b.HasOne("FEventopia.DAO.EntityModels.Location", "Location")
-                        .WithOne("EventDetail")
-                        .HasForeignKey("FEventopia.DAO.EntityModels.EventDetail", "LocationID")
+                        .WithMany("EventDetail")
+                        .HasForeignKey("LocationID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -788,8 +788,8 @@ namespace FEventopia.DAO.Migrations
             modelBuilder.Entity("FEventopia.DAO.EntityModels.EventStall", b =>
                 {
                     b.HasOne("FEventopia.DAO.EntityModels.EventDetail", "EventDetail")
-                        .WithOne("EventStall")
-                        .HasForeignKey("FEventopia.DAO.EntityModels.EventStall", "EventDetailID")
+                        .WithMany("EventStall")
+                        .HasForeignKey("EventDetailID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -899,8 +899,8 @@ namespace FEventopia.DAO.Migrations
             modelBuilder.Entity("FEventopia.DAO.EntityModels.Ticket", b =>
                 {
                     b.HasOne("FEventopia.DAO.EntityModels.EventDetail", "EventDetail")
-                        .WithOne("Ticket")
-                        .HasForeignKey("FEventopia.DAO.EntityModels.Ticket", "EventDetailID")
+                        .WithMany("Ticket")
+                        .HasForeignKey("EventDetailID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

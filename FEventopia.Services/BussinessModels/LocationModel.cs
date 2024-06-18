@@ -9,6 +9,7 @@ namespace FEventopia.Services.BussinessModels
 {
     public class LocationModel
     {
+        public string? Id { get; set; }
         [StringLength(50, MinimumLength = 1, ErrorMessage = "Location name must between 1-50 characters!")]
         public required string LocationName { get; set; }
         public required string LocationDescription { get; set; }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FEventopia.DAO.EntityModels;
 using FEventopia.Services.BussinessModels;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace FEventopia.Services.Settings
 {
@@ -32,9 +33,75 @@ namespace FEventopia.Services.Settings
                                               .ForMember(dest => dest.Version, opt => opt.Ignore());
             CreateMap<Transaction, TransactionModel>().ReverseMap();
             CreateMap<Location, LocationModel>().ReverseMap();
-            CreateMap<Event, EventModel>().ReverseMap();
-            CreateMap<Event, EventOperatorModel>().ReverseMap();
+            CreateMap<Location, LocationProcessModel>().ReverseMap();
+
+            CreateMap<Event, EventModel>().ForMember(dest => dest.EventDetail, opt => opt.MapFrom(src => src.EventDetail.Select(ed => new EventDetailModel
+            {
+                StartDate = ed.StartDate,
+                EndDate = ed.EndDate,
+                TicketForSaleInventory = ed.TicketForSaleInventory,
+                StallForSaleInventory = ed.StallForSaleInventory,
+                TicketPrice = ed.TicketPrice
+            })));
+
+            CreateMap<Event, EventOperatorModel>().ForMember(dest => dest.EventDetail, opt => opt.MapFrom(src => src.EventDetail.Select(ed => new EventDetailOperatorModel
+            {
+                StartDate = ed.StartDate,
+                EndDate = ed.EndDate,
+                TicketForSaleInventory = ed.TicketForSaleInventory,
+                StallForSaleInventory = ed.StallForSaleInventory,
+                TicketPrice = ed.TicketPrice,
+                EstimateCost = ed.EstimateCost
+            })));
+
+            CreateMap<Event, EventOperatorModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.ToString())) // Convert Event.Id to string
+                .ForMember(dest => dest.EventName, opt => opt.MapFrom(src => src.EventName))
+                .ForMember(dest => dest.EventDescription, opt => opt.MapFrom(src => src.EventDescription))
+                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category))
+                .ForMember(dest => dest.Banner, opt => opt.MapFrom(src => src.Banner))
+                .ForMember(dest => dest.InitialCapital, opt => opt.MapFrom(src => src.InitialCapital))
+                .ForMember(dest => dest.SponsorCapital, opt => opt.MapFrom(src => src.SponsorCapital))
+                .ForMember(dest => dest.TicketSaleIncome, opt => opt.MapFrom(src => src.TicketSaleIncome))
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
+                .ForMember(dest => dest.EventDetail, opt => opt.MapFrom(src => src.EventDetail.Where(ed => !ed.DeleteFlag)));
+
+            CreateMap<EventDetail, EventDetailOperatorModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.ToString())) // Convert EventDetail.Id to string
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate))
+                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate))
+                .ForMember(dest => dest.TicketForSaleInventory, opt => opt.MapFrom(src => src.TicketForSaleInventory))
+                .ForMember(dest => dest.StallForSaleInventory, opt => opt.MapFrom(src => src.StallForSaleInventory))
+                .ForMember(dest => dest.TicketPrice, opt => opt.MapFrom(src => src.TicketPrice))
+                .ForMember(dest => dest.EstimateCost, opt => opt.MapFrom(src => src.EstimateCost))
+                .ForMember(dest => dest.Location, opt => opt.UseDestinationValue());
+
+            CreateMap<Event, EventModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.ToString())) // Convert Event.Id to string
+                .ForMember(dest => dest.EventName, opt => opt.MapFrom(src => src.EventName))
+                .ForMember(dest => dest.EventDescription, opt => opt.MapFrom(src => src.EventDescription))
+                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category))
+                .ForMember(dest => dest.Banner, opt => opt.MapFrom(src => src.Banner))
+                .ForMember(dest => dest.EventDetail, opt => opt.MapFrom(src => src.EventDetail.Where(ed => !ed.DeleteFlag)));
+
+            CreateMap<EventDetail, EventDetailModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.ToString())) // Convert EventDetail.Id to string
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate))
+                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate))
+                .ForMember(dest => dest.TicketForSaleInventory, opt => opt.MapFrom(src => src.TicketForSaleInventory))
+                .ForMember(dest => dest.StallForSaleInventory, opt => opt.MapFrom(src => src.StallForSaleInventory))
+                .ForMember(dest => dest.TicketPrice, opt => opt.MapFrom(src => src.TicketPrice))
+                .ForMember(dest => dest.Location, opt => opt.UseDestinationValue());
+
             CreateMap<Event, EventProcessModel>().ReverseMap();
+            CreateMap<EventDetail, EventDetailModel>().ReverseMap();
+            CreateMap<EventDetail, EventDetailOperatorModel>().ReverseMap();
+            CreateMap<EventDetail, EventDetailProcessModel>().ReverseMap();
+            CreateMap<Event, EventTicketModel>().ReverseMap();
+
+            CreateMap<Ticket, TicketModel>().
+                ForMember(dest => dest.Event, opt => opt.MapFrom(src => src.EventDetail.Event));
+
         }
     }
 }

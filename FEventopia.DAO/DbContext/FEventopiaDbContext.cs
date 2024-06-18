@@ -59,14 +59,18 @@ namespace FEventopia.DAO.DbContext
                 entity.ToTable("Ticket");
                 entity.HasKey(x => x.Id);
 
+                entity.HasIndex(x => x.VisitorID).IsUnique(false);
+                entity.HasIndex(x => x.TransactionID).IsUnique(false);
+                entity.HasIndex(x => x.EventDetailID).IsUnique(false);
+
                 entity.Property(x => x.CheckInStatus).HasColumnType("bit");
 
                 entity.HasOne(t => t.Account).WithMany(a => a.Ticket)
                       .HasForeignKey(t => t.VisitorID).OnDelete(DeleteBehavior.Restrict);
                 entity.HasOne(t => t.Transaction).WithOne(t => t.Ticket)
                       .HasForeignKey<Ticket>(t => t.TransactionID).OnDelete(DeleteBehavior.Restrict);
-                entity.HasOne(t => t.EventDetail).WithOne(ed => ed.Ticket)
-                      .HasForeignKey<Ticket>(t => t.EventDetailID).OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(t => t.EventDetail).WithMany(ed => ed.Ticket)
+                      .HasForeignKey(t => t.EventDetailID).OnDelete(DeleteBehavior.Restrict);
             });
 
             builder.Entity<EventStall>(entity =>
@@ -74,20 +78,28 @@ namespace FEventopia.DAO.DbContext
                 entity.ToTable("EventStall");
                 entity.HasKey(x => x.Id);
 
+                entity.HasIndex(x => x.SponsorID).IsUnique(false);
+                entity.HasIndex(x => x.TransactionID).IsUnique(false);
+                entity.HasIndex(x => x.EventDetailID).IsUnique(false);
+
                 entity.Property(es => es.StallNumber).HasMaxLength(10).HasColumnType("varchar(10)");
 
                 entity.HasOne(es => es.Account).WithMany(a => a.EventStall)
                       .HasForeignKey(es => es.SponsorID).OnDelete(DeleteBehavior.Restrict);
                 entity.HasOne(es => es.Transaction).WithOne(t => t.EventStall)
                       .HasForeignKey<EventStall>(es => es.TransactionID).OnDelete(DeleteBehavior.Restrict);
-                entity.HasOne(es => es.EventDetail).WithOne(ed => ed.EventStall)
-                      .HasForeignKey<EventStall>(es => es.EventDetailID).OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(es => es.EventDetail).WithMany(ed => ed.EventStall)
+                      .HasForeignKey(es => es.EventDetailID).OnDelete(DeleteBehavior.Restrict);
             });
 
             builder.Entity<SponsorEvent>(entity =>
             {
                 entity.ToTable("SponsorEvent");
                 entity.HasKey(x => x.Id);
+
+                entity.HasIndex(x => x.SponsorID).IsUnique(false);
+                entity.HasIndex(x => x.TransactionID).IsUnique(false);
+                entity.HasIndex(x => x.EventID).IsUnique(false);
 
                 entity.HasOne(se => se.Account).WithMany(a => a.SponsorEvents)
                       .HasForeignKey(se => se.SponsorID).OnDelete(DeleteBehavior.Restrict);
@@ -117,6 +129,9 @@ namespace FEventopia.DAO.DbContext
                 entity.ToTable("EventDetail");
                 entity.HasKey(x => x.Id);
 
+                entity.HasIndex(x => x.LocationID).IsUnique(false);
+                entity.HasIndex(x => x.EventID).IsUnique(false);
+
                 entity.Property(x => x.StartDate).HasColumnType("datetime");
                 entity.Property(x => x.EndDate).HasColumnType("datetime");
                 entity.Property(x => x.TicketForSaleInventory).HasColumnType("int");
@@ -125,14 +140,17 @@ namespace FEventopia.DAO.DbContext
 
                 entity.HasOne(ed => ed.Event).WithMany(e => e.EventDetail)
                       .HasForeignKey(ed => ed.EventID).OnDelete(DeleteBehavior.Restrict);
-                entity.HasOne(ed => ed.Location).WithOne(l => l.EventDetail)
-                      .HasForeignKey<EventDetail>(ed => ed.LocationID).OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(ed => ed.Location).WithMany(l => l.EventDetail)
+                      .HasForeignKey(ed => ed.LocationID).OnDelete(DeleteBehavior.Restrict);
             });
 
             builder.Entity<EntityModels.Task>(entity =>
             {
                 entity.ToTable("Task");
                 entity.HasKey(x => x.Id);
+
+                entity.HasIndex(x => x.StaffID).IsUnique(false);
+                entity.HasIndex(x => x.EventDetailID).IsUnique(false);
 
                 entity.Property(x => x.Description).HasColumnType("nvarchar(MAX)");
                 entity.Property(x => x.Status).HasColumnType("nvarchar(20)");
@@ -153,15 +171,15 @@ namespace FEventopia.DAO.DbContext
                 entity.Property(x => x.LocationName).HasMaxLength(50).HasColumnType("nvarchar(50)");
                 entity.Property(x => x.LocationDescription).HasColumnType("nvarchar(MAX)");
                 entity.Property(x => x.Capacity).HasColumnType("int");
-
-                entity.HasOne(l => l.EventDetail).WithOne(ed => ed.Location)
-                      .HasForeignKey<EventDetail>(ed => ed.LocationID).OnDelete(DeleteBehavior.Restrict);
             });
 
             builder.Entity<Feedback>(entity =>
             {
                 entity.ToTable("Feedback");
                 entity.HasKey(x => x.Id);
+
+                entity.HasIndex(x => x.AccountId).IsUnique(false);
+                entity.HasIndex(x => x.EventDetailId).IsUnique(false);
 
                 entity.Property(x => x.Rate).HasColumnType("int");
                 entity.Property(x => x.Description).HasColumnType("nvarchar(MAX)");
@@ -177,7 +195,11 @@ namespace FEventopia.DAO.DbContext
                 entity.ToTable("SponsorManagement");
                 entity.HasKey(p => new { p.EventId, p.SponsorId });
 
-                entity.Property(x => x.Amount).HasColumnType("float");
+                entity.HasIndex(p => p.EventId).IsUnique(false);
+                entity.HasIndex(p => p.SponsorId).IsUnique(false);
+
+                entity.Property(x => x.PledgeAmount).HasColumnType("float");
+                entity.Property(x => x.ActualAmount).HasColumnType("float");
                 entity.Property(x => x.Status).HasColumnType("nvarchar(20)");
                 entity.Property(x => x.Rank).HasColumnType("nvarchar(20)");
 
@@ -192,6 +214,9 @@ namespace FEventopia.DAO.DbContext
             {
                 entity.ToTable("EventAssignee");
                 entity.HasKey(p => new { p.AccountId, p.EventDetailId });
+
+                entity.HasIndex(p => p.AccountId).IsUnique(false);
+                entity.HasIndex(p => p.EventDetailId).IsUnique(false);
 
                 entity.Property(x => x.Role).HasColumnType("nvarchar(10)");
 

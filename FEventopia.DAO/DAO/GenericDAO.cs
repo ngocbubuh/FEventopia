@@ -38,12 +38,12 @@ namespace FEventopia.DAO.DAO
 
         public async Task<List<TEntity>> GetAllAsync()
         {
-            return await _dbSet.ToListAsync() ?? new List<TEntity>();
+            return await _dbSet.Where(p => p.DeleteFlag == false).ToListAsync() ?? new List<TEntity>();
         }
 
-        public async Task<TEntity>? GetByIdAsync(string id)
+        public async Task<TEntity?> GetByIdAsync(string id)
         {
-            return await _dbSet.FirstOrDefaultAsync(p => id.ToLower().Equals(p.Id.ToString().ToLower())) ?? null;
+            return await _dbSet.FirstOrDefaultAsync(p => id.ToLower().Equals(p.Id.ToString().ToLower()) && p.DeleteFlag == false) ?? null;
         }
 
         public async Task<bool> UpdateAsync(TEntity entity)

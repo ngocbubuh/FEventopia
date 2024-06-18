@@ -15,12 +15,14 @@ namespace FEventopia.Services.Services
     public class EventService : IEventService
     {
         private readonly IEventRepository _eventRepository;
+        private readonly ILocationRepository _locationRepository;
         private readonly IMapper _mapper;
 
-        public EventService(IEventRepository eventRepository, IMapper mapper)
+        public EventService(IEventRepository eventRepository, IMapper mapper, ILocationRepository locationRepository)
         {
             _eventRepository = eventRepository;
             _mapper = mapper;
+            _locationRepository = locationRepository;
         }
 
         public async Task<EventOperatorModel> AddEventAsync(EventProcessModel eventProcessModel)
@@ -36,6 +38,16 @@ namespace FEventopia.Services.Services
             throw new NotImplementedException();
         }
 
+        public async Task<bool> DeleteEventAsync(string id)
+        {
+            var result = await _eventRepository.GetByIdAsync(id);
+            if (result == null)
+            {
+                return false;
+            }
+            return await _eventRepository.DeleteAsync(result);
+        }
+
         public async Task<PageModel<EventModel>> GetAllEventAsync(PageParaModel pagePara)
         {
             var eventList = await _eventRepository.GetAllAsync();
@@ -47,27 +59,39 @@ namespace FEventopia.Services.Services
 
         public async Task<EventModel> GetEventByIdAsync(string id)
         {
-            var result = await _eventRepository.GetByIdAsync(id);
+            var result = await _eventRepository.GetEventWithDetailByIdAsync(id);
             return _mapper.Map<EventModel>(result);
         }
 
         public async Task<EventOperatorModel> GetEventByIdOperatorAsync(string id)
         {
-            var result = await _eventRepository.GetByIdAsync(id);
+            var result = await _eventRepository.GetEventWithDetailByIdAsync(id);
             return _mapper.Map<EventOperatorModel>(result);
         }
 
         public async Task<EventOperatorModel> UpdateEventAsync(string id, EventProcessModel eventProcessModel)
         {
             var eventCurrent = await _eventRepository.GetByIdAsync(id);
+            if (eventCurrent == null) 
+            {
+                return null;
+            }
             var eventUpdate = _mapper.Map(eventProcessModel, eventCurrent);
-            await _eventRepository.UpdateAsync(eventUpdate);
+            var result = await _eventRepository.UpdateAsync(eventUpdate);
+            if (!result)
+            {
+                return null;
+            }
             return _mapper.Map<EventOperatorModel>(eventUpdate);
         }
 
         public async Task<bool> UpdateEventNextPhaseAsync(string id)
         {
             var eventModel = await _eventRepository.GetByIdAsync(id);
+            if (eventModel == null)
+            {
+                return false;
+            }
             switch (eventModel.Status.ToString())
             {
                 case "INITIAL":
