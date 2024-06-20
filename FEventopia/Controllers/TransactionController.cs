@@ -46,10 +46,18 @@ namespace FEventopia.Controllers.Controllers
         {
             try
             {
+                var uri = HttpContext.Request.Host.ToString();
                 var transaction = await _transactionService.UpdateTransactionByVNPAYStatusAsync(model);
-                var urlParameter = transaction.ToUrlParameters();
-                //return Redirect("https://feventopia.vercel.app/payment?" + urlParameter)
-                return Ok(urlParameter);
+                var urlParameters = transaction.ToUrlParameters();
+                if (uri.Contains("localhost"))
+                {
+                    return Redirect("http://localhost:3000/transactioninfo?" + urlParameters);
+                }
+                else
+                {
+                    return Redirect("https://feventopia.vercel.app/transactioninfo?" + urlParameters);
+                }
+                //return Ok(urlParameter);
             } catch 
             {
                 throw;    

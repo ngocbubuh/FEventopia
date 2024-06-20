@@ -4,7 +4,7 @@ namespace FEventopia.Controllers.ViewModels.RequestModels
 {
     public class BuyTicketRequestModel
     {
-        public required string EventDetailId { get; set; }
+        public required Guid EventDetailId { get; set; }
 
         [Range(1, 3, ErrorMessage = "You can only request maximum of 3 tickets per event per transaction!")]
         public int Quantity { get; set; }

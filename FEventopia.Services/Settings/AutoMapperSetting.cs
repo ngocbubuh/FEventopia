@@ -101,7 +101,8 @@ namespace FEventopia.Services.Settings
 
             CreateMap<Ticket, TicketModel>().
                 ForMember(dest => dest.Event, opt => opt.MapFrom(src => src.EventDetail.Event));
-
+            CreateMap<SponsorEvent, SponsorEventModel>().ReverseMap();
+            CreateMap<SponsorManagement, SponsorManagementModel>().ReverseMap();
         }
     }
 }
