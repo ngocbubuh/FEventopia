@@ -17,6 +17,7 @@ namespace FEventopia.DAO.EntityModels
         public required int TicketForSaleInventory { get; set; }
         public int? StallForSaleInventory { get; set; } = 0;
         public double TicketPrice { get; set; } = 0;
+        public double StallPrice { get; set; } = 0;
         public double EstimateCost { get; set; }
 
         public virtual Location Location { get; set; }

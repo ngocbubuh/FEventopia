@@ -35,7 +35,7 @@ namespace FEventopia.DAO.DbContext
                 entity.Property(x => x.Email).HasMaxLength(50).HasColumnType("nvarchar(50)").IsRequired(false);
                 entity.Property(x => x.PhoneNumber).HasMaxLength(10).HasColumnType("varchar(10)").IsRequired(false);
                 entity.Property(x => x.Avatar).HasColumnType("nvarchar(MAX)").IsRequired(false);
-                entity.Property(x => x.Role).HasColumnType("nvarchar(10)");
+                entity.Property(x => x.Role).HasColumnType("nvarchar(20)");
                 entity.Property(x => x.CreditAmount).HasColumnType("float");
             });
 

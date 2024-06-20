@@ -52,7 +52,7 @@ namespace FEventopia.Controllers.Controllers
                         //Với mỗi số lượng mà loại vé đó đặt
                         for (var i = 1; i <= entity.Quantity; i++)
                         {
-                            var result = await _ticketService.AddTicketAsync(entity.EventDetailId, username);
+                            var result = await _ticketService.AddTicketAsync(entity.EventDetailId.ToString(), username);
                             if (result != null)
                             {
                                 //Tạo link checkin

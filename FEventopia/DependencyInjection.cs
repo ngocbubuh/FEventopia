@@ -36,11 +36,17 @@ namespace FEventopia.Controllers
             services.AddScoped<IEventDetailService, EventDetailService>();
             services.AddScoped<ITicketRepository, TicketRepository>();
             services.AddScoped<ITicketService, TicketService>();
+            services.AddScoped<ISponsorManagementRepository, SponsorManagementRepository>();
+            services.AddScoped<ISponsorManagementService, SponsorManagementService>();
+            services.AddScoped<ISponsorEventRepository, SponsorEventRepository>();
+            services.AddScoped<ISponsorEventService, SponsorEventService>();
 
             services.AddScoped<IUserDAO, UserDAO>();
             services.AddScoped<IEventDAO, EventDAO>();
             services.AddScoped<IEventDetailDAO, EventDetailDAO>();
             services.AddScoped<ITicketDAO, TicketDAO>();
+            services.AddScoped<ISponsorEventDAO, SponsorEventDAO>();
+            services.AddScoped<ISponsorManagementDAO, SponsorManagementDAO>();
 
             //Add Exception Handler
             services.AddExceptionHandler<GlobalExceptionHandler>();
