@@ -109,39 +109,31 @@ namespace FEventopia.Controllers.Controllers
 
         [HttpPut("UpdateTaskStatus")]
         [Authorize(Roles = "ADMIN,EVENTOPERATOR,CHECKINGSTAFF")]
-        public async Task<IActionResult> UpdateTaskStatus([Required] string id, TaskStatusModel model)
+        public async Task<IActionResult> UpdateTaskStatus([Required] string id,[FromQuery] TaskStatusModel model)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    //CHECK kiểu đúng lỏ luôn ba :)
-                    if(model.Status == "TODO" || model.Status == "INPROGRESS" || model.Status == "DONE")
+                    var result = await _taskService.UpdateTaskStatus(id, model);
+                    if (result)
                     {
-                        var result = await _taskService.UpdateTaskStatus(id, model);
-                        if (result)
+                        var response = new ResponseModel
                         {
-                            var response = new ResponseModel
-                            {
-                                Status = result,
-                                Message = "Update Task Status Successfully!"
-                            };
-                            return Ok(response);
-                        }
-                        else
-                        {
-                            var response = new ResponseModel
-                            {
-                                Status = result,
-                                Message = "Update Task Status Failed!"
-                            };
-                            return BadRequest(response);
-                        }
-                    } else
-                    {
-                        return BadRequest(Response);
+                            Status = result,
+                            Message = "Update Task Status Successfully!"
+                        };
+                        return Ok(response);
                     }
-                    
+                    else
+                    {
+                        var response = new ResponseModel
+                        {
+                            Status = result,
+                            Message = "Update Task Status Failed!"
+                        };
+                        return BadRequest(response);
+                    }
                 }
                 else
                 {
