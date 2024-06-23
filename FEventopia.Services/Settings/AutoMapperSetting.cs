@@ -92,7 +92,7 @@ namespace FEventopia.Services.Settings
                 .ForMember(dest => dest.StallForSaleInventory, opt => opt.MapFrom(src => src.StallForSaleInventory))
                 .ForMember(dest => dest.TicketPrice, opt => opt.MapFrom(src => src.TicketPrice))
                 .ForMember(dest => dest.Location, opt => opt.UseDestinationValue());
-
+                
             CreateMap<Event, EventProcessModel>().ReverseMap();
             CreateMap<EventDetail, EventDetailModel>().ReverseMap();
             CreateMap<EventDetail, EventDetailOperatorModel>().ReverseMap();
@@ -101,6 +101,15 @@ namespace FEventopia.Services.Settings
 
             CreateMap<Ticket, TicketModel>().
                 ForMember(dest => dest.Event, opt => opt.MapFrom(src => src.EventDetail.Event));
+
+            CreateMap<Feedback, FeedBackModel>().ReverseMap();
+
+            CreateMap<DAO.EntityModels.Task,TaskModel>().ReverseMap();
+            CreateMap<DAO.EntityModels.Task,TaskStatusModel>().ReverseMap();
+
+            CreateMap<EventStall,EventStallModel>().ReverseMap();
+
+            CreateMap<EventAssignee,EventAssigneeModel>().ReverseMap();
 
         }
     }

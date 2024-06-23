@@ -23,6 +23,18 @@ namespace FEventopia.Controllers
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<ILocationRepository, LocationRepository>();
 
+            services.AddScoped<IFeedBackService, FeedBackService>();
+            services.AddScoped<IFeedBackRepository, FeedBackRepository>();
+
+            services.AddScoped<ITaskService, TaskService>();
+            services.AddScoped<ITaskRepository, TaskRepository>();
+
+            services.AddScoped<IEventStallService, EventStallService>();
+            services.AddScoped<IEventStallRepository, EventStallRepository>();
+
+            services.AddScoped<IEventAssigneeRepository, EventAssigneeRepository>();
+            services.AddScoped<IEventAssigneeService, EventAssigneeService>();
+
             services.AddScoped<IMailService, MailService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserRepository, UserRepository>();
