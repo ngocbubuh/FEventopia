@@ -45,6 +45,22 @@ namespace FEventopia.Controllers.Controllers
 
                     //Lấy thông tin user
                     var account = await _userService.GetAccountByUsernameAsync(username);
+
+                    //Nếu tiền trong tài khoản ít hơn tổng giá vé => Hủy
+                    double totalPrice = 0;
+                    foreach (var item in requestModels)
+                    {
+                        totalPrice += item.TicketPrice;
+                    }
+                    if (account.CreditAmount < totalPrice)
+                    {
+                        var response = new ResponseModel
+                        {
+                            Status = false,
+                            Message = "Not enough credit!"
+                        };
+                        return BadRequest(response);
+                    }
                     
                     //Với mỗi loại vé của các sự kiện khác nhau
                     foreach (var entity in requestModels)
@@ -64,7 +80,7 @@ namespace FEventopia.Controllers.Controllers
                                 {
                                     ToEmail = entity.EmailReceive,
                                     Subject = "FEventopia Ticket Confirmation",
-                                    Body = TicketEmail.EmailContent(result, account, url)
+                                    Body = TicketEmail.EmailContent(result, account, result.Id)
                                 };
                                 await _mailService.SendEmailAsync(messageRequest);
                             } else 
@@ -103,6 +119,7 @@ namespace FEventopia.Controllers.Controllers
         {
             try
             {
+                //Thêm quét sự kiện hiện tại để chỉ checkin thành công đúng vé của sự kiện đó
                 var result = await _ticketService.CheckInAsync(ticketId);
                 if (result)
                 {

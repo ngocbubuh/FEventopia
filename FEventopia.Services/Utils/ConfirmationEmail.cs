@@ -25,7 +25,7 @@ namespace FEventopia.Services.Utils
                 <body style=""font-family: 'Roboto', sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;"">
                     <div style=""max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 0 50px #ff914d;"">
                         <div style=""text-align: center; border-bottom: 1px solid #dddddd; background-color: #ff914d; padding-bottom: 20px;"">
-                            <img src=""images/logo.svg"" alt=""Logo"" style=""max-width: 150px;"">
+                            <img src=""https://firebasestorage.googleapis.com/v0/b/feventopia-app.appspot.com/o/logo%2Flogo.svg?alt=media&token=6e50aaa8-2c91-4596-9b11-e407bb6694e3"" alt=""feventopia-logo"">
                         </div>
                         <div style=""padding: 20px; text-align: center;"">
                             <h2 style=""color: #333333;"">XÁC NHẬN EMAIL</h2>

@@ -218,7 +218,7 @@ namespace FEventopia.DAO.DbContext
                 entity.HasIndex(p => p.AccountId).IsUnique(false);
                 entity.HasIndex(p => p.EventDetailId).IsUnique(false);
 
-                entity.Property(x => x.Role).HasColumnType("nvarchar(10)");
+                entity.Property(x => x.Role).HasColumnType("nvarchar(20)");
 
                 entity.HasOne(ea => ea.EventDetail).WithMany(ed => ed.EventAssignee)
                       .HasForeignKey(ea => ea.EventDetailId).OnDelete(DeleteBehavior.Restrict);
@@ -229,6 +229,10 @@ namespace FEventopia.DAO.DbContext
 
         public override int SaveChanges()
         {
+            DateTime utcNow = DateTime.UtcNow;
+
+            TimeZoneInfo vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+
             var entries = ChangeTracker
                 .Entries()
                 .Where(e => e.Entity is EntityBase && (
@@ -237,11 +241,11 @@ namespace FEventopia.DAO.DbContext
 
             foreach (var entityEntry in entries)
             {
-                ((EntityBase)entityEntry.Entity).UpdatedDate = DateTime.Now;
+                ((EntityBase)entityEntry.Entity).UpdatedDate = TimeZoneInfo.ConvertTimeFromUtc(utcNow, vietnamTimeZone);
 
                 if (entityEntry.State == EntityState.Added)
                 {
-                    ((EntityBase)entityEntry.Entity).CreatedDate = DateTime.Now;
+                    ((EntityBase)entityEntry.Entity).CreatedDate = TimeZoneInfo.ConvertTimeFromUtc(utcNow, vietnamTimeZone);
                 }
             }
 
@@ -250,6 +254,10 @@ namespace FEventopia.DAO.DbContext
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
+            DateTime utcNow = DateTime.UtcNow;
+
+            TimeZoneInfo vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+
             var entries = ChangeTracker
                 .Entries()
                 .Where(e => e.Entity is EntityBase && (
@@ -258,11 +266,11 @@ namespace FEventopia.DAO.DbContext
 
             foreach (var entityEntry in entries)
             {
-                ((EntityBase)entityEntry.Entity).UpdatedDate = DateTime.Now;
+                ((EntityBase)entityEntry.Entity).UpdatedDate = TimeZoneInfo.ConvertTimeFromUtc(utcNow, vietnamTimeZone);
 
                 if (entityEntry.State == EntityState.Added)
                 {
-                    ((EntityBase)entityEntry.Entity).CreatedDate = DateTime.Now;
+                    ((EntityBase)entityEntry.Entity).CreatedDate = TimeZoneInfo.ConvertTimeFromUtc(utcNow, vietnamTimeZone);
                 }
             }
             return await base.SaveChangesAsync(cancellationToken);

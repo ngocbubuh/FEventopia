@@ -11,7 +11,9 @@ namespace FEventopia.Services.BussinessModels
     {
         [StringLength(50, MinimumLength = 1, ErrorMessage = "Location name must between 1-50 characters!")]
         public required string LocationName { get; set; }
+        [Required(AllowEmptyStrings = false)]
         public required string LocationDescription { get; set; }
+        [Range(0, int.MaxValue)]
         public required int Capacity { get; set; }
     }
 }

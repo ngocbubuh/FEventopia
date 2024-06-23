@@ -30,6 +30,7 @@ namespace FEventopia.Controllers.Controllers
         {
             try
             {
+                if (!(amount >= 10000)) { return BadRequest(); }
                 var username = _authenService.GetCurrentLogin;
                 var transaction = await _transactionService.AddTransactionByVNPAYAsync(amount, username);
                 var paymentURL = _vnPayService.CreatePaymentUrl(transaction, HttpContext);

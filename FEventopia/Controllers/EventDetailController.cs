@@ -75,8 +75,15 @@ namespace FEventopia.Controllers.Controllers
         {
             try
             {
-                var result = await _eventDetailService.AddEventDetailAsync(processModel);
-                return Ok(result);
+                if (processModel.IsValidDate())
+                {
+                    var result = await _eventDetailService.AddEventDetailAsync(processModel);
+                    return Ok(result);
+                } else
+                {
+                    var repsonse = new ResponseModel { Status = false, Message = "Invalid Event Duration!" };
+                    return BadRequest(repsonse);
+                }
             } catch
             {
                 throw;

@@ -14,7 +14,7 @@ namespace FEventopia.Services.BussinessModels
         public required string EventID { get; set; }
         public required string TransactionID { get; set; }
 
-        public Transaction? Transaction { get; }
-        public Event? Event { get; }
+        public TransactionModel? Transaction { get; set; }
+        public EventModel? Event { get; set; }
     }
 }
