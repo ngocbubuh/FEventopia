@@ -18,6 +18,13 @@ namespace FEventopia.Repositories.Repositories
             _eventDetailDAO = eventDetailDAO;
         }
 
+        public async Task<List<EventDetail>> GetAllEventDetailAtLocation(string locationId, DateTime startDate, DateTime endDate)
+        {
+            var result = await _eventDetailDAO.GetAllAsync();
+            return result.Where(ed => locationId.ToLower().Equals(ed.LocationID.ToString().ToLower())
+                                && (ed.StartDate.Date.Equals(startDate.Date) || ed.EndDate.Date.Equals(endDate.Date))).ToList();
+        }
+
         public async Task<List<EventDetail>> GetAllEventDetailWithLocationById(string id)
         {
             var result = await _eventDetailDAO.GetAllEventDetailWithLocation();

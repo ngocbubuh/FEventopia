@@ -9,5 +9,6 @@ namespace FEventopia.Repositories.Repositories.Interfaces
 {
     public interface ITransactionRepository : IGenericRepository<Transaction>
     {
+        public Task<List<Transaction>> GetAllByUserId(string userId);
     }
 }

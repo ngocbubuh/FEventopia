@@ -30,15 +30,15 @@ namespace FEventopia.DAO.EntityModels
 
         private string SetRank(double amount)
         {
-            if (amount >= 10000000)
+            if (amount >= 50000000)
             {
                 return "Platinum";
             }
-            else if (amount >= 5000000)
+            else if (amount >= 30000000)
             {
                 return "Gold";
             }
-            else if (amount >= 2000000)
+            else if (amount >= 15000000)
             {
                 return "Silver";
             }

@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FEventopia.Repositories.Repositories;
 using FEventopia.DAO.EntityModels;
+using FEventopia.Services.Utils;
 
 namespace FEventopia.Services.Services
 {
@@ -36,17 +37,17 @@ namespace FEventopia.Services.Services
         public async Task<SponsorEventModel> AddSponsorEventAsync(SponsorEventProcessModel sponsorEventProcessModel, string username)
         {
             //Lấy event, nếu event ko tồn tại => lỗi
-            var @event = await _eventRepository.GetByIdAsync(sponsorEventProcessModel.EventId);
+            var @event = await _eventRepository.GetByIdAsync(sponsorEventProcessModel.EventId.ToString());
             if (@event == null) { return null; }
 
             //Nếu sự kiện chưa mở nhận tài trợ hoặc đã qua đợt tài trợ => Hủy
-            if (!@event.Status.Equals(EventStatus.FUNDRAISING.ToString())) { return null; }
+            //if (!@event.Status.Equals(EventStatus.FUNDRAISING.ToString())) { return null; }
 
             //Lấy account user đang login => Lấy accountId, trừ tiền trong tài khoản
             var account = await _userRepository.GetAccountByUsernameAsync(username);
 
             //Nếu tiền trong tài khoản ko đủ => ko được tài trợ tiếp
-            if (account.CreditAmount < sponsorEventProcessModel.Amount) { return null; }
+            //if (account.CreditAmount < sponsorEventProcessModel.Amount) { return null; }
 
             //Lấy agreement, chưa hứa chuyển => Hứa đi rồi cho chuyển :3
             var agreement = await _sponsorManagementRepository.GetSponsorManagementDetailByPrimaryKey(@event.Id.ToString(), account.Id.ToString());
@@ -83,9 +84,9 @@ namespace FEventopia.Services.Services
                 Id = Guid.NewGuid(),
                 AccountID = account.Id,
                 TransactionType = TransactionType.OUT.ToString(),
-                TransactionDate = DateTime.Now,
+                TransactionDate = TimeUtils.GetTimeVietNam(),
                 Amount = sponsorEventProcessModel.Amount,
-                Description = $"FEventopia {username.ToUpper()}: Sponsor for {@event.EventName} event -{sponsorEventProcessModel.Amount}.",
+                Description = $"FEventopia {username.ToUpper()}: Sponsor for '{@event.EventName}' event -{sponsorEventProcessModel.Amount}.",
                 Status = true
             };
             await _transactionRepository.AddAsync(transaction);
@@ -122,9 +123,10 @@ namespace FEventopia.Services.Services
                 pageParaModel.PageSize);
         }
 
-        public async Task<PageModel<SponsorEventModel>> GetAllSponsorEventWithDetailCurrentUser(string userId, PageParaModel pageParaModel)
+        public async Task<PageModel<SponsorEventModel>> GetAllSponsorEventWithDetailCurrentUser(string username, PageParaModel pageParaModel)
         {
-            var sponsorEvents = await _sponsorEventRepository.GetAllSponsorEventWithDetailCurrentUser(userId);
+            var user = await _userRepository.GetAccountByUsernameAsync(username);
+            var sponsorEvents = await _sponsorEventRepository.GetAllSponsorEventWithDetailCurrentUser(user.Id);
             var result = _mapper.Map<List<SponsorEventModel>>(sponsorEvents);
             return PageModel<SponsorEventModel>.ToPagedList(result,
                 pageParaModel.PageNumber,

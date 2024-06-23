@@ -18,5 +18,6 @@ namespace FEventopia.Controllers.ViewModels.RequestModels
                   ErrorMessage = "Email Address required!")]
         [Display(Name = "Email Address")]
         public required string EmailReceive { get; set; }
+        public required double TicketPrice { get; set; }
     }
 }

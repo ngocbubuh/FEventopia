@@ -31,12 +31,14 @@ namespace FEventopia.Services.Services
             var account = await _userRepository.GetAccountByUsernameAsync(username);
             var sponsorManagement = new SponsorManagement(eventId, account.Id, amount, SponsorsManagementStatus.PENDING.ToString())
             {
+                Id = Guid.NewGuid(),
                 EventId = eventId,
                 SponsorId = account.Id,
                 Status = SponsorsManagementStatus.PENDING.ToString()
             };
-            await _sponsorManagementRepository.UpdateAsync(sponsorManagement);
-            return _mapper.Map<SponsorManagementModel>(sponsorManagement);
+            await _sponsorManagementRepository.AddAsync(sponsorManagement);
+            var result = await _sponsorManagementRepository.GetSponsorManagementDetailById(sponsorManagement.Id.ToString());
+            return _mapper.Map<SponsorManagementModel>(result);
         }
 
         public async Task<PageModel<SponsorManagementModel>> GetAllSponsorManagementWithDetailAsync(PageParaModel pageParaModel)
@@ -57,9 +59,10 @@ namespace FEventopia.Services.Services
                 pageParaModel.PageSize);
         }
 
-        public async Task<PageModel<SponsorManagementModel>> GetAllSponsorManagementWithDetailCurrentUser(string userId, PageParaModel pageParaModel)
+        public async Task<PageModel<SponsorManagementModel>> GetAllSponsorManagementWithDetailCurrentUser(string username, PageParaModel pageParaModel)
         {
-            var sponsorManagements = await _sponsorManagementRepository.GetAllSponsorManagementWithDetailCurrentUser(userId);
+            var user = await _userRepository.GetAccountByUsernameAsync(username);
+            var sponsorManagements = await _sponsorManagementRepository.GetAllSponsorManagementWithDetailCurrentUser(user.Id);
             var result = _mapper.Map<List<SponsorManagementModel>>(sponsorManagements);
             return PageModel<SponsorManagementModel>.ToPagedList(result,
                 pageParaModel.PageNumber,

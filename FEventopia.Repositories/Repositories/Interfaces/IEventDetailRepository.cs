@@ -11,5 +11,6 @@ namespace FEventopia.Repositories.Repositories.Interfaces
     {
         public Task<List<EventDetail>> GetAllEventDetailWithLocationById(string id);
         public Task<EventDetail?> GetEventDetailWithLocationById(string id);
+        public Task<List<EventDetail>> GetAllEventDetailAtLocation(string locationId, DateTime startDate, DateTime endDate);
     }
 }

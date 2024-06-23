@@ -17,6 +17,6 @@ namespace FEventopia.Services.BussinessModels
         public string? Rank { get; private set; }
         public required string Status { get; set; }
 
-        public virtual Event? Event { get; }
+        public virtual EventModel? Event { get; set; }
     }
 }
