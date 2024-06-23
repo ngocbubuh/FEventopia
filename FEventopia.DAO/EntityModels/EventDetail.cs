@@ -19,7 +19,6 @@ namespace FEventopia.DAO.EntityModels
         public double TicketPrice { get; set; } = 0;
         public double StallPrice { get; set; } = 0;
         public double EstimateCost { get; set; }
-
         public virtual Location Location { get; set; }
         public virtual Event Event { get; }
         public virtual ICollection<Ticket>? Ticket { get; }

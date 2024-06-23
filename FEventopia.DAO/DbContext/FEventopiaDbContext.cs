@@ -218,7 +218,7 @@ namespace FEventopia.DAO.DbContext
                 entity.HasIndex(p => p.AccountId).IsUnique(false);
                 entity.HasIndex(p => p.EventDetailId).IsUnique(false);
 
-                entity.Property(x => x.Role).HasColumnType("nvarchar(10)");
+                entity.Property(x => x.Role).HasColumnType("nvarchar(20)");
 
                 entity.HasOne(ea => ea.EventDetail).WithMany(ed => ed.EventAssignee)
                       .HasForeignKey(ea => ea.EventDetailId).OnDelete(DeleteBehavior.Restrict);

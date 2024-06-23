@@ -13,7 +13,6 @@ namespace FEventopia.DAO.EntityModels
         public required string AccountId { get; set; }
         public required int Rate { get; set; }
         public string? Description { get; set; }
-
         public virtual Account? Account { get; }
         public virtual EventDetail? EventDetail { get; }
     }
