@@ -102,6 +102,7 @@ namespace FEventopia.Services.Settings
             CreateMap<Ticket, TicketModel>().
                 ForMember(dest => dest.Event, opt => opt.MapFrom(src => src.EventDetail.Event));
 
+
             CreateMap<Feedback, FeedBackModel>().ReverseMap();
 
             CreateMap<DAO.EntityModels.Task,TaskModel>().ReverseMap();
@@ -110,6 +111,9 @@ namespace FEventopia.Services.Settings
             CreateMap<EventStall,EventStallModel>().ReverseMap();
 
             CreateMap<EventAssignee,EventAssigneeModel>().ReverseMap();
+
+            CreateMap<SponsorEvent, SponsorEventModel>().ReverseMap();
+            CreateMap<SponsorManagement, SponsorManagementModel>().ReverseMap();
 
         }
     }

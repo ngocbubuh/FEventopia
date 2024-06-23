@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FEventopia.Controllers.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("location/")]
     [ApiController]
     public class LocationController : ControllerBase
     {

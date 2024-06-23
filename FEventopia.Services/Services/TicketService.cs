@@ -83,7 +83,7 @@ namespace FEventopia.Services.Services
             var ticket = new Ticket
             {
                 Id = Guid.NewGuid(),
-                EventDetailID = Guid.Parse(eventDetailId),
+                EventDetailID = eventDetail.Id, 
                 TransactionID = transaction.Id,
                 VisitorID = account.Id,
             };
