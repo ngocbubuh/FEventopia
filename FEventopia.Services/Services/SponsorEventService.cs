@@ -41,13 +41,13 @@ namespace FEventopia.Services.Services
             if (@event == null) { return null; }
 
             //Nếu sự kiện chưa mở nhận tài trợ hoặc đã qua đợt tài trợ => Hủy
-            //if (!@event.Status.Equals(EventStatus.FUNDRAISING.ToString())) { return null; }
+            if (!@event.Status.Equals(EventStatus.FUNDRAISING.ToString())) { return null; }
 
             //Lấy account user đang login => Lấy accountId, trừ tiền trong tài khoản
             var account = await _userRepository.GetAccountByUsernameAsync(username);
 
             //Nếu tiền trong tài khoản ko đủ => ko được tài trợ tiếp
-            //if (account.CreditAmount < sponsorEventProcessModel.Amount) { return null; }
+            if (account.CreditAmount < sponsorEventProcessModel.Amount) { return null; }
 
             //Lấy agreement, chưa hứa chuyển => Hứa đi rồi cho chuyển :3
             var agreement = await _sponsorManagementRepository.GetSponsorManagementDetailByPrimaryKey(@event.Id.ToString(), account.Id.ToString());

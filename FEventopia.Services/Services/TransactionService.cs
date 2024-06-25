@@ -44,6 +44,22 @@ namespace FEventopia.Services.Services
             return _mapper.Map<TransactionModel>(result);
         }
 
+        public async Task<TransactionModel> AddTransactionRefundByVNPAYAsync(double amount, string username)
+        {
+            var user = await _userRepository.GetAccountByUsernameAsync(username);
+            var transaction = new Transaction
+            {
+                Id = Guid.NewGuid(),
+                AccountID = user.Id,
+                TransactionType = TransactionType.OUT.ToString(),
+                TransactionDate = TimeUtils.GetTimeVietNam(),
+                Amount = amount,
+                Description = $"FEventopia {username.ToUpper()}: Withdrawal -{amount}.",
+            };
+            var result = await _transactionRepository.AddAsync(transaction);
+            return _mapper.Map<TransactionModel>(result);
+        }
+
         public async Task<PageModel<TransactionModel>> GetAllTransactionByUsernameAsync(string username, PageParaModel pagePara)
         {
             var user = await _userRepository.GetAccountByUsernameAsync(username);

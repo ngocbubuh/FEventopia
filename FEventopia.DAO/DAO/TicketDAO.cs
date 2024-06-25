@@ -21,13 +21,13 @@ namespace FEventopia.DAO.DAO
         public async Task<List<Ticket>> GetAllTicketDetail()
         {
             return await _dbContext.Ticket.Include(t => t.EventDetail).ThenInclude(ed => ed.Location).Include(t => t.EventDetail).ThenInclude(ed => ed.Event).Include(t => t.Transaction)
-                  .ToListAsync();
+                  .Where(t => !t.DeleteFlag).ToListAsync();
         }
 
         public async Task<Ticket?> GetTicketDetail(string id)
         {
             return await _dbContext.Ticket.Include(t => t.EventDetail).ThenInclude(ed => ed.Location).Include(t => t.EventDetail).ThenInclude(ed => ed.Event).Include(t => t.Transaction)
-                  .FirstOrDefaultAsync(t => t.Id.ToString().ToLower().Equals(id.ToLower()));
+                  .FirstOrDefaultAsync(t => t.Id.ToString().ToLower().Equals(id.ToLower()) && !t.DeleteFlag);
         }
     }
 }

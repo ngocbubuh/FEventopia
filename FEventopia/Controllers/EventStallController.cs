@@ -13,10 +13,12 @@ namespace FEventopia.Controllers.Controllers
     public class EventStallController : ControllerBase
     {
         private readonly IEventStallService _eventStallService;
+        private readonly IAuthenService _authenService;
 
-        public EventStallController(IEventStallService eventStallService)
+        public EventStallController(IEventStallService eventStallService, IAuthenService authenService)
         {
             _eventStallService = eventStallService;
+            _authenService = authenService;
         }
 
         [HttpGet("GetAllEventStall")]
@@ -31,15 +33,29 @@ namespace FEventopia.Controllers.Controllers
             {
                 throw;
             }
-
         }
 
-        [HttpGet("GetEventBySponsorID")]
-        public async Task<IActionResult>GetBySponsorID(string id, [FromQuery] PageParaModel pageParaModel)
+        [HttpGet("GetEventStallBySponsorUsername")]
+        public async Task<IActionResult>GetBySponsorUsername(string username, [FromQuery] PageParaModel pageParaModel)
         {
             try
             {
-                var result = await _eventStallService.GetEventStallBySponsorID(id, pageParaModel);
+                var result = await _eventStallService.GetEventStallBySponsorID(username, pageParaModel);
+                return Ok(result);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        [HttpGet("GetEventStallCurrentUser")]
+        public async Task<IActionResult> GetByCurrentUser([FromQuery] PageParaModel pageParaModel)
+        {
+            try
+            {
+                var username = _authenService.GetCurrentLogin;
+                var result = await _eventStallService.GetEventStallBySponsorID(username, pageParaModel);
                 return Ok(result);
             }
             catch
@@ -57,6 +73,19 @@ namespace FEventopia.Controllers.Controllers
                 return Ok(result);
             }
             catch
+            {
+                throw;
+            }
+        }
+
+        [HttpGet("GetStallById")]
+        public async Task<IActionResult> GetStallById(string id)
+        {
+            try
+            {
+                var result = await _eventStallService.GetEventStallById(id);
+                return Ok(result);
+            } catch
             {
                 throw;
             }

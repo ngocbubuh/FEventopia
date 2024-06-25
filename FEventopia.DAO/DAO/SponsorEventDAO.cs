@@ -27,7 +27,7 @@ namespace FEventopia.DAO.DAO
         public async Task<SponsorEvent?> GetSponsorEventDetail(string id)
         {
             return await _dbContext.SponsorEvent.Include(se => se.Event).Include(se => se.Transaction).
-                FirstOrDefaultAsync(t => t.Id.ToString().ToLower().Equals(id.ToLower()));
+                FirstOrDefaultAsync(t => t.Id.ToString().ToLower().Equals(id.ToLower()) && !t.DeleteFlag);
         }
     }
 }

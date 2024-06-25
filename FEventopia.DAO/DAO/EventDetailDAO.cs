@@ -20,7 +20,7 @@ namespace FEventopia.DAO.DAO
 
         public async Task<List<EventDetail>> GetAllEventDetailWithLocation()
         {
-            return await _dbContext.EventDetail.Include(l => l.Location).ToListAsync();
+            return await _dbContext.EventDetail.Include(l => l.Location).Where(l => !l.DeleteFlag).ToListAsync();
         }
 
         public async Task<EventDetail?> GetEventDetailWithLocationById(string id)
