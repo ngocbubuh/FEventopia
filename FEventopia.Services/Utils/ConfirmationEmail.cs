@@ -32,7 +32,7 @@ namespace FEventopia.Services.Utils
                             <p style=""color: #666666; line-height: 1.6;"">Xin chào <strong>{username}</strong>,</p>
                             <p style=""color: #666666; line-height: 1.6;"">Cảm ơn bạn đã đăng ký tài khoản FEventopia. Vui lòng nhấp vào nút bên dưới để xác nhận địa chỉ email và hoàn tất đăng ký.</p>
                             <a href=""{confirmationLink}"" style=""display: inline-block; margin-top: 20px; margin-bottom: 30px; padding: 10px 20px; background-color: #007bff; color: #ffffff; text-decoration: none; border-radius: 4px;"">Xác nhận Email</a>
-                            <p style=""color: #666666; line-height: 1.6;"">Nếu không phải bạn, không cần thực hiện thêm hành động nào.</p>
+                            <p style=""color: #666666; line-height: 1.6;"">Nếu bạn không nhận ra hành động này, xin hãy bỏ qua email này.</p>
                         </div>
                         <div style=""text-align: center; color: #999999; padding-top: 20px; border-top: 1px solid #dddddd;"">
                             <p>© 2024 <strong>FEventopia. All rights reserved. Powered by FPT University.</strong></p>

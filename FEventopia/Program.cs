@@ -66,9 +66,9 @@ if (builder.Environment.IsDevelopment())
     // ---------------------------------------- //
 
     //If test in LocalDB
-    connection = builder.Configuration.GetConnectionString("LOCAL_CONNECTION_STRING");
+    //connection = builder.Configuration.GetConnectionString("LOCAL_CONNECTION_STRING");
     //If test in AzureDB
-    //connection = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
+    connection = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
 
     // ---------------------------------------- //
     ///   SELECT CONNECTIONSTRING CAREFULLY    ///

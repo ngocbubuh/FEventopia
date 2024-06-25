@@ -14,5 +14,6 @@ namespace FEventopia.Services.Services.Interfaces
         public Task<List<EventStallModel>> GetEventStallBySponsorID(string  sponsorID, PageParaModel pageParaModel);
         public Task<EventStallModel> CreateEventStall(string eventDetailId, string username, string stallnumber);
         public Task<List<EventStallModel>> GetAllByStallNumber(string stallnumber, PageParaModel pageParaModel);
+        public Task<EventStallModel> GetEventStallById(string stallid);
     }
 }

@@ -41,6 +41,8 @@ namespace FEventopia.Services.Services
             var eventdetail = await _eventDetailRepository.GetByIdAsync(eventDetailId);
             if (eventdetail == null) { return null; }
 
+            if (!(eventdetail.StallForSaleInventory > 0)) { return null; }
+
             //lay event => event co status khac execute => false
             var @event = await _eventRepository.GetByIdAsync(eventdetail.EventID.ToString());
             if (!@event.Status.Equals(EventStatus.EXECUTE.ToString()))
@@ -101,9 +103,10 @@ namespace FEventopia.Services.Services
             return PageModel<EventStallModel>.ToPagedList(result, pageParaModel.PageNumber, pageParaModel.PageSize);
         }
 
-        public async Task<List<EventStallModel>> GetEventStallBySponsorID(string sponsorID, PageParaModel pageParaModel)
+        public async Task<List<EventStallModel>> GetEventStallBySponsorID(string username, PageParaModel pageParaModel)
         {
-            var eventstalls = await _eventStallRepository.GetBySponsorIDAsync(sponsorID);
+            var user = await _userRepository.GetAccountByUsernameAsync(username);
+            var eventstalls = await _eventStallRepository.GetBySponsorIDAsync(user.Id);
             var result = _mapper.Map<List<EventStallModel>>(eventstalls);
             return PageModel<EventStallModel>.ToPagedList(result, pageParaModel.PageNumber, pageParaModel.PageSize);
         }
@@ -113,6 +116,12 @@ namespace FEventopia.Services.Services
             var eventstalls = await _eventStallRepository.GetByEventStallNumber(stallnumber);
             var result = _mapper.Map<List<EventStallModel>>(eventstalls);
             return PageModel<EventStallModel>.ToPagedList(result, pageParaModel.PageNumber, pageParaModel.PageSize);
+        }
+
+        public async Task<EventStallModel> GetEventStallById(string stallid)
+        {
+            var result = await _eventStallRepository.GetEventStallByIdWithDetail(stallid);
+            return _mapper.Map<EventStallModel>(result);
         }
     }
 }
