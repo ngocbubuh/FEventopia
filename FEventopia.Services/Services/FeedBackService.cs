@@ -40,7 +40,7 @@ namespace FEventopia.Services.Services
 
         public async Task<PageModel<FeedBackModel>> GetAllByEventDetail(string eventDetailId, PageParaModel pageparamodel)
         {
-            var feedbacks = await _feedBackRepository.GetAllByEventDetail(eventDetailId);
+            var feedbacks = await _feedBackRepository.GetAllByEventDetailId(eventDetailId);
             var result = _mapper.Map<List<FeedBackModel>>(feedbacks);
             return PageModel<FeedBackModel>.ToPagedList(result, pageparamodel.PageNumber, pageparamodel.PageSize);
         }

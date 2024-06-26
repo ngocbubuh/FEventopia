@@ -13,7 +13,7 @@ namespace FEventopia.DAO.EntityModels
         public Guid EventDetailID { get; set; }
         public required string VisitorID { get; set; }
         public Guid TransactionID { get; set; }
-        public bool? CheckInStatus { get; set; } = false;
+        public bool CheckInStatus { get; set; } = false;
 
         public virtual Account Account { get; } //FK VisitorID
         public virtual Transaction Transaction { get; } //FK TransactionID

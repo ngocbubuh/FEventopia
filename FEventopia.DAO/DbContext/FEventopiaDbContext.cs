@@ -121,6 +121,7 @@ namespace FEventopia.DAO.DbContext
                 entity.Property(x => x.InitialCapital).HasColumnType("float");
                 entity.Property(x => x.SponsorCapital).HasColumnType("float");
                 entity.Property(x => x.TicketSaleIncome).HasColumnType("float");
+                entity.Property(x => x.StallSaleIncome).HasColumnType("float");
                 entity.Property(x => x.Status).HasColumnType("nvarchar(20)");
             });
 
@@ -137,6 +138,7 @@ namespace FEventopia.DAO.DbContext
                 entity.Property(x => x.TicketForSaleInventory).HasColumnType("int");
                 entity.Property(x => x.TicketPrice).HasColumnType("float");
                 entity.Property(x => x.EstimateCost).HasColumnType("float");
+                entity.Property(x => x.StallPrice).HasColumnType("float");
 
                 entity.HasOne(ed => ed.Event).WithMany(e => e.EventDetail)
                       .HasForeignKey(ed => ed.EventID).OnDelete(DeleteBehavior.Restrict);

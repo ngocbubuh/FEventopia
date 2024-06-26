@@ -68,6 +68,10 @@ namespace FEventopia.Services.Services
             eventdetail.StallForSaleInventory -= 1;
             await _eventDetailRepository.UpdateAsync(eventdetail);
 
+            //Cập nhật doanh thu stall
+            @event.StallSaleIncome += eventdetail.StallPrice;
+            await _eventRepository.UpdateAsync(@event);
+
             //cap nhat transaction
             var transaction = new Transaction
             {
