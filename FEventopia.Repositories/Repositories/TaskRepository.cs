@@ -24,5 +24,11 @@ namespace FEventopia.Repositories.Repositories
             var tasks = await _taskDAO.GetAllAsync();
             return tasks.Where(t => t.StaffID.Equals(staffid)).ToList();
         }
+
+        public async Task<List<Task>> GetAllByEventDetailId(string eventDetailId)
+        {
+            var result = await _taskDAO.GetAllAsync();
+            return result.Where(t => t.EventDetailID.ToString().ToLower().Equals(eventDetailId.ToLower())).ToList();
+        }
     }
 }

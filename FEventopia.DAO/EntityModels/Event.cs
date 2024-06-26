@@ -14,8 +14,9 @@ namespace FEventopia.DAO.EntityModels
         public required string Category { get; set; }
         public string? Banner { get; set; }
         public required double InitialCapital { get; set; }
-        public double? SponsorCapital { get; set; } = 0; //No manually update
-        public double? TicketSaleIncome { get; set; } = 0; //No manually update
+        public double SponsorCapital { get; set; } = 0; //No manually update
+        public double TicketSaleIncome { get; set; } = 0; //No manually update
+        public double StallSaleIncome { get; set; } = 0; //No manually update
         public required string Status { get; set; }
         public virtual SponsorEvent? SponsorEvent { get; }
         public virtual ICollection<EventDetail> EventDetail { get; }

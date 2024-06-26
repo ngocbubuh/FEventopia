@@ -12,5 +12,6 @@ namespace FEventopia.Repositories.Repositories.Interfaces
         public Task<List<EventStall>> GetBySponsorIDAsync(string sponsorID);
         public Task<List<EventStall>> GetByEventStallNumber(string eventStallNumber);
         public Task<EventStall> GetEventStallByIdWithDetail(string id);
+        public Task<List<EventStall>> GetAllEventStallByEventDetailId(string eventDetailId);
     }
 }

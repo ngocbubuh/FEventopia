@@ -10,12 +10,12 @@ namespace FEventopia.DAO.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<double>(
-                name: "StallPrice",
-                table: "EventDetail",
-                type: "float",
-                nullable: false,
-                defaultValue: 0.0);
+            //migrationBuilder.AddColumn<double>(
+            //    name: "StallPrice",
+            //    table: "EventDetail",
+            //    type: "float",
+            //    nullable: false,
+            //    defaultValue: 0.0);
         }
 
         /// <inheritdoc />

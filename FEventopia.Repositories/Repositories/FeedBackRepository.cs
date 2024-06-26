@@ -17,12 +17,12 @@ namespace FEventopia.Repositories.Repositories
             _feedbackDAO = genericDAO;
         }
 
-        public async Task<List<Feedback>> GetAllByEventDetail(string eventDetailId)
+        public async Task<List<Feedback>> GetAllByEventDetailId(string eventDetailId)
         {
             var feedBacks = await _feedbackDAO.GetAllAsync();
             string idtoupper = eventDetailId.ToLower();
             //return feedBacks.Where(f => f.EventDetailId.Equals(eventDetailId)).ToList();
-            return feedBacks.Where(f => idtoupper.Equals(f.EventDetailId.ToString())).ToList();
+            return feedBacks.Where(f => idtoupper.Equals(f.EventDetailId.ToString().ToLower())).ToList();
         }
         
     }
