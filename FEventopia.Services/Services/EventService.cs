@@ -112,5 +112,12 @@ namespace FEventopia.Services.Services
             await _eventRepository.UpdateAsync(eventModel);
             return true;
         }
+
+        public async Task<EventModel> GetEventByName(string name)
+        {
+            var result = await _eventRepository.GetEventByName(name);
+            return _mapper.Map<EventModel>(result);
+        }
+
     }
 }

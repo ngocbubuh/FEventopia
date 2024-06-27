@@ -10,5 +10,6 @@ namespace FEventopia.Repositories.Repositories.Interfaces
     public interface IEventRepository : IGenericRepository<Event>
     {
         public Task<Event?> GetEventWithDetailByIdAsync(string id);
+        public Task<Event> GetEventByName(string name);
     }
 }

@@ -1,8 +1,10 @@
 ﻿using FEventopia.DAO.DAO.Interfaces;
 using FEventopia.DAO.EntityModels;
 using FEventopia.Repositories.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,10 +18,43 @@ namespace FEventopia.Repositories.Repositories
         {
             _eventDAO = eventDAO;
         }
+        
+        public static string UnsignName(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                return text;
+            }
+
+            var normalizedString = text.Normalize(NormalizationForm.FormD);
+            var stringBuilder = new StringBuilder();
+
+            foreach (var c in normalizedString)
+            {
+                var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+                {
+                    stringBuilder.Append(c);
+                }
+            }
+
+            return stringBuilder
+                .ToString()
+                .Normalize(NormalizationForm.FormC)
+                .ToLowerInvariant();
+        }
+
 
         public async Task<Event?> GetEventWithDetailByIdAsync(string id)
         {
             return await _eventDAO.GetEventWithDetailByIdAsync(id);
         }
+        public async Task<Event> GetEventByName(string nameSAMPLE)
+        {
+            var events = await _eventDAO.GetAllAsync();
+            string name = UnsignName(nameSAMPLE);
+            return events.Where(e => e.EventName.Equals(name)).SingleOrDefault();
+        }
+
     }
 }

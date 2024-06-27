@@ -178,5 +178,19 @@ namespace FEventopia.Controllers.Controllers
                 throw;
             }
         }
+        [HttpGet("GetEventByName")]
+        public async Task<IActionResult> GetEventByName(string name)
+        {
+            try
+            {
+                var result = await _eventService.GetEventByName(name);
+                return Ok(result);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
     }
 }

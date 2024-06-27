@@ -116,8 +116,6 @@ namespace FEventopia.Controllers.Controllers
                 if (ModelState.IsValid)
                 {
                     //CHECK kiểu đúng lỏ luôn ba :)
-                    if(model.Status == "TODO" || model.Status == "INPROGRESS" || model.Status == "DONE")
-                    {
                         var result = await _taskService.UpdateTaskStatus(id, model);
                         if (result)
                         {
@@ -136,12 +134,7 @@ namespace FEventopia.Controllers.Controllers
                                 Message = "Update Task Status Failed!"
                             };
                             return BadRequest(response);
-                        }
-                    } else
-                    {
-                        return BadRequest(Response);
-                    }
-                    
+                        }                    
                 }
                 else
                 {
