@@ -21,7 +21,7 @@ namespace FEventopia.Repositories.Repositories
             _eventDAO = eventDAO;
         }
         
-        public static string UnsignName(string text)
+        private static string UnsignName(string text)
         {
             if (string.IsNullOrEmpty(text))
             {
