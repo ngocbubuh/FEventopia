@@ -4,6 +4,7 @@ using FEventopia.Repositories.Repositories.Interfaces;
 using FEventopia.Services.BussinessModels;
 using FEventopia.Services.Enum;
 using FEventopia.Services.Services.Interfaces;
+using FEventopia.Services.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,6 +52,7 @@ namespace FEventopia.Services.Services
 
             //Nếu tiền trong tài khoản ko đủ => ko được đặt tiếp
             if (account.CreditAmount < eventDetail.TicketPrice) { return null; }
+
             //Nếu số lượng vé ko còn => ko được đặt tiếp
             if (eventDetail.TicketForSaleInventory == 0) { return null; }
 
@@ -72,7 +74,7 @@ namespace FEventopia.Services.Services
                 Id = Guid.NewGuid(),
                 AccountID = account.Id,
                 TransactionType = TransactionType.OUT.ToString(),
-                TransactionDate = DateTime.Now,
+                TransactionDate = TimeUtils.GetTimeVietNam(),
                 Amount = eventDetail.TicketPrice,
                 Description = $"FEventopia {username.ToUpper()}: Purchase {@event.EventName} Ticket -{eventDetail.TicketPrice}.",
                 Status = true

@@ -11,24 +11,34 @@ namespace FEventopia.Repositories.Repositories
 {
     public class EventStallRepository : GenericRepository<EventStall>, IEventStallRepository
     {
-        private readonly IGenericDAO<EventStall> _eventStallDAO;
+        private readonly IEventStallDAO _eventStallDAO;
 
-        public EventStallRepository(IGenericDAO<EventStall> genericDAO) : base(genericDAO)
+        public EventStallRepository(IEventStallDAO genericDAO) : base(genericDAO)
         {
             _eventStallDAO = genericDAO;
         }
 
         public async Task<List<EventStall>> GetByEventStallNumber(string eventStallNumber)
         {
-            var eventStalls = await _eventStallDAO.GetAllAsync();
+            var eventStalls = await _eventStallDAO.GetAllEventStallWithDetail();
             return eventStalls.Where(e => e.StallNumber.Equals(eventStallNumber)).ToList();
         }
 
         public async Task<List<EventStall>> GetBySponsorIDAsync(string sponsorID)
         {
-            var eventstalls = await _eventStallDAO.GetAllAsync();
+            var eventstalls = await _eventStallDAO.GetAllEventStallWithDetail();
             return eventstalls.Where(e => e.SponsorID.Equals(sponsorID)).ToList();
         }
 
+        public async Task<List<EventStall>> GetAllEventStallByEventDetailId(string eventDetailId)
+        {
+            var result = await _eventStallDAO.GetAllAsync();
+            return result.Where(es => es.EventDetailID.ToString().ToLower().Equals(eventDetailId.ToLower())).ToList();
+        }
+
+        public async Task<EventStall> GetEventStallByIdWithDetail(string id)
+        {
+            return await _eventStallDAO.GetEventStallWithDetailById(id);
+        }
     }
 }

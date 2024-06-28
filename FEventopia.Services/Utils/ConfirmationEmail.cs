@@ -25,14 +25,14 @@ namespace FEventopia.Services.Utils
                 <body style=""font-family: 'Roboto', sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;"">
                     <div style=""max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 0 50px #ff914d;"">
                         <div style=""text-align: center; border-bottom: 1px solid #dddddd; background-color: #ff914d; padding-bottom: 20px;"">
-                            <img src=""images/logo.svg"" alt=""Logo"" style=""max-width: 150px;"">
+                            <img src=""https://firebasestorage.googleapis.com/v0/b/feventopia-app.appspot.com/o/logo%2Flogo.svg?alt=media&token=6e50aaa8-2c91-4596-9b11-e407bb6694e3"" alt=""feventopia-logo"">
                         </div>
                         <div style=""padding: 20px; text-align: center;"">
                             <h2 style=""color: #333333;"">XÁC NHẬN EMAIL</h2>
                             <p style=""color: #666666; line-height: 1.6;"">Xin chào <strong>{username}</strong>,</p>
                             <p style=""color: #666666; line-height: 1.6;"">Cảm ơn bạn đã đăng ký tài khoản FEventopia. Vui lòng nhấp vào nút bên dưới để xác nhận địa chỉ email và hoàn tất đăng ký.</p>
                             <a href=""{confirmationLink}"" style=""display: inline-block; margin-top: 20px; margin-bottom: 30px; padding: 10px 20px; background-color: #007bff; color: #ffffff; text-decoration: none; border-radius: 4px;"">Xác nhận Email</a>
-                            <p style=""color: #666666; line-height: 1.6;"">Nếu không phải bạn, không cần thực hiện thêm hành động nào.</p>
+                            <p style=""color: #666666; line-height: 1.6;"">Nếu bạn không nhận ra hành động này, xin hãy bỏ qua email này.</p>
                         </div>
                         <div style=""text-align: center; color: #999999; padding-top: 20px; border-top: 1px solid #dddddd;"">
                             <p>© 2024 <strong>FEventopia. All rights reserved. Powered by FPT University.</strong></p>

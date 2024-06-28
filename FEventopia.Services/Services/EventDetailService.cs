@@ -29,6 +29,16 @@ namespace FEventopia.Services.Services
 
         public async Task<EventDetailOperatorModel> AddEventDetailAsync(EventDetailProcessModel eventDetailModel)
         {
+            if (eventDetailModel.EndDate < eventDetailModel.StartDate) { return null; }
+            var existEventDetailAtLocation = await _eventDetailRepository.GetAllEventDetailAtLocation(eventDetailModel.LocationID.ToString(), 
+                                                                                                        eventDetailModel.StartDate, 
+                                                                                                        eventDetailModel.EndDate);
+
+            //Kiểm tra có sự kiện ở vị trí đó cùng thời gian chưa
+            foreach (var item in existEventDetailAtLocation)
+            {
+                if (eventDetailModel.StartDate < item.EndDate && eventDetailModel.EndDate > item.StartDate) return null;
+            }
             var eventDetail = _mapper.Map<EventDetail>(eventDetailModel);
 
             //Get Event info

@@ -66,9 +66,9 @@ if (builder.Environment.IsDevelopment())
     // ---------------------------------------- //
 
     //If test in LocalDB
-    connection = builder.Configuration.GetConnectionString("LOCAL_CONNECTION_STRING");
+    //connection = builder.Configuration.GetConnectionString("LOCAL_CONNECTION_STRING");
     //If test in AzureDB
-    //connection = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
+    connection = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
 
     // ---------------------------------------- //
     ///   SELECT CONNECTIONSTRING CAREFULLY    ///
@@ -79,7 +79,7 @@ else
     connection = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION_STRING");
 }
 
-builder.Services.AddDbContext<FEventopiaDbContext>(options => { options.UseSqlServer(connection); options.EnableSensitiveDataLogging(); });
+builder.Services.AddDbContext<FEventopiaDbContext>(options => { options.UseSqlServer(connection); });
 
 // Add Authentication
 builder.Services.AddIdentity<Account, IdentityRole>()

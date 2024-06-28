@@ -20,19 +20,19 @@ namespace FEventopia.DAO.DAO
 
         public async Task<List<SponsorManagement>> GetAllSponsorManagementDetail()
         {
-            return await _context.sponsorManagement.Include(sm => sm.Event).ToListAsync();
+            return await _context.sponsorManagement.Include(sm => sm.Event).Where(t => !t.DeleteFlag).ToListAsync();
         }
 
         public async Task<SponsorManagement?> GetSponsorManagementDetailByPrimaryKey(string eventId, string accountId)
         {
             return await _context.sponsorManagement.Include(sm => sm.Event)
-                .FirstOrDefaultAsync(t => accountId.ToLower().Equals(t.SponsorId.ToLower()) && eventId.ToLower().Equals(t.EventId.ToString().ToLower()));
+                .FirstOrDefaultAsync(t => accountId.ToLower().Equals(t.SponsorId.ToLower()) && eventId.ToLower().Equals(t.EventId.ToString().ToLower()) && !t.DeleteFlag);
         }
 
         public async Task<SponsorManagement?> GetSponsorManagementDetailById(string sponsorManagementId)
         {
             return await _context.sponsorManagement.Include(sm => sm.Event)
-                .FirstOrDefaultAsync(t => sponsorManagementId.ToLower().Equals(t.Id.ToString().ToLower()));
+                .FirstOrDefaultAsync(t => sponsorManagementId.ToLower().Equals(t.Id.ToString().ToLower()) && !t.DeleteFlag);
         }
     }
 }

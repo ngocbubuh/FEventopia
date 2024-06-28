@@ -4,6 +4,7 @@ using FEventopia.DAO.DbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FEventopia.DAO.Migrations
 {
     [DbContext(typeof(FEventopiaDbContext))]
-    partial class FEventopiaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240623085351_fixRole")]
+    partial class fixRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -143,17 +146,14 @@ namespace FEventopia.DAO.Migrations
                     b.Property<double>("InitialCapital")
                         .HasColumnType("float");
 
-                    b.Property<double>("SponsorCapital")
-                        .HasColumnType("float");
-
-                    b.Property<double>("StallSaleIncome")
+                    b.Property<double?>("SponsorCapital")
                         .HasColumnType("float");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<double>("TicketSaleIncome")
+                    b.Property<double?>("TicketSaleIncome")
                         .HasColumnType("float");
 
                     b.Property<DateTime?>("UpdatedDate")
@@ -533,7 +533,7 @@ namespace FEventopia.DAO.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("CheckInStatus")
+                    b.Property<bool?>("CheckInStatus")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("CreatedDate")

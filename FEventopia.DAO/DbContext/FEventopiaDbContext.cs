@@ -121,6 +121,7 @@ namespace FEventopia.DAO.DbContext
                 entity.Property(x => x.InitialCapital).HasColumnType("float");
                 entity.Property(x => x.SponsorCapital).HasColumnType("float");
                 entity.Property(x => x.TicketSaleIncome).HasColumnType("float");
+                entity.Property(x => x.StallSaleIncome).HasColumnType("float");
                 entity.Property(x => x.Status).HasColumnType("nvarchar(20)");
             });
 
@@ -137,6 +138,7 @@ namespace FEventopia.DAO.DbContext
                 entity.Property(x => x.TicketForSaleInventory).HasColumnType("int");
                 entity.Property(x => x.TicketPrice).HasColumnType("float");
                 entity.Property(x => x.EstimateCost).HasColumnType("float");
+                entity.Property(x => x.StallPrice).HasColumnType("float");
 
                 entity.HasOne(ed => ed.Event).WithMany(e => e.EventDetail)
                       .HasForeignKey(ed => ed.EventID).OnDelete(DeleteBehavior.Restrict);
@@ -229,6 +231,10 @@ namespace FEventopia.DAO.DbContext
 
         public override int SaveChanges()
         {
+            DateTime utcNow = DateTime.UtcNow;
+
+            TimeZoneInfo vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+
             var entries = ChangeTracker
                 .Entries()
                 .Where(e => e.Entity is EntityBase && (
@@ -237,11 +243,11 @@ namespace FEventopia.DAO.DbContext
 
             foreach (var entityEntry in entries)
             {
-                ((EntityBase)entityEntry.Entity).UpdatedDate = DateTime.Now;
+                ((EntityBase)entityEntry.Entity).UpdatedDate = TimeZoneInfo.ConvertTimeFromUtc(utcNow, vietnamTimeZone);
 
                 if (entityEntry.State == EntityState.Added)
                 {
-                    ((EntityBase)entityEntry.Entity).CreatedDate = DateTime.Now;
+                    ((EntityBase)entityEntry.Entity).CreatedDate = TimeZoneInfo.ConvertTimeFromUtc(utcNow, vietnamTimeZone);
                 }
             }
 
@@ -250,6 +256,10 @@ namespace FEventopia.DAO.DbContext
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
+            DateTime utcNow = DateTime.UtcNow;
+
+            TimeZoneInfo vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+
             var entries = ChangeTracker
                 .Entries()
                 .Where(e => e.Entity is EntityBase && (
@@ -258,11 +268,11 @@ namespace FEventopia.DAO.DbContext
 
             foreach (var entityEntry in entries)
             {
-                ((EntityBase)entityEntry.Entity).UpdatedDate = DateTime.Now;
+                ((EntityBase)entityEntry.Entity).UpdatedDate = TimeZoneInfo.ConvertTimeFromUtc(utcNow, vietnamTimeZone);
 
                 if (entityEntry.State == EntityState.Added)
                 {
-                    ((EntityBase)entityEntry.Entity).CreatedDate = DateTime.Now;
+                    ((EntityBase)entityEntry.Entity).CreatedDate = TimeZoneInfo.ConvertTimeFromUtc(utcNow, vietnamTimeZone);
                 }
             }
             return await base.SaveChangesAsync(cancellationToken);

@@ -5,7 +5,7 @@
 namespace FEventopia.DAO.Migrations
 {
     /// <inheritdoc />
-    public partial class fixeventdetail : Migration
+    public partial class fixRole : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,6 +16,14 @@ namespace FEventopia.DAO.Migrations
             //    type: "float",
             //    nullable: false,
             //    defaultValue: 0.0);
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Role",
+                table: "EventAssignee",
+                type: "nvarchar(20)",
+                nullable: false,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(10)");
         }
 
         /// <inheritdoc />
@@ -24,6 +32,14 @@ namespace FEventopia.DAO.Migrations
             migrationBuilder.DropColumn(
                 name: "StallPrice",
                 table: "EventDetail");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Role",
+                table: "EventAssignee",
+                type: "nvarchar(10)",
+                nullable: false,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(20)");
         }
     }
 }

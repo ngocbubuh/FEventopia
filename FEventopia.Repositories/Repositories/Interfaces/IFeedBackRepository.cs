@@ -9,6 +9,6 @@ namespace FEventopia.Repositories.Repositories.Interfaces
 {
     public interface IFeedBackRepository : IGenericRepository<Feedback>
     {
-        public Task<List<Feedback>> GetAllByEventDetail(string eventDetailId);
+        public Task<List<Feedback>> GetAllByEventDetailId(string eventDetailId);
     }
 }

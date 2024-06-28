@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using FEventopia.DAO.EntityModels;
+using FEventopia.Repositories.Repositories;
 using FEventopia.Repositories.Repositories.Interfaces;
 using FEventopia.Services.BussinessModels;
 using FEventopia.Services.Enum;
 using FEventopia.Services.Services.Interfaces;
+using FEventopia.Services.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,14 +17,20 @@ namespace FEventopia.Services.Services
     public class EventService : IEventService
     {
         private readonly IEventRepository _eventRepository;
-        private readonly ILocationRepository _locationRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly ITicketRepository _ticketRepository;
+        private readonly ISponsorManagementRepository _sponsorManagementRepository;
+        private readonly ITransactionRepository _transactionRepository;
         private readonly IMapper _mapper;
 
-        public EventService(IEventRepository eventRepository, IMapper mapper, ILocationRepository locationRepository)
+        public EventService(IEventRepository eventRepository, IMapper mapper, IUserRepository userRepository, ITicketRepository ticketRepository, ISponsorManagementRepository sponsorManagementRepository, ITransactionRepository transactionRepository)
         {
             _eventRepository = eventRepository;
             _mapper = mapper;
-            _locationRepository = locationRepository;
+            _userRepository = userRepository;
+            _ticketRepository = ticketRepository;
+            _sponsorManagementRepository = sponsorManagementRepository;
+            _transactionRepository = transactionRepository;
         }
 
         public async Task<EventOperatorModel> AddEventAsync(EventProcessModel eventProcessModel)
@@ -33,9 +41,58 @@ namespace FEventopia.Services.Services
             return _mapper.Map<EventOperatorModel>(result);
         }
 
-        public Task<bool> CancelEventAsync(string id)
+        public async Task<bool> CancelEventAsync(string id)
         {
-            throw new NotImplementedException();
+            //Cập nhật trạng thái sự kiện sang hủy
+            var @event = await _eventRepository.GetEventWithDetailByIdAsync(id);
+            @event.Status = EventStatus.CANCELED.ToString();
+            await _eventRepository.UpdateAsync(@event);
+
+            //Lấy thông tin user đã mua vé sự kiện này => hoàn tiền
+            var ticketList = await _ticketRepository.GetAllTicketWithDetailCurrentEvent(@event.Id.ToString());
+            foreach (var ticket in ticketList)
+            {
+                var user = await _userRepository.GetAccountByIdAsync(ticket.VisitorID);
+                user.CreditAmount += ticket.Transaction.Amount;
+                await _userRepository.UpdateAccountAsync(user);
+
+                //Tạo transaction
+                var transaction = new Transaction
+                {
+                    Id = Guid.NewGuid(),
+                    AccountID = user.Id,
+                    TransactionType = TransactionType.IN.ToString(),
+                    TransactionDate = TimeUtils.GetTimeVietNam(),
+                    Amount = ticket.Transaction.Amount,
+                    Description = $"FEventopia {user.UserName.ToUpper()}: '{@event.EventName}' event has been canceled: Refund -{ticket.Transaction.Amount}.",
+                    Status = true
+                };
+                await _transactionRepository.AddAsync(transaction);
+            };
+
+            //Lấy thông tin các sponsor đã tài trợ cho sự kiện này => hoàn tiền
+            var sponsorList = await _sponsorManagementRepository.GetAllSponsorManagementWithDetailCurrentEvent(@event.Id.ToString());
+            foreach (var sponsor in sponsorList)
+            {
+                var user = await _userRepository.GetAccountByIdAsync(sponsor.SponsorId);
+                user.CreditAmount += sponsor.ActualAmount;
+                await _userRepository.UpdateAccountAsync(user);
+
+                //Tạo transaction
+                var transaction = new Transaction
+                {
+                    Id = Guid.NewGuid(),
+                    AccountID = user.Id,
+                    TransactionType = TransactionType.IN.ToString(),
+                    TransactionDate = TimeUtils.GetTimeVietNam(),
+                    Amount = sponsor.ActualAmount,
+                    Description = $"FEventopia {user.UserName.ToUpper()}: '{@event.EventName}' event has been canceled: Refund -{sponsor.ActualAmount}.",
+                    Status = true
+                };
+                await _transactionRepository.AddAsync(transaction);
+            }
+
+            return true;
         }
 
         public async Task<bool> DeleteEventAsync(string id)

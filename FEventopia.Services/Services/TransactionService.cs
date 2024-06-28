@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using FEventopia.Services.Utils;
 
 namespace FEventopia.Services.Services
 {
@@ -35,9 +36,25 @@ namespace FEventopia.Services.Services
                 Id = Guid.NewGuid(),
                 AccountID = user.Id,
                 TransactionType = TransactionType.IN.ToString(),
-                TransactionDate = DateTime.Now,
+                TransactionDate = TimeUtils.GetTimeVietNam(),
                 Amount = amount,
                 Description = $"FEventopia {username.ToUpper()}: Recharge +{amount}.",
+            };
+            var result = await _transactionRepository.AddAsync(transaction);
+            return _mapper.Map<TransactionModel>(result);
+        }
+
+        public async Task<TransactionModel> AddTransactionRefundByVNPAYAsync(double amount, string username)
+        {
+            var user = await _userRepository.GetAccountByUsernameAsync(username);
+            var transaction = new Transaction
+            {
+                Id = Guid.NewGuid(),
+                AccountID = user.Id,
+                TransactionType = TransactionType.OUT.ToString(),
+                TransactionDate = TimeUtils.GetTimeVietNam(),
+                Amount = amount,
+                Description = $"FEventopia {username.ToUpper()}: Withdrawal -{amount}.",
             };
             var result = await _transactionRepository.AddAsync(transaction);
             return _mapper.Map<TransactionModel>(result);
@@ -46,7 +63,7 @@ namespace FEventopia.Services.Services
         public async Task<PageModel<TransactionModel>> GetAllTransactionByUsernameAsync(string username, PageParaModel pagePara)
         {
             var user = await _userRepository.GetAccountByUsernameAsync(username);
-            var transactionList = await _transactionRepository.GetByIdAsync(user.Id);
+            var transactionList = await _transactionRepository.GetAllByUserId(user.Id);
             var result = _mapper.Map<List<TransactionModel>>(transactionList);
             return PageModel<TransactionModel>.ToPagedList(result,
                 pagePara.PageNumber,
@@ -69,7 +86,7 @@ namespace FEventopia.Services.Services
                 var transaction = await _transactionRepository.GetByIdAsync(model.vnp_TxnRef);
                 transaction.Status = true;
                 await _transactionRepository.UpdateAsync(transaction);
-
+                
                 //Update credit for user
                 var user = await _userRepository.GetAccountByIdAsync(transaction.AccountID);
                 user.CreditAmount += double.Parse(model.vnp_Amount)/100;

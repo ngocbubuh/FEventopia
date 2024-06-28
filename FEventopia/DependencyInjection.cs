@@ -52,6 +52,7 @@ namespace FEventopia.Controllers
             services.AddScoped<ISponsorManagementService, SponsorManagementService>();
             services.AddScoped<ISponsorEventRepository, SponsorEventRepository>();
             services.AddScoped<ISponsorEventService, SponsorEventService>();
+            services.AddScoped<IAnalysisService, AnalysisService>();
 
             services.AddScoped<IUserDAO, UserDAO>();
             services.AddScoped<IEventDAO, EventDAO>();
@@ -59,6 +60,7 @@ namespace FEventopia.Controllers
             services.AddScoped<ITicketDAO, TicketDAO>();
             services.AddScoped<ISponsorEventDAO, SponsorEventDAO>();
             services.AddScoped<ISponsorManagementDAO, SponsorManagementDAO>();
+            services.AddScoped<IEventStallDAO, EventStallDAO>();
 
             //Add Exception Handler
             services.AddExceptionHandler<GlobalExceptionHandler>();

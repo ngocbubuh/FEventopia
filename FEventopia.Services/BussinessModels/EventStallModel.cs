@@ -12,5 +12,9 @@ namespace FEventopia.Services.BussinessModels
         public required string SponsorID { get; set; }
         public required Guid EventDetailID { get; set; }
         public required string StallNumber { get; set; }
+
+        public TransactionModel? Transaction { get; set; }
+        public EventDetailModel? EventDetail { get; set; }
+        public EventTicketModel? Event { get; set; }
     }
 }
