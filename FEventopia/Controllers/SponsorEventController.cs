@@ -108,7 +108,7 @@ namespace FEventopia.Controllers.Controllers
 
         [HttpPost("SponsoringEvent")]
         [Authorize(Roles = "SPONSOR")]
-        public async Task<IActionResult> SponsoringEvent(SponsorEventProcessModel sponsorEventProcessModel)
+        public async Task<IActionResult> SponsoringEventAsync(SponsorEventProcessModel sponsorEventProcessModel)
         {
             try
             {

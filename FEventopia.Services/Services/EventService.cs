@@ -6,6 +6,7 @@ using FEventopia.Services.BussinessModels;
 using FEventopia.Services.Enum;
 using FEventopia.Services.Services.Interfaces;
 using FEventopia.Services.Utils;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -144,7 +145,7 @@ namespace FEventopia.Services.Services
 
         public async Task<bool> UpdateEventNextPhaseAsync(string id)
         {
-            var eventModel = await _eventRepository.GetByIdAsync(id);
+            var eventModel = await _eventRepository.GetEventWithDetailByIdAsync(id);
             if (eventModel == null)
             {
                 return false;
@@ -155,9 +156,25 @@ namespace FEventopia.Services.Services
                     eventModel.Status = EventStatus.FUNDRAISING.ToString();
                     break;
                 case "FUNDRAISING":
+                    //Cập nhật số dư thực tế của sponsor
+                    var sponsorList = await _sponsorManagementRepository.GetAllSponsorManagementWithDetailCurrentEvent(id);
+                    foreach (var sponsor in sponsorList)
+                    {
+                        //Nếu sponsor chưa chuyển đủ như hợp đồng
+                        if(!sponsor.Status.Equals(SponsorsManagementStatus.FULL.ToString()))
+                        {
+                            sponsor.SetAmount(sponsor.ActualAmount);
+                            await _sponsorManagementRepository.UpdateAsync(sponsor);
+                        }
+                    }
                     eventModel.Status = EventStatus.PREPARATION.ToString();
                     break;
                 case "PREPARATION":
+                    //Nếu sự kiện chưa tạo eventDetails mà đã muốn mở bán vé, từ chối
+                    if ( eventModel == null || eventModel.EventDetail.IsNullOrEmpty())
+                    {
+                        return false;
+                    }
                     eventModel.Status = EventStatus.EXECUTE.ToString();
                     break;
                 case "EXECUTE":

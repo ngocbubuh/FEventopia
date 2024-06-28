@@ -38,6 +38,9 @@ namespace FEventopia.Services.Services
             var eventDetail = await _eventDetailRepository.GetByIdAsync(eventDetailId);
             if (eventDetail == null) { return null; }
 
+            //Nếu sự kiện đã bắt đầu, ko được mua
+            if (TimeUtils.GetTimeVietNam() >= eventDetail.StartDate) return null;
+
             //Lấy event => Lấy event name, cập nhật tiền bán vé của sự kiện
             var @event = await _eventRepository.GetByIdAsync(eventDetail.EventID.ToString());
 
