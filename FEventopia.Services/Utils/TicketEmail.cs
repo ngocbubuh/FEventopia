@@ -29,7 +29,7 @@ namespace FEventopia.Services.Utils
 						<title>Vé đã mua</title>
 
 						<!-- Favicon Icon -->
-						<link rel=""icon"" type=""image/png"" href=""https://firebasestorage.googleapis.com/v0/b/feventopia-app.appspot.com/o/logo%2Flogo-fav.png?alt=media&token=9d2d758d-348b-4965-a506-367c34e2e051"">
+						<link rel=""icon"" type=""image/png"" href=""https://firebasestorage.googleapis.com/v0/b/feventopia-app.appspot.com/o/logo%2Flogo.svg?alt=media&token=6e50aaa8-2c91-4596-9b11-e407bb6694e3"">
 
 						<!-- Stylesheets -->
 						<link rel=""preconnect"" href=""https://fonts.googleapis.com"">
