@@ -3,6 +3,8 @@ using FEventopia.DAO.EntityModels;
 using FEventopia.Repositories.Repositories.Interfaces;
 using FEventopia.Services.BussinessModels;
 using FEventopia.Services.Services.Interfaces;
+using FEventopia.Services.Utils;
+using FEventopia.Services.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +35,8 @@ namespace FEventopia.Services.Services
             var existEventDetailAtLocation = await _eventDetailRepository.GetAllEventDetailAtLocation(eventDetailModel.LocationID.ToString(), 
                                                                                                         eventDetailModel.StartDate, 
                                                                                                         eventDetailModel.EndDate);
+            //Tạo sự kiện => có thời gian bắt đầu phải cách thời gian hiện tại ít nhất 1 tuần
+            if (TimeUtils.GetTimeVietNam().Date < eventDetailModel.StartDate.AddDays(7).Date) return null;
 
             //Kiểm tra có sự kiện ở vị trí đó cùng thời gian chưa
             foreach (var item in existEventDetailAtLocation)
@@ -43,7 +47,9 @@ namespace FEventopia.Services.Services
 
             //Get Event info
             var @event = await _eventRepository.GetByIdAsync(eventDetail.EventID.ToString());
-            if (@event == null)
+
+            //Nếu ko tồn tại hoặc đang ko trong giai đoạn chuẩn bị
+            if (@event == null || !@event.Status.Equals(EventStatus.PREPARATION.ToString()))
             {
                 return null;
             }
@@ -59,16 +65,16 @@ namespace FEventopia.Services.Services
             switch (@event.Category)
             {
                 case "TALKSHOW":
-                    eventDetail.EstimateCost = location.Capacity * 50000;
+                    eventDetail.EstimateCost = location.Capacity * 200000;
                     break;
                 case "MUSICSHOW":
-                    eventDetail.EstimateCost = location.Capacity * 100000;
+                    eventDetail.EstimateCost = location.Capacity * 300000;
                     break;
                 case "FESTIVAL":
-                    eventDetail.EstimateCost = location.Capacity * 150000;
+                    eventDetail.EstimateCost = location.Capacity * 400000;
                     break;
                 case "COMPETITION":
-                    eventDetail.EstimateCost = location.Capacity * 200000;
+                    eventDetail.EstimateCost = location.Capacity * 500000;
                     break;
             }
 

@@ -1,4 +1,4 @@
-﻿using FEventopia.Services.BussinessModels;
+using FEventopia.Services.BussinessModels;
 using FEventopia.Services.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -106,8 +106,9 @@ namespace FEventopia.Controllers.Controllers
             }
         }
 
-        [HttpPost("GetEventByName")]
-        public async Task<IActionResult> SponsoringEvent(SponsorEventProcessModel sponsorEventProcessModel)
+        [HttpPost("SponsoringEvent")]
+        [Authorize(Roles = "SPONSOR")]
+        public async Task<IActionResult> SponsoringEventAsync(SponsorEventProcessModel sponsorEventProcessModel)
         {
             try
             {
