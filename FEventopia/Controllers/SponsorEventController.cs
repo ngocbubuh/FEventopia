@@ -1,4 +1,4 @@
-﻿using FEventopia.Services.BussinessModels;
+using FEventopia.Services.BussinessModels;
 using FEventopia.Services.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
