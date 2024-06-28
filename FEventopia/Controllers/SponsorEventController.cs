@@ -106,8 +106,7 @@ namespace FEventopia.Controllers.Controllers
             }
         }
 
-        [HttpPost("SponsoringEvent")]
-        [Authorize(Roles = "SPONSOR")]
+        [HttpPost("GetEventByName")]
         public async Task<IActionResult> SponsoringEvent(SponsorEventProcessModel sponsorEventProcessModel)
         {
             try
