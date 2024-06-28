@@ -11,5 +11,6 @@ namespace FEventopia.Repositories.Repositories.Interfaces
     {
         public Task<Event?> GetEventWithDetailByIdAsync(string id);
         public Task<Event> GetEventByName(string name);
+        public Task<List<Event>> SearchEventByName(string name);
     }
 }

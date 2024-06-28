@@ -1,9 +1,11 @@
 ﻿using FEventopia.DAO.DAO.Interfaces;
 using FEventopia.DAO.EntityModels;
 using FEventopia.Repositories.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -43,12 +45,26 @@ namespace FEventopia.Repositories.Repositories
                 .Normalize(NormalizationForm.FormC)
                 .ToLowerInvariant();
         }
+        private static IEnumerable<Event> SearchData(IEnumerable<Event> data, string keyword)
+        {
+            string normalizedKeyword = UnsignName(keyword);
+
+            return data.Where(item => UnsignName(item.EventName).Contains(normalizedKeyword));
+        }
 
 
         public async Task<Event?> GetEventWithDetailByIdAsync(string id)
         {
             return await _eventDAO.GetEventWithDetailByIdAsync(id);
         }
+
+        public async Task<List<Event>> SearchEventByName(string name)
+        {
+            var events = await _eventDAO.GetAllAsync();
+            var resuls = SearchData(events, name);
+            return resuls.ToList();
+        }
+
         public async Task<Event> GetEventByName(string nameSAMPLE)
         {
             var events = await _eventDAO.GetAllAsync();

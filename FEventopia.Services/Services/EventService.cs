@@ -119,5 +119,11 @@ namespace FEventopia.Services.Services
             return _mapper.Map<EventModel>(result);
         }
 
+        public async Task<List<EventModel>> SearchEventByName(string name)
+        {
+            var results = await _eventRepository.SearchEventByName(name);
+            return _mapper.Map<List<EventModel>>(results);
+        }
+
     }
 }
