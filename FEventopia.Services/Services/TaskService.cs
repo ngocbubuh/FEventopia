@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FEventopia.DAO.EntityModels;
+using FEventopia.Repositories.Repositories;
 using FEventopia.Repositories.Repositories.Interfaces;
 using FEventopia.Services.BussinessModels;
 using FEventopia.Services.Enum;
@@ -16,16 +17,27 @@ namespace FEventopia.Services.Services
     public class TaskService : ITaskService
     {
         private readonly ITaskRepository _taskRepository;
+        private readonly IEventRepository _eventRepository;
+        private readonly IEventDetailRepository _eventDetailRepository;
         private IMapper _mapper;
 
-        public TaskService(ITaskRepository taskRepository, IMapper mapper)
+        public TaskService(ITaskRepository taskRepository, IMapper mapper, IEventRepository eventRepository, IEventDetailRepository eventDetailRepository)
         {
             _taskRepository = taskRepository;
             _mapper = mapper;
+            _eventRepository = eventRepository;
+            _eventDetailRepository = eventDetailRepository;
         }
 
         public async Task<TaskModel> CreateTask(TaskModel taskmodel)
         {
+            var eventdetail = await _eventDetailRepository.GetByIdAsync(taskmodel.EventDetailId.ToString());
+            if (eventdetail == null) { return null; }
+
+            //Nếu sự kiện đã tới giai đoạn EXECUTE trở đi => Hủy
+            var @event = await _eventRepository.GetByIdAsync(eventdetail.EventID.ToString());
+            if (@event.Status.Equals(EventStatus.EXECUTE.ToString()) || @event.Status.Equals(EventStatus.POST.ToString())) return null;
+
             var task = _mapper.Map<DAO.EntityModels.Task>(taskmodel);
             task.Status = Enum.TaskStatus.TODO.ToString();
             var result = await _taskRepository.AddAsync(task);
@@ -35,6 +47,13 @@ namespace FEventopia.Services.Services
         public async Task<bool> DeleteTask(string taskId)
         {
             var task = await _taskRepository.GetByIdAsync(taskId);
+            var eventdetail = await _eventDetailRepository.GetByIdAsync(task.EventDetailID.ToString());
+            if (eventdetail == null) { return false; }
+
+            //Nếu sự kiện đã tới giai đoạn EXECUTE trở đi => Hủy
+            var @event = await _eventRepository.GetByIdAsync(eventdetail.EventID.ToString());
+            if (@event.Status.Equals(EventStatus.EXECUTE.ToString()) || @event.Status.Equals(EventStatus.POST.ToString())) return false;
+
             return await _taskRepository.DeleteAsync(task);          
         }
 
@@ -54,10 +73,18 @@ namespace FEventopia.Services.Services
         public async Task<bool> UpdateTask(string taskid, TaskModel taskModel)
         {
             var task = await _taskRepository.GetByIdAsync(taskid);
-            if(task == null)
-            { 
+            if (task == null)
+            {
                 return false;
             }
+
+            var eventdetail = await _eventDetailRepository.GetByIdAsync(task.EventDetailID.ToString());
+            if (eventdetail == null) { return false; }
+
+            //Nếu sự kiện đã tới giai đoạn EXECUTE trở đi => Hủy
+            var @event = await _eventRepository.GetByIdAsync(eventdetail.EventID.ToString());
+            if (@event.Status.Equals(EventStatus.EXECUTE.ToString()) || @event.Status.Equals(EventStatus.POST.ToString())) return false;
+
             var result = _mapper.Map(taskModel,task);
             return await _taskRepository.UpdateAsync(result);
         }

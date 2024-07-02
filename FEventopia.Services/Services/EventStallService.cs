@@ -43,6 +43,9 @@ namespace FEventopia.Services.Services
 
             if (!(eventdetail.StallForSaleInventory > 0)) { return null; }
 
+            //Nếu sự kiện đã bắt đầu, ko được mua
+            if (TimeUtils.GetTimeVietNam() >= eventdetail.StartDate) return null;
+
             //lay event => event co status khac execute => false
             var @event = await _eventRepository.GetByIdAsync(eventdetail.EventID.ToString());
             if (!@event.Status.Equals(EventStatus.EXECUTE.ToString()))
@@ -59,6 +62,12 @@ namespace FEventopia.Services.Services
 
             //neu tien trong tai khoan ko du => chim cut
             if (account.CreditAmount < eventdetail.StallPrice) {return null;}
+
+            //Nếu sự kiện chưa mở bán stall => false
+            if (!@event.Status.Equals(EventStatus.EXECUTE.ToString()))
+            {
+                return null;
+            }
 
             //Cập nhật số dư tài khoản
             account.CreditAmount -= eventdetail.StallPrice;

@@ -3,6 +3,7 @@ using FEventopia.DAO.EntityModels;
 using FEventopia.Repositories.Repositories.Interfaces;
 using FEventopia.Services.BussinessModels;
 using FEventopia.Services.Services.Interfaces;
+using FEventopia.Services.Enum;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.VisualBasic;
 using System;
@@ -20,15 +21,17 @@ namespace FEventopia.Services.Services
         private readonly IEventAssigneeRepository _eventAssigneeRepository;
         private readonly IUserRepository _userRepository;
         private readonly IEventDetailRepository _eventDetailRepository;
+        private readonly IEventRepository _eventRepository;
         private readonly IMapper _mapper;
 
         public EventAssigneeService(IEventAssigneeRepository eventAssigneeRepository, 
-            IUserRepository userRepository, IEventDetailRepository eventDetailRepository,IMapper mapper)
+            IUserRepository userRepository, IEventDetailRepository eventDetailRepository,IMapper mapper, IEventRepository eventRepository)
         {
             _eventAssigneeRepository = eventAssigneeRepository;
             _userRepository = userRepository;
             _eventDetailRepository = eventDetailRepository;
             _mapper = mapper;
+            _eventRepository = eventRepository;
         }
 
         public async Task<bool> AddEventAssignee(string accountId, string eventDetailId)
@@ -40,6 +43,10 @@ namespace FEventopia.Services.Services
             //lay eventdetail, kiem tra eventdetail có ton tai khum
             var eventdetail = await _eventDetailRepository.GetByIdAsync(eventDetailId);
             if (eventdetail == null) { return false; } //chinh lai null
+
+            //Lay event - Nếu sự kiện đang ở giai đoạn EXECUTION trở đi, ko được add
+            var @event = await _eventRepository.GetByIdAsync(eventdetail.EventID.ToString());
+            if (@event.Status.Equals(EventStatus.EXECUTE.ToString()) || @event.Status.Equals(EventStatus.POST.ToString())) return false;
 
             //tao event assignee - luu db
             var eventAssignee = new EventAssignee
@@ -63,6 +70,14 @@ namespace FEventopia.Services.Services
 
         public async Task<bool> DeleteEventAssignee(string eventDetailId, string accountId)
         {
+            //lay eventdetail, kiem tra eventdetail có ton tai khum
+            var eventdetail = await _eventDetailRepository.GetByIdAsync(eventDetailId);
+            if (eventdetail == null) { return false; } //chinh lai null
+
+            //Lay event - Nếu sự kiện đang ở giai đoạn EXECUTION trở đi, ko được xóa
+            var @event = await _eventRepository.GetByIdAsync(eventdetail.EventID.ToString());
+            if (@event.Status.Equals(EventStatus.EXECUTE.ToString()) || @event.Status.Equals(EventStatus.POST.ToString())) return false;
+
             var eventassignee = await _eventAssigneeRepository.GetByED_AC(eventDetailId, accountId);
             return await _eventAssigneeRepository.DeleteAsync(eventassignee);
         }

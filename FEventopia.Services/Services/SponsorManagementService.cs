@@ -16,19 +16,26 @@ namespace FEventopia.Services.Services
     public class SponsorManagementService : ISponsorManagementService
     {
         private readonly ISponsorManagementRepository _sponsorManagementRepository;
+        private readonly IEventRepository _eventRepository;
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
-        public SponsorManagementService(ISponsorManagementRepository sponsorManagementRepository, IMapper mapper, IUserRepository userRepository) 
+        public SponsorManagementService(ISponsorManagementRepository sponsorManagementRepository, IMapper mapper, IUserRepository userRepository, IEventRepository eventRepository) 
         {
             _sponsorManagementRepository = sponsorManagementRepository;
             _mapper = mapper;
             _userRepository = userRepository;
+            _eventRepository = eventRepository;
         }
 
         public async Task<SponsorManagementModel> AddSponsorManagementAsync(Guid eventId, double amount, string username)
         {
             var account = await _userRepository.GetAccountByUsernameAsync(username);
+            
+            //Nếu sự kiện chưa mở tài trợ hoặc đã qua tài trợ => Ko cho
+            var @event = await _eventRepository.GetByIdAsync(eventId.ToString());
+            if (!@event.Status.Equals(EventStatus.FUNDRAISING.ToString())) { return null; }
+
             var sponsorManagement = new SponsorManagement(eventId, account.Id, amount, SponsorsManagementStatus.PENDING.ToString())
             {
                 Id = Guid.NewGuid(),
