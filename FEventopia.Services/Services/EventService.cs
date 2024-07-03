@@ -109,6 +109,7 @@ namespace FEventopia.Services.Services
         public async Task<PageModel<EventModel>> GetAllEventAsync(PageParaModel pagePara)
         {
             var eventList = await _eventRepository.GetAllAsync();
+            eventList.Sort((t1, t2) => t2.CreatedDate.CompareTo(t1.CreatedDate));
             var result = _mapper.Map<List<EventModel>>(eventList);
             return PageModel<EventModel>.ToPagedList(result,
                 pagePara.PageNumber,

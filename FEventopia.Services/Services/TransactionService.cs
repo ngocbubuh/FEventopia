@@ -65,6 +65,7 @@ namespace FEventopia.Services.Services
             var user = await _userRepository.GetAccountByUsernameAsync(username);
             var transactionList = await _transactionRepository.GetAllByUserId(user.Id);
             var result = _mapper.Map<List<TransactionModel>>(transactionList);
+            result.Sort((t1, t2) => t2.TransactionDate.CompareTo(t1.TransactionDate));
             return PageModel<TransactionModel>.ToPagedList(result,
                 pagePara.PageNumber,
                 pagePara.PageSize);
