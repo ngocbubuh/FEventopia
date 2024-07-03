@@ -13,9 +13,9 @@ namespace FEventopia.DAO.EntityModels.Base
     {
         public Guid Id { get; set; }
         [Column(TypeName = "datetime")]
-        public DateTime? CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
         [Column(TypeName = "datetime")]
-        public DateTime? UpdatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
         public bool DeleteFlag { get; set; } = false;
         [Timestamp]
         public byte[]? Version { get; set; }

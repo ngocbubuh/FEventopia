@@ -120,6 +120,7 @@ namespace FEventopia.Services.Services
         {
             var user = await _userRepository.GetAccountByUsernameAsync(username);
             var eventstalls = await _eventStallRepository.GetBySponsorIDAsync(user.Id);
+            eventstalls.Sort((t1, t2) => t2.CreatedDate.CompareTo(t1.CreatedDate));
             var result = _mapper.Map<List<EventStallModel>>(eventstalls);
             return PageModel<EventStallModel>.ToPagedList(result, pageParaModel.PageNumber, pageParaModel.PageSize);
         }

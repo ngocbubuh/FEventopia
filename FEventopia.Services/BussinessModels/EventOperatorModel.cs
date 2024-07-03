@@ -16,6 +16,7 @@ namespace FEventopia.Services.BussinessModels
         public required double InitialCapital { get; set; }
         public double? SponsorCapital { get; set; } = 0; //No manually update
         public double? TicketSaleIncome { get; set; } = 0; //No manually update
+        public double? StallSaleIncome { get; set; } = 0; //No manually update
         public required string Status { get; set; }
 
         public ICollection<EventDetailOperatorModel>? EventDetail { get; set; }

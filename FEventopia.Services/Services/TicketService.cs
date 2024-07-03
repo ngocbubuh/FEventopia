@@ -117,6 +117,7 @@ namespace FEventopia.Services.Services
         public async Task<PageModel<TicketModel>> GetAllTicketWithDetailCurrentEvent(string eventId, PageParaModel pageParaModel)
         {
             var ticketList = await _ticketRepository.GetAllTicketWithDetailCurrentEvent(eventId);
+            ticketList.Sort((t1, t2) => t2.CreatedDate.CompareTo(t1.CreatedDate));
             if (ticketList == null) { return null; }
             var result = _mapper.Map<List<TicketModel>>(ticketList);
             return PageModel<TicketModel>.ToPagedList(result,
@@ -128,6 +129,7 @@ namespace FEventopia.Services.Services
         {
             var account = await _userRepository.GetAccountByUsernameAsync(username);
             var ticketList = await _ticketRepository.GetAllTicketWithDetailCurrentUser(account.Id);
+            ticketList.Sort((t1, t2) => t2.CreatedDate.CompareTo(t1.CreatedDate));
             var result = _mapper.Map<List<TicketModel>>(ticketList);
             return PageModel<TicketModel>.ToPagedList(result,
                 pageParaModel.PageNumber,
