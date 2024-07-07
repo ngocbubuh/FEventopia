@@ -57,8 +57,11 @@ namespace FEventopia.Services.Services
             var account = await _userRepository.GetAccountByUsernameAsync(username);
 
             //validate stall number
-            var stall = await _eventStallRepository.GetByEventStallNumber(stallnumber);
-            if(stall != null) { return null; }
+            var stallList = await _eventStallRepository.GetAllEventStallByEventDetailId(eventDetailId);
+            foreach ( var stall in stallList )
+            {
+                if (stall.StallNumber.Equals(stallnumber)) return null;
+            }
 
             //neu tien trong tai khoan ko du => chim cut
             if (account.CreditAmount < eventdetail.StallPrice) {return null;}

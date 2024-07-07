@@ -5,8 +5,10 @@ using FEventopia.Services.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Formats.Asn1;
 using System.Net.WebSockets;
 
@@ -24,11 +26,11 @@ namespace FEventopia.Controllers.Controllers
         }
 
         [HttpGet("GetAllEvent")]
-        public async Task<IActionResult> GetAllEventAsync([FromQuery] PageParaModel pageParaModel) 
+        public async Task<IActionResult> GetAllEventAsync([FromQuery] PageParaModel pageParaModel, string? category, string? status) 
         {
             try
             {
-                var result = await _eventService.GetAllEventAsync(pageParaModel);
+                var result = await _eventService.GetAllEventAsync(pageParaModel, category, status);
                 var metadata = new
                 {
                     result.TotalCount,

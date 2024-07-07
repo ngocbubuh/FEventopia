@@ -18,6 +18,11 @@ namespace FEventopia.Repositories.Repositories
             return await _genericDAO.AddAsync(entity);
         }
 
+        public async Task<bool> AddRangeAsync(List<TEntity> entities)
+        {
+            return await _genericDAO.AddRangeAsync(entities);
+        }
+
         public async Task<bool> DeleteAsync(TEntity entity)
         {
             return await _genericDAO.DeleteAsync(entity);
