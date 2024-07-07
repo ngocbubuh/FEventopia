@@ -101,6 +101,10 @@ namespace FEventopia.Services.Services
         public async Task<bool> CheckInAsync(string ticketId)
         {
             var ticket = await _ticketRepository.GetByIdAsync(ticketId);
+            if(ticket.CheckInStatus)
+            {
+                return false;
+            }
             ticket.CheckInStatus = true;
             return await _ticketRepository.UpdateAsync(ticket);
         }

@@ -92,10 +92,11 @@ namespace FEventopia.Controllers.Controllers
         }
 
         [HttpPost("AddEventStall")]
-        public async Task<IActionResult> AddEventStall(string eventDetailId, string username, string stallnumber)
+        public async Task<IActionResult> AddEventStall(string eventDetailId, string stallnumber)
         {
             try
             {
+                var username = _authenService.GetCurrentLogin;
                 var result = await _eventStallService.CreateEventStall(eventDetailId, username, stallnumber);
                 return Ok(result);
             }

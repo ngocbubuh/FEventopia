@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace FEventopia.Repositories.Repositories
@@ -27,6 +28,8 @@ namespace FEventopia.Repositories.Repositories
             {
                 return text;
             }
+
+            text = Regex.Replace(text, "[^a-zA-Z0-9 ]", " ");
 
             var normalizedString = text.Normalize(NormalizationForm.FormD);
             var stringBuilder = new StringBuilder();

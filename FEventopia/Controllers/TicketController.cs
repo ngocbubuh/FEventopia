@@ -32,79 +32,153 @@ namespace FEventopia.Controllers.Controllers
             _userService = userService;
         }
 
+        //[HttpPost("BuyTicket")]
+        //[Authorize(Roles = "VISITOR")]
+        //public async Task<IActionResult> BuyTicketAsync([Required] List<BuyTicketRequestModel> requestModels) 
+        //{
+        //    try
+        //    {
+        //        if (ModelState.IsValid)
+        //        {
+        //            //Lấy user đang login
+        //            var username = _authenService.GetCurrentLogin;
+
+        //            //Lấy thông tin user
+        //            var account = await _userService.GetAccountByUsernameAsync(username);
+
+        //            //Nếu tiền trong tài khoản ít hơn tổng giá vé => Hủy
+        //            double totalPrice = 0;
+        //            foreach (var item in requestModels)
+        //            {
+        //                totalPrice += item.TicketPrice;
+        //            }
+        //            if (account.CreditAmount < totalPrice)
+        //            {
+        //                var response = new ResponseModel
+        //                {
+        //                    Status = false,
+        //                    Message = "Not enough credit!"
+        //                };
+        //                return BadRequest(response);
+        //            }
+
+        //            //Với mỗi loại vé của các sự kiện khác nhau
+        //            foreach (var entity in requestModels)
+        //            {
+        //                //Với mỗi số lượng mà loại vé đó đặt
+        //                for (var i = 1; i <= entity.Quantity; i++)
+        //                {
+        //                    var result = await _ticketService.AddTicketAsync(entity.EventDetailId.ToString(), username);
+        //                    if (result != null)
+        //                    {
+        //                        //Tạo link checkin
+        //                        var checkinUrl = Url.Action(nameof(Checkin), "Ticket", new { Id = result.Id }, Request.Scheme);
+        //                        var url = HttpUtility.UrlEncode(checkinUrl);
+
+        //                        //Gửi mail vẽ với mỗi vé tạo thành công
+        //                        var messageRequest = new MailRequestSetting
+        //                        {
+        //                            ToEmail = entity.EmailReceive,
+        //                            Subject = "FEventopia Ticket Confirmation",
+        //                            Body = TicketEmail.EmailContent(result, account, result.Id)
+        //                        };
+        //                        await _mailService.SendEmailAsync(messageRequest);
+        //                    } else 
+        //                    {
+        //                        //Sự kiện chưa mở bán vé
+        //                        var response = new ResponseModel
+        //                        {
+        //                            Status = false,
+        //                            Message = "Booking failed!"
+        //                        };
+        //                        return BadRequest(response);
+        //                    }
+        //                }
+        //            }
+
+        //            //Response
+        //            var responseSuccess = new ResponseModel
+        //            {
+        //                Status = true,
+        //                Message = "Booking Ticket Successfully!"
+        //            };
+        //            return Ok(responseSuccess);
+        //        } else 
+        //        { 
+        //            return ValidationProblem(ModelState);
+        //        }
+        //    } catch
+        //    {
+        //        throw;
+        //    }
+        //}
+
         [HttpPost("BuyTicket")]
         [Authorize(Roles = "VISITOR")]
-        public async Task<IActionResult> BuyTicketAsync([Required] List<BuyTicketRequestModel> requestModels) 
+        public async Task<IActionResult> AddTicketAsync(BuyTicketRequestModel buyTicketRequestModel)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    //Lấy user đang login
                     var username = _authenService.GetCurrentLogin;
-
-                    //Lấy thông tin user
                     var account = await _userService.GetAccountByUsernameAsync(username);
-
-                    //Nếu tiền trong tài khoản ít hơn tổng giá vé => Hủy
-                    double totalPrice = 0;
-                    foreach (var item in requestModels)
-                    {
-                        totalPrice += item.TicketPrice;
-                    }
-                    if (account.CreditAmount < totalPrice)
+                    //Kiểm tra account có đủ tiền hay ko
+                    if(account.CreditAmount < buyTicketRequestModel.TotalPrice)
                     {
                         var response = new ResponseModel
                         {
-                            Status = false,
-                            Message = "Not enough credit!"
+                            Status = true,
+                            Message = "Insufficient credit!"
                         };
                         return BadRequest(response);
                     }
-                    
-                    //Với mỗi loại vé của các sự kiện khác nhau
-                    foreach (var entity in requestModels)
+                    else
                     {
-                        //Với mỗi số lượng mà loại vé đó đặt
-                        for (var i = 1; i <= entity.Quantity; i++)
+                        bool bookingFlag = false;
+                        foreach (var item in buyTicketRequestModel.TicketRequests)
                         {
-                            var result = await _ticketService.AddTicketAsync(entity.EventDetailId.ToString(), username);
-                            if (result != null)
+                            //Với mỗi số lượng mà loại vé đó đặt
+                            for (var i = 1; i <= item.Quantity; i++)
                             {
-                                //Tạo link checkin
-                                var checkinUrl = Url.Action(nameof(Checkin), "Ticket", new { Id = result.Id }, Request.Scheme);
-                                var url = HttpUtility.UrlEncode(checkinUrl);
-
-                                //Gửi mail vẽ với mỗi vé tạo thành công
-                                var messageRequest = new MailRequestSetting
+                                var result = await _ticketService.AddTicketAsync(item.EventDetailId.ToString(), username);
+                                if (result != null)
                                 {
-                                    ToEmail = entity.EmailReceive,
-                                    Subject = "FEventopia Ticket Confirmation",
-                                    Body = TicketEmail.EmailContent(result, account, result.Id)
-                                };
-                                await _mailService.SendEmailAsync(messageRequest);
-                            } else 
-                            {
-                                //Sự kiện chưa mở bán vé
-                                var response = new ResponseModel
+                                    //Gửi mail vẽ với mỗi vé tạo thành công
+                                    var messageRequest = new MailRequestSetting
+                                    {
+                                        ToEmail = buyTicketRequestModel.EmailAddress,
+                                        Subject = "FEventopia Ticket Confirmation",
+                                        Body = TicketEmail.EmailContent(result, account, HttpUtility.UrlEncode(result.Id))
+                                    };
+                                    await _mailService.SendEmailAsync(messageRequest);
+                                } else
                                 {
-                                    Status = false,
-                                    Message = "Booking failed!"
-                                };
-                                return BadRequest(response);
+                                    bookingFlag = true;
+                                }
                             }
                         }
+                        if (bookingFlag)
+                        {
+                            var response = new ResponseModel
+                            {
+                                Status = false,
+                                Message = "1 or all ticket booking request failed, please check your email and inventory for more details!"
+                            };
+                            return BadRequest(response);
+                        }
+                        else
+                        {
+                            var response = new ResponseModel
+                            {
+                                Status = true,
+                                Message = "Booking Ticket Successfully!"
+                            };
+                            return Ok(response);
+                        }
                     }
-
-                    //Response
-                    var responseSuccess = new ResponseModel
-                    {
-                        Status = true,
-                        Message = "Booking Ticket Successfully!"
-                    };
-                    return Ok(responseSuccess);
-                } else 
-                { 
+                } else
+                {
                     return ValidationProblem(ModelState);
                 }
             } catch

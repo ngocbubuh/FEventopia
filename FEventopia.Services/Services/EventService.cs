@@ -106,11 +106,19 @@ namespace FEventopia.Services.Services
             return await _eventRepository.DeleteAsync(result);
         }
 
-        public async Task<PageModel<EventModel>> GetAllEventAsync(PageParaModel pagePara)
+        public async Task<PageModel<EventModel>> GetAllEventAsync(PageParaModel pagePara, string? category, string? status)
         {
             var eventList = await _eventRepository.GetAllAsync();
             eventList.Sort((t1, t2) => t2.CreatedDate.CompareTo(t1.CreatedDate));
             var result = _mapper.Map<List<EventModel>>(eventList);
+            if (!category.IsNullOrEmpty())
+            {
+                result = result.Where(e => e.Category.ToLower().Equals(category.ToLower())).ToList();
+            }
+            if (!status.IsNullOrEmpty())
+            {
+                result = result.Where(e => e.Status.ToLower().Equals(status.ToLower())).ToList();
+            }
             return PageModel<EventModel>.ToPagedList(result,
                 pagePara.PageNumber,
                 pagePara.PageSize);

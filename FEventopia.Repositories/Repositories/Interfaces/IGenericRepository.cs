@@ -9,5 +9,6 @@ namespace FEventopia.Repositories.Repositories.Interfaces
         public Task<TEntity> AddAsync(TEntity entity);
         public Task<bool> UpdateAsync(TEntity entity);
         public Task<bool> DeleteAsync(TEntity entity);
+        public Task<bool> AddRangeAsync(List<TEntity> entities);
     }
 }
