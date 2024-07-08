@@ -26,6 +26,7 @@ namespace FEventopia.Controllers.Controllers
         }
 
         [HttpGet("GetAllEvent")]
+        [Authorize(Roles = "SPONSOR, CHECKINGSTAFF, EVENTOPERATOR, ADMIN")]
         public async Task<IActionResult> GetAllEventAsync([FromQuery] PageParaModel pageParaModel, string? category, string? status) 
         {
             try
@@ -209,5 +210,28 @@ namespace FEventopia.Controllers.Controllers
             }
         }
 
+        [HttpGet("GetAllEventForVisitor")]
+        public async Task<IActionResult> GetAllEventForVisitor([FromQuery] PageParaModel pageParaModel, string? category, string? status)
+        {
+            try
+            {
+                var result = await _eventService.GetAllEventForVisitorAsync(pageParaModel, category, status);
+                var metadata = new
+                {
+                    result.TotalCount,
+                    result.PageSize,
+                    result.CurrentPage,
+                    result.TotalPages,
+                    result.HasNext,
+                    result.HasPrevious
+                };
+                Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
+                return Ok(result);
+            }
+            catch
+            {
+                throw;
+            }
+        }
     }
 }

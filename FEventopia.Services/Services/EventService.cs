@@ -208,5 +208,22 @@ namespace FEventopia.Services.Services
             return _mapper.Map<List<EventModel>>(results);
         }
 
+        public async Task<PageModel<EventModel>> GetAllEventForVisitorAsync(PageParaModel pagePara, string? category, string? status)
+        {
+            var eventList = await _eventRepository.GetAllEventForVisitorAsync();
+            eventList.Sort((t1, t2) => t2.CreatedDate.CompareTo(t1.CreatedDate));
+            var result = _mapper.Map<List<EventModel>>(eventList);
+            if (!category.IsNullOrEmpty())
+            {
+                result = result.Where(e => e.Category.ToLower().Equals(category.ToLower())).ToList();
+            }
+            if (!status.IsNullOrEmpty())
+            {
+                result = result.Where(e => e.Status.ToLower().Equals(status.ToLower())).ToList();
+            }
+            return PageModel<EventModel>.ToPagedList(result,
+                pagePara.PageNumber,
+                pagePara.PageSize);
+        }
     }
 }
