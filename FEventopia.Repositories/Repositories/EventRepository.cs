@@ -75,5 +75,10 @@ namespace FEventopia.Repositories.Repositories
             return events.Where(e => e.EventName.Equals(name)).SingleOrDefault();
         }
 
+        public async Task<List<Event>> GetAllEventForVisitorAsync()
+        {
+            var eventLists = await _eventDAO.GetAllAsync();
+            return eventLists.Where(e => e.Status.ToUpper().Equals("EXECUTE") || e.Status.ToUpper().Equals("POST")).ToList();
+        }
     }
 }
