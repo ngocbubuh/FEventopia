@@ -5,8 +5,7 @@ using FEventopia.Services.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
-using System.Drawing.Printing;
+using Newtonsoft.Json;
 
 namespace FEventopia.Controllers.Controllers
 {
@@ -15,23 +14,85 @@ namespace FEventopia.Controllers.Controllers
     public class EventAssigneeController : ControllerBase
     {
         private readonly IEventAssigneeService _eventAssigneeService;
+        private readonly IAuthenService _authenService;
 
-        public EventAssigneeController(IEventAssigneeService eventAssigneeService)
+        public EventAssigneeController(IEventAssigneeService eventAssigneeService, IAuthenService authenService)
         {
             this._eventAssigneeService = eventAssigneeService;
+            this._authenService = authenService;
         }
 
-        [HttpGet("GetAllByEventDetailId")]
+        [HttpGet("GetAllByCurrentEvent")]
         [Authorize(Roles = "ADMIN,EVENTOPERATOR")]
         public async Task<IActionResult> GetAllByEventDetailId(string eventdetailid, [FromQuery] PageParaModel pageParaModel)
         {
             try
             {
-                var results = await _eventAssigneeService.GetAllByEventDetailId(eventdetailid, pageParaModel);
-                return Ok(results);
+                var result = await _eventAssigneeService.GetAllByEventDetailId(eventdetailid, pageParaModel);
+                var metadata = new
+                {
+                    result.TotalCount,
+                    result.PageSize,
+                    result.CurrentPage,
+                    result.TotalPages,
+                    result.HasNext,
+                    result.HasPrevious
+                };
+                Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
+                return Ok(result);
             }
             catch
             { 
+                throw;
+            }
+        }
+
+        [HttpGet("GetAllByCurrentUser")]
+        [Authorize(Roles = "ADMIN, EVENTOPERATOR, CHECKINGSTAFF")]
+        public async Task<IActionResult> GetAllByAcocuntUsername([FromQuery] PageParaModel pagePara)
+        {
+            try
+            {
+                var username = _authenService.GetCurrentLogin;
+                var result = await _eventAssigneeService.GetAllByAccountId(username, pagePara);
+                var metadata = new
+                {
+                    result.TotalCount,
+                    result.PageSize,
+                    result.CurrentPage,
+                    result.TotalPages,
+                    result.HasNext,
+                    result.HasPrevious
+                };
+                Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
+                return Ok(result);
+            } catch
+            {
+                throw;
+            }
+        }
+
+        [HttpGet("GetAllByAccountId")]
+        [Authorize(Roles = "ADMIN, EVENTOPERATOR")]
+        public async Task<IActionResult> GetAllByAccountId([FromQuery] PageParaModel pagePara, string username)
+        {
+            try
+            {
+                var result = await _eventAssigneeService.GetAllByAccountId(username, pagePara);
+                var metadata = new
+                {
+                    result.TotalCount,
+                    result.PageSize,
+                    result.CurrentPage,
+                    result.TotalPages,
+                    result.HasNext,
+                    result.HasPrevious
+                };
+                Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
+                return Ok(result);
+            }
+            catch
+            {
                 throw;
             }
         }

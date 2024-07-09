@@ -26,7 +26,7 @@ namespace FEventopia.Controllers.Controllers
         }
 
         [HttpGet("GetAllEvent")]
-        [Authorize(Roles = "SPONSOR, CHECKINGSTAFF, EVENTOPERATOR, ADMIN")]
+        [Authorize(Roles = "SPONSOR, EVENTOPERATOR, ADMIN")]
         public async Task<IActionResult> GetAllEventAsync([FromQuery] PageParaModel pageParaModel, string? category, string? status) 
         {
             try
