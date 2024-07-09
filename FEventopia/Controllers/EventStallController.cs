@@ -4,6 +4,7 @@ using FEventopia.Services.Services;
 using FEventopia.Services.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace FEventopia.Controllers.Controllers
 {
@@ -27,6 +28,16 @@ namespace FEventopia.Controllers.Controllers
             try
             {
                 var result = await _eventStallService.GetAllEventStall(pageParaModel);
+                var metadata = new
+                {
+                    result.TotalCount,
+                    result.PageSize,
+                    result.CurrentPage,
+                    result.TotalPages,
+                    result.HasNext,
+                    result.HasPrevious
+                };
+                Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
                 return Ok(result);
             }
             catch
@@ -41,6 +52,16 @@ namespace FEventopia.Controllers.Controllers
             try
             {
                 var result = await _eventStallService.GetEventStallBySponsorID(username, pageParaModel);
+                var metadata = new
+                {
+                    result.TotalCount,
+                    result.PageSize,
+                    result.CurrentPage,
+                    result.TotalPages,
+                    result.HasNext,
+                    result.HasPrevious
+                };
+                Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
                 return Ok(result);
             }
             catch
@@ -56,6 +77,16 @@ namespace FEventopia.Controllers.Controllers
             {
                 var username = _authenService.GetCurrentLogin;
                 var result = await _eventStallService.GetEventStallBySponsorID(username, pageParaModel);
+                var metadata = new
+                {
+                    result.TotalCount,
+                    result.PageSize,
+                    result.CurrentPage,
+                    result.TotalPages,
+                    result.HasNext,
+                    result.HasPrevious
+                };
+                Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
                 return Ok(result);
             }
             catch
@@ -70,6 +101,16 @@ namespace FEventopia.Controllers.Controllers
             try
             {
                 var result = await _eventStallService.GetAllByStallNumber(stallnumber, pageParaModel);
+                var metadata = new
+                {
+                    result.TotalCount,
+                    result.PageSize,
+                    result.CurrentPage,
+                    result.TotalPages,
+                    result.HasNext,
+                    result.HasPrevious
+                };
+                Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
                 return Ok(result);
             }
             catch

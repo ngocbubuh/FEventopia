@@ -77,7 +77,6 @@ namespace FEventopia.Services.Services
                     eventDetail.EstimateCost = location.Capacity * 500000;
                     break;
             }
-
             var result = await _eventDetailRepository.AddAsync(eventDetail);
             return _mapper.Map<EventDetailOperatorModel>(result);
         }

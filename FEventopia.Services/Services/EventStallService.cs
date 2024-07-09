@@ -112,14 +112,14 @@ namespace FEventopia.Services.Services
             return _mapper.Map<EventStallModel>(result);
         }
 
-        public async Task<List<EventStallModel>> GetAllEventStall(PageParaModel pageParaModel)
+        public async Task<PageModel<EventStallModel>> GetAllEventStall(PageParaModel pageParaModel)
         {
             var eventStalls =  await _eventStallRepository.GetAllAsync();
             var result = _mapper.Map<List<EventStallModel>>(eventStalls);
             return PageModel<EventStallModel>.ToPagedList(result, pageParaModel.PageNumber, pageParaModel.PageSize);
         }
 
-        public async Task<List<EventStallModel>> GetEventStallBySponsorID(string username, PageParaModel pageParaModel)
+        public async Task<PageModel<EventStallModel>> GetEventStallBySponsorID(string username, PageParaModel pageParaModel)
         {
             var user = await _userRepository.GetAccountByUsernameAsync(username);
             var eventstalls = await _eventStallRepository.GetBySponsorIDAsync(user.Id);
@@ -128,7 +128,7 @@ namespace FEventopia.Services.Services
             return PageModel<EventStallModel>.ToPagedList(result, pageParaModel.PageNumber, pageParaModel.PageSize);
         }
 
-        public async Task<List<EventStallModel>> GetAllByStallNumber(string stallnumber, PageParaModel pageParaModel)
+        public async Task<PageModel<EventStallModel>> GetAllByStallNumber(string stallnumber, PageParaModel pageParaModel)
         {
             var eventstalls = await _eventStallRepository.GetByEventStallNumber(stallnumber);
             var result = _mapper.Map<List<EventStallModel>>(eventstalls);

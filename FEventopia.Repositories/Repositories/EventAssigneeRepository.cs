@@ -31,5 +31,11 @@ namespace FEventopia.Repositories.Repositories
             //string accountId = accountIdSAMPLE.ToLower();
             return eventassignee.Where(e => e.EventDetailId.ToString().Equals(eventdetailId) && e.AccountId.Equals(accountId)).SingleOrDefault();
         }
+
+        public async Task<List<EventAssignee>> GetEventAssigneeByAccountId(string accountid)
+        {
+            var evenAssignee = await _EventAssigneeDAO.GetAllAsync();
+            return evenAssignee.Where(ea => ea.AccountId.ToString().ToLower().Equals(accountid)).ToList();
+        }
     }
 }
