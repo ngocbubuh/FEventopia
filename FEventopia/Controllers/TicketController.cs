@@ -108,12 +108,12 @@ namespace FEventopia.Controllers.Controllers
 
         [HttpGet("Checkin")]
         [Authorize(Roles = "CHECKINGSTAFF, EVENTOPERATOR")]
-        public async Task<IActionResult> Checkin(string ticketId)
+        public async Task<IActionResult> Checkin(string ticketId, string eventDetailId)
         {
             try
             {
                 //Thêm quét sự kiện hiện tại để chỉ checkin thành công đúng vé của sự kiện đó
-                var result = await _ticketService.CheckInAsync(ticketId);
+                var result = await _ticketService.CheckInAsync(ticketId, eventDetailId);
                 if (result)
                 {
                     var response = new ResponseModel

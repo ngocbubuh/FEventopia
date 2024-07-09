@@ -98,15 +98,24 @@ namespace FEventopia.Services.Services
             return _mapper.Map<TicketModel>(result);
         }
 
-        public async Task<bool> CheckInAsync(string ticketId)
+        public async Task<bool> CheckInAsync(string ticketId, string eventDetailId)
         {
-            var ticket = await _ticketRepository.GetByIdAsync(ticketId);
-            if(ticket.CheckInStatus)
+            var ticket = await _ticketRepository.GetTicketDetailById(ticketId);
+            var eventDetail = await _eventDetailRepository.GetByIdAsync(eventDetailId);
+            if(ticket.EventDetailID.ToString().ToLower().Equals(eventDetail.Id.ToString().ToLower()))
+            {
+                if (ticket.CheckInStatus)
+                {
+                    return false;
+                }
+                ticket.CheckInStatus = true;
+                return await _ticketRepository.UpdateAsync(ticket);
+            }
+            else
             {
                 return false;
             }
-            ticket.CheckInStatus = true;
-            return await _ticketRepository.UpdateAsync(ticket);
+            
         }
 
         public async Task<PageModel<TicketModel>> GetAllTicketWithDetailAsync(PageParaModel pageParaModel)

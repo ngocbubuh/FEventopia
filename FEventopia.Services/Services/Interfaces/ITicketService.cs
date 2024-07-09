@@ -16,6 +16,6 @@ namespace FEventopia.Services.Services.Interfaces
         public Task<PageModel<TicketModel>> GetAllTicketWithDetailCurrentUser(string userId, PageParaModel pageParaModel);
         public Task<TicketModel?> GetTicketDetailById(string ticketId);
         public Task<TicketModel> AddTicketAsync(string eventDetailId, string username);
-        public Task<bool> CheckInAsync(string ticketId);
+        public Task<bool> CheckInAsync(string ticketId, string eventDetailId);
     }
 }
