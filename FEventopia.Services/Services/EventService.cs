@@ -6,6 +6,7 @@ using FEventopia.Services.BussinessModels;
 using FEventopia.Services.Enum;
 using FEventopia.Services.Services.Interfaces;
 using FEventopia.Services.Utils;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -46,6 +47,9 @@ namespace FEventopia.Services.Services
         {
             //Cập nhật trạng thái sự kiện sang hủy
             var @event = await _eventRepository.GetEventWithDetailByIdAsync(id);
+
+            //Nếu ko tìm thấy hoặc sự kiện đã canceled =>
+            if (@event == null || @event.Status.Equals(EventStatus.CANCELED.ToString()) || @event.Status.Equals(EventStatus.POST.ToString())) return false;
             @event.Status = EventStatus.CANCELED.ToString();
             await _eventRepository.UpdateAsync(@event);
 
@@ -56,6 +60,9 @@ namespace FEventopia.Services.Services
                 var user = await _userRepository.GetAccountByIdAsync(ticket.VisitorID);
                 user.CreditAmount += ticket.Transaction.Amount;
                 await _userRepository.UpdateAccountAsync(user);
+
+                //Hủy vé
+                await _ticketRepository.DeleteAsync(ticket);
 
                 //Tạo transaction
                 var transaction = new Transaction
@@ -78,6 +85,9 @@ namespace FEventopia.Services.Services
                 var user = await _userRepository.GetAccountByIdAsync(sponsor.SponsorId);
                 user.CreditAmount += sponsor.ActualAmount;
                 await _userRepository.UpdateAccountAsync(user);
+
+                //Hủy hợp đồng
+                await _sponsorManagementRepository.DeleteAsync(sponsor);
 
                 //Tạo transaction
                 var transaction = new Transaction
@@ -143,6 +153,12 @@ namespace FEventopia.Services.Services
             {
                 return null;
             }
+
+            if (!eventCurrent.Status.Equals(EventStatus.INITIAL.ToString()))
+            {
+                return null;
+            }
+
             var eventUpdate = _mapper.Map(eventProcessModel, eventCurrent);
             var result = await _eventRepository.UpdateAsync(eventUpdate);
             if (!result)
@@ -224,6 +240,13 @@ namespace FEventopia.Services.Services
             return PageModel<EventModel>.ToPagedList(result,
                 pagePara.PageNumber,
                 pagePara.PageSize);
+        }
+
+        public async Task<List<EventModel>> GetAllAsync()
+        {
+            var result = await _eventRepository.GetAllAsync();
+            result.Sort((t1, t2) => t2.CreatedDate.CompareTo(t1.CreatedDate));
+            return _mapper.Map<List<EventModel>>(result);
         }
     }
 }
