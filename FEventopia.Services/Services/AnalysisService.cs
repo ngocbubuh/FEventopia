@@ -1,6 +1,7 @@
 ﻿using FEventopia.DAO.EntityModels;
 using FEventopia.Repositories.Repositories.Interfaces;
 using FEventopia.Services.BussinessModels;
+using FEventopia.Services.Enum;
 using FEventopia.Services.Services.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -50,12 +51,12 @@ namespace FEventopia.Services.Services
             var analysisModel = new AnalysisModel
             {
                 InitialCapital = @event.InitialCapital,
-                SponsorCaptital = @event.SponsorCapital,
+                SponsorCaptital = @event.Status.Equals(EventStatus.CANCELED.ToString()) ? 0 : @event.SponsorCapital,
                 NumTicketSold = ticketList.Count,
                 NumTicketCheckedIn = ticketList.Where(t => t.CheckInStatus).ToList().Count,
-                TicketIncome = @event.TicketSaleIncome,
+                TicketIncome = @event.Status.Equals(EventStatus.CANCELED.ToString()) ? 0 : @event.TicketSaleIncome,
                 NumStallSold = stallList.Count,
-                StallIncome = @event.StallSaleIncome,
+                StallIncome = @event.Status.Equals(EventStatus.CANCELED.ToString()) ? 0 : @event.StallSaleIncome,
                 AverageFeedback = !feedbackList.IsNullOrEmpty() ? feedbackList.Sum(feedback => feedback.Rate) / feedbackList.Count : 0,
                 ActualExpense = taskList.Sum(task => task.ActualCost)
             };

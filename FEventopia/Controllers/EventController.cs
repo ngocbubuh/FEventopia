@@ -152,8 +152,22 @@ namespace FEventopia.Controllers.Controllers
             }
         }
 
-        [HttpDelete("DeleteEvent")]
+        [HttpDelete("CancelEvent")]
         [Authorize(Roles = "ADMIN, EVENTOPERATOR")]
+        public async Task<IActionResult> CancelEvent(string id)
+        {
+            try
+            {
+                var result = await _eventService.CancelEventAsync(id);
+                return Ok(result);
+            } catch
+            {
+                throw;
+            }
+        }
+
+        [HttpDelete("DeleteEvent")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> DeleteEventAsync(string id)
         {
             try
@@ -197,12 +211,19 @@ namespace FEventopia.Controllers.Controllers
         }
 
         [HttpGet("SearchEventByName")]
-        public async Task<IActionResult> SearchEventByName(string name)
+        public async Task<IActionResult> SearchEventByName(string? name)
         {
             try
             {
-                var results = await _eventService.SearchEventByName(name);
-                return Ok(results);
+                if (name.IsNullOrEmpty())
+                {
+                    var results = await _eventService.GetAllAsync();
+                    return Ok(results);
+                } else
+                {
+                    var results = await _eventService.SearchEventByName(name);
+                    return Ok(results);
+                }
             }
             catch
             {
