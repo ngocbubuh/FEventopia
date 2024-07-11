@@ -13,6 +13,7 @@ namespace FEventopia.Services.BussinessModels
         public required string Id { get; set; }
         public required string EventDetailID { get; set; }
         public required string VisitorID { get; set; }
+        public bool CheckInStatus { get; set; }
 
         public TransactionModel? Transaction { get; set; }
         public EventDetailModel? EventDetail { get; set; }

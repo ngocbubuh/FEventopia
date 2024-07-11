@@ -278,21 +278,11 @@ namespace FEventopia.Controllers.Controllers
 
         [HttpGet("GetAllStaffAccount")]
         [Authorize(Roles = "ADMIN, EVENTOPERATOR")]
-        public async Task<IActionResult> GetAllStaffAccount([FromQuery] PageParaModel pageParaModel)
+        public async Task<IActionResult> GetAllStaffAccount()
         {
             try
             {
-                var result = await _userService.GetAllStaffAccountAsync(pageParaModel);
-                var metadata = new
-                {
-                    result.TotalCount,
-                    result.PageSize,
-                    result.CurrentPage,
-                    result.TotalPages,
-                    result.HasNext,
-                    result.HasPrevious
-                };
-                Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
+                var result = await _userService.GetAllStaffAccountAsync();
                 return Ok(result);
             } catch
             {
