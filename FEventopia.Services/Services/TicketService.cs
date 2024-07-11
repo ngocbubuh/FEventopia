@@ -118,6 +118,16 @@ namespace FEventopia.Services.Services
             
         }
 
+        public async Task<PageModel<TicketModel>> GetAllTicketEventAttendanceAsync(string username, PageParaModel pageParaModel)
+        {
+            var account = await _userRepository.GetAccountByUsernameAsync(username);
+            var ticketList = await _ticketRepository.GetAllTicketDetailCheckedInCurrentUser(account.Id);
+            var result = _mapper.Map<List<TicketModel>>(ticketList).GroupBy(e => e.EventDetailID).Select(group => group.First()).ToList();
+            return PageModel<TicketModel>.ToPagedList(result,
+                pageParaModel.PageNumber,
+                pageParaModel.PageSize);
+        }
+
         public async Task<PageModel<TicketModel>> GetAllTicketWithDetailAsync(PageParaModel pageParaModel)
         {
             var ticketList = await _ticketRepository.GetAllTicketWithDetail();

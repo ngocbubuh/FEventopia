@@ -45,13 +45,10 @@ namespace FEventopia.Services.Services
                 pagePara.PageSize);
         }
 
-        public async Task<PageModel<AccountModel>> GetAllStaffAccountAsync(PageParaModel pagePara)
+        public async Task<List<AccountModel>> GetAllStaffAccountAsync()
         {
             var resultList = await _userRepository.GetAllStaffAccount();
-            var result = _mapper.Map<List<AccountModel>>(resultList);
-            return PageModel<AccountModel>.ToPagedList(result,
-                pagePara.PageNumber,
-                pagePara.PageSize);
+            return _mapper.Map<List<AccountModel>>(resultList);
         }
 
         public async Task<bool> UnactivateAccountAsync(string username)

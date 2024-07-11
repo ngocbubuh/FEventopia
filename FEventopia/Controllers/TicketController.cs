@@ -224,6 +224,31 @@ namespace FEventopia.Controllers.Controllers
             }
         }
 
+        [HttpGet("GetAllEventCheckedInCurrentUser")]
+        [Authorize(Roles = "VISITOR")]
+        public async Task<IActionResult> GetAllEventCheckedInCurrentUser([FromQuery] PageParaModel pageParaModel)
+        {
+            try
+            {
+                var username = _authenService.GetCurrentLogin;
+                var result = await _ticketService.GetAllTicketEventAttendanceAsync(username, pageParaModel);
+                var metadata = new
+                {
+                    result.TotalCount,
+                    result.PageSize,
+                    result.CurrentPage,
+                    result.TotalPages,
+                    result.HasNext,
+                    result.HasPrevious
+                };
+                Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
+                return Ok(result);
+            } catch
+            {
+                throw;
+            }
+        }
+
         [HttpGet("GetAllTicketCheckedInCurrentUser")]
         [Authorize(Roles = "VISITOR")]
         public async Task<IActionResult> GetAllTicketCheckedInCurrentUser([FromQuery] PageParaModel pageParaModel)
@@ -243,7 +268,8 @@ namespace FEventopia.Controllers.Controllers
                 };
                 Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
                 return Ok(result);
-            } catch
+            }
+            catch
             {
                 throw;
             }
@@ -252,6 +278,31 @@ namespace FEventopia.Controllers.Controllers
         [HttpGet("GetAllTicketCheckedInByUsername")]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> GetAllTicketCheckedInByUsername([FromQuery] PageParaModel pageParaModel, string username)
+        {
+            try
+            {
+                var result = await _ticketService.GetAllTicketWithDetailCheckedInAsync(username, pageParaModel);
+                var metadata = new
+                {
+                    result.TotalCount,
+                    result.PageSize,
+                    result.CurrentPage,
+                    result.TotalPages,
+                    result.HasNext,
+                    result.HasPrevious
+                };
+                Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
+                return Ok(result);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        [HttpGet("GetAllTEventCheckedInByUsername")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> GetAllEventCheckedInByUsername([FromQuery] PageParaModel pageParaModel, string username)
         {
             try
             {
