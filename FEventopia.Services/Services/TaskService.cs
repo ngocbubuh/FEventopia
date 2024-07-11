@@ -19,14 +19,16 @@ namespace FEventopia.Services.Services
         private readonly ITaskRepository _taskRepository;
         private readonly IEventRepository _eventRepository;
         private readonly IEventDetailRepository _eventDetailRepository;
+        private readonly IUserRepository _userRepository;
         private IMapper _mapper;
 
-        public TaskService(ITaskRepository taskRepository, IMapper mapper, IEventRepository eventRepository, IEventDetailRepository eventDetailRepository)
+        public TaskService(ITaskRepository taskRepository, IMapper mapper, IEventRepository eventRepository, IEventDetailRepository eventDetailRepository, IUserRepository userRepository)
         {
             _taskRepository = taskRepository;
             _mapper = mapper;
             _eventRepository = eventRepository;
             _eventDetailRepository = eventDetailRepository;
+            _userRepository = userRepository;
         }
 
         public async Task<TaskModel> CreateTask(TaskModel taskmodel)
@@ -60,6 +62,21 @@ namespace FEventopia.Services.Services
         public async Task<PageModel<TaskModel>> GetAllByAccountId(string staffId, PageParaModel pageParaModel)
         {
             var tasks = await _taskRepository.GetAllByAccountId(staffId);
+            var result = _mapper.Map<List<TaskModel>>(tasks);
+            return PageModel<TaskModel>.ToPagedList(result, pageParaModel.PageNumber, pageParaModel.PageSize);
+        }
+
+        public async Task<PageModel<TaskModel>> GetAllByEventDetailId(string eventDetailId, PageParaModel pageParaModel)
+        {
+            var tasks = await _taskRepository.GetAllByEventDetailId(eventDetailId);
+            var result = _mapper.Map<List<TaskModel>>(tasks);
+            return PageModel<TaskModel>.ToPagedList(result, pageParaModel.PageNumber, pageParaModel.PageSize);
+        }
+
+        public async Task<PageModel<TaskModel>> GetAllByUsername(string username, PageParaModel pageParaModel)
+        {
+            var account = await _userRepository.GetAccountByUsernameAsync(username);
+            var tasks = await _taskRepository.GetAllByAccountId(account.Id);
             var result = _mapper.Map<List<TaskModel>>(tasks);
             return PageModel<TaskModel>.ToPagedList(result, pageParaModel.PageNumber, pageParaModel.PageSize);
         }
