@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -84,7 +85,7 @@ namespace FEventopia.Services.Services
                     TransactionType = TransactionType.IN.ToString(),
                     TransactionDate = TimeUtils.GetTimeVietNam(),
                     Amount = sponsor.ActualAmount,
-                    Description = $"FEventopia {user.UserName.ToUpper()}: '{@event.EventName}' event has been canceled: Refund -{sponsor.ActualAmount} | SponsorAgreementId: {sponsor.Id}.",
+                    Description = $"FEventopia {user.UserName.ToUpper()}: '{@event.EventName}' event has been canceled: Refund +{sponsor.ActualAmount} | SponsorAgreementId: {sponsor.Id}.",
                     Status = true
                 };
                 await _transactionRepository.AddAsync(transaction);
@@ -114,7 +115,7 @@ namespace FEventopia.Services.Services
                         TransactionType = TransactionType.IN.ToString(),
                         TransactionDate = TimeUtils.GetTimeVietNam(),
                         Amount = ticket.Transaction.Amount,
-                        Description = $"FEventopia {user.UserName.ToUpper()}: '{@event.EventName}' event has been canceled: Refund -{ticket.Transaction.Amount} | TicketId: {ticket.Id}.",
+                        Description = $"FEventopia {user.UserName.ToUpper()}: '{@event.EventName}' event has been canceled: Refund +{ticket.Transaction.Amount} | TicketId: {ticket.Id}.",
                         Status = true
                     };
                     await _transactionRepository.AddAsync(transaction);
@@ -139,7 +140,7 @@ namespace FEventopia.Services.Services
                         TransactionType = TransactionType.IN.ToString(),
                         TransactionDate = TimeUtils.GetTimeVietNam(),
                         Amount = stall.Transaction.Amount,
-                        Description = $"FEventopia {user.UserName.ToUpper()}: '{@event.EventName}' event has been canceled: Refund -{stall.Transaction.Amount} | StallId: {stall.Id}.",
+                        Description = $"FEventopia {user.UserName.ToUpper()}: '{@event.EventName}' event has been canceled: Refund +{stall.Transaction.Amount} | StallId: {stall.Id}.",
                         Status = true
                     };
                     await _transactionRepository.AddAsync(transaction);
@@ -220,12 +221,14 @@ namespace FEventopia.Services.Services
             {
                 return false;
             }
-            switch (eventModel.Status.ToString())
+
+            EventStatus status = (EventStatus)System.Enum.Parse(typeof(EventStatus), eventModel.Status);
+            switch (status)
             {
-                case "INITIAL":
+                case EventStatus.INITIAL:
                     eventModel.Status = EventStatus.FUNDRAISING.ToString();
                     break;
-                case "FUNDRAISING":
+                case EventStatus.FUNDRAISING:
                     //Cập nhật số dư thực tế của sponsor
                     var sponsorList = await _sponsorManagementRepository.GetAllSponsorManagementWithDetailCurrentEvent(id);
                     foreach (var sponsor in sponsorList)
@@ -239,7 +242,7 @@ namespace FEventopia.Services.Services
                     }
                     eventModel.Status = EventStatus.PREPARATION.ToString();
                     break;
-                case "PREPARATION":
+                case EventStatus.PREPARATION:
                     //Nếu sự kiện chưa tạo eventDetails mà đã muốn mở bán vé, từ chối
                     if ( eventModel == null || eventModel.EventDetail.IsNullOrEmpty())
                     {
@@ -247,7 +250,7 @@ namespace FEventopia.Services.Services
                     }
                     eventModel.Status = EventStatus.EXECUTE.ToString();
                     break;
-                case "EXECUTE":
+                case EventStatus.EXECUTE:
                     eventModel.Status = EventStatus.POST.ToString();
                     break;
                 default:

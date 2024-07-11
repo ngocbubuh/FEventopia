@@ -62,18 +62,19 @@ namespace FEventopia.Services.Services
             }
 
             //Calculate Estimate Cost base on Event and Location
-            switch (@event.Category)
+            EventCategory status = (EventCategory)System.Enum.Parse(typeof(EventCategory), @event.Category);
+            switch (status)
             {
-                case "TALKSHOW":
+                case EventCategory.TALKSHOW:
                     eventDetail.EstimateCost = location.Capacity * 200000;
                     break;
-                case "MUSICSHOW":
+                case EventCategory.MUSICSHOW:
                     eventDetail.EstimateCost = location.Capacity * 300000;
                     break;
-                case "FESTIVAL":
+                case EventCategory.FESTIVAL:
                     eventDetail.EstimateCost = location.Capacity * 400000;
                     break;
-                case "COMPETITION":
+                case EventCategory.COMPETITION:
                     eventDetail.EstimateCost = location.Capacity * 500000;
                     break;
             }
@@ -157,18 +158,19 @@ namespace FEventopia.Services.Services
             }
 
             //Calculate Estimate Cost base on Event and Location
-            switch (@event.Category)
+            EventCategory status = (EventCategory)System.Enum.Parse(typeof(EventCategory), @event.Category);
+            switch (status)
             {
-                case "TALKSHOW":
+                case EventCategory.TALKSHOW:
                     eventDetail.EstimateCost = location.Capacity * 200000;
                     break;
-                case "MUSICSHOW":
+                case EventCategory.MUSICSHOW:
                     eventDetail.EstimateCost = location.Capacity * 300000;
                     break;
-                case "FESTIVAL":
+                case EventCategory.FESTIVAL:
                     eventDetail.EstimateCost = location.Capacity * 400000;
                     break;
-                case "COMPETITION":
+                case EventCategory.COMPETITION:
                     eventDetail.EstimateCost = location.Capacity * 500000;
                     break;
             }
