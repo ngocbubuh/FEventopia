@@ -4,6 +4,7 @@ namespace FEventopia.Services.Services.Interfaces
 {
     public interface IUserService
     {
+        public Task<AccountModel> GetByIdAsync(string id);
         public Task<PageModel<AccountModel>> GetAllAccountAsync(PageParaModel pagePara);
         public Task<List<AccountModel>> GetAllStaffAccountAsync();
         public Task<AccountModel> GetAccountByUsernameAsync(string username);

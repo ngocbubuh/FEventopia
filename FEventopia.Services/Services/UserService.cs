@@ -45,6 +45,11 @@ namespace FEventopia.Services.Services
                 pagePara.PageSize);
         }
 
+        public async Task<AccountModel> GetByIdAsync(string id)
+        {
+            return _mapper.Map<AccountModel>(await _userRepository.GetAccountByIdAsync(id));
+        }
+
         public async Task<List<AccountModel>> GetAllStaffAccountAsync()
         {
             var resultList = await _userRepository.GetAllStaffAccount();

@@ -54,7 +54,7 @@ namespace FEventopia.Controllers.Controllers
             try
             {
                 var username = _authenService.GetCurrentLogin;
-                var result = await _eventAssigneeService.GetAllByAccountId(username, pagePara);
+                var result = await _eventAssigneeService.GetAllByAccountUsername(username, pagePara);
                 var metadata = new
                 {
                     result.TotalCount,
@@ -72,13 +72,13 @@ namespace FEventopia.Controllers.Controllers
             }
         }
 
-        [HttpGet("GetAllByAccountId")]
+        [HttpGet("GetAllByAccountUsername")]
         [Authorize(Roles = "ADMIN, EVENTOPERATOR")]
         public async Task<IActionResult> GetAllByAccountId([FromQuery] PageParaModel pagePara, string username)
         {
             try
             {
-                var result = await _eventAssigneeService.GetAllByAccountId(username, pagePara);
+                var result = await _eventAssigneeService.GetAllByAccountUsername(username, pagePara);
                 var metadata = new
                 {
                     result.TotalCount,

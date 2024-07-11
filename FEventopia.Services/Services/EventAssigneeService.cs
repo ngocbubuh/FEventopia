@@ -82,7 +82,7 @@ namespace FEventopia.Services.Services
             return await _eventAssigneeRepository.DeleteAsync(eventassignee);
         }
 
-        public async Task<PageModel<EventAssigneeModel>> GetAllByAccountId(string username, PageParaModel pageParaModel)
+        public async Task<PageModel<EventAssigneeModel>> GetAllByAccountUsername(string username, PageParaModel pageParaModel)
         {
             var account = await _userRepository.GetAccountByUsernameAsync(username);
             var eventAssignees = await _eventAssigneeRepository.GetEventAssigneeByAccountId(account.Id);

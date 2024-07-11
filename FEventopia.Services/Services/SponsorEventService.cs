@@ -58,7 +58,7 @@ namespace FEventopia.Services.Services
             await _userRepository.UpdateAccountAsync(account);
 
             //Cập nhật tiền nhận tài trợ của sự kiện
-            @event.StallSaleIncome += sponsorEventProcessModel.Amount;
+            @event.SponsorCapital += sponsorEventProcessModel.Amount;
             await _eventRepository.UpdateAsync(@event);
 
             //Ghi nhận giao dịch, cập nhật Agreement

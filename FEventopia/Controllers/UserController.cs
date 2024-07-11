@@ -289,5 +289,19 @@ namespace FEventopia.Controllers.Controllers
                 throw;
             }
         }
+
+        [HttpGet("GetById")]
+        [Authorize(Roles = "ADMIN, EVENTOPERATOR")]
+        public async Task<IActionResult> GetById(string id)
+        {
+            try
+            {
+                var result = await _userService.GetByIdAsync(id);
+                return Ok(result);
+            } catch
+            {
+                throw;
+            }
+        }
     }
 }

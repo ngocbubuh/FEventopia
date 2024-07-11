@@ -18,9 +18,11 @@ namespace FEventopia.Controllers.Controllers
     public class TaskController : ControllerBase
     {
         private readonly ITaskService _taskService;
-        public TaskController(ITaskService taskService)
+        private readonly IAuthenService _authenService;
+        public TaskController(ITaskService taskService, IAuthenService authenService)
         {
             _taskService = taskService;
+            _authenService = authenService;
         }
 
         [HttpGet("GetById")]
@@ -38,13 +40,63 @@ namespace FEventopia.Controllers.Controllers
             }
         }
 
-        [HttpGet("GetAllByStaffId")]
+        [HttpGet("GetAllByEventDetailId")]
         [Authorize(Roles = "ADMIN,EVENTOPERATOR,CHECKINGSTAFF")]
-        public async Task<IActionResult> GetAllByStaffId(string staffId,[FromQuery] PageParaModel pageParaModel)
+        public async Task<IActionResult> GetAllByEventDetailId(string eventDetailId, [FromQuery] PageParaModel pageParaModel)
         {
             try
             {
-                var result = await _taskService.GetAllByAccountId(staffId, pageParaModel);
+                var result = await _taskService.GetAllByEventDetailId(eventDetailId, pageParaModel);
+                var metadata = new
+                {
+                    result.TotalCount,
+                    result.PageSize,
+                    result.CurrentPage,
+                    result.TotalPages,
+                    result.HasNext,
+                    result.HasPrevious
+                };
+                Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
+                return Ok(result);
+            } catch
+            {
+                throw;
+            }
+        }
+
+        [HttpGet("GetAllByStaffUsername")]
+        [Authorize(Roles = "ADMIN,EVENTOPERATOR,CHECKINGSTAFF")]
+        public async Task<IActionResult> GetAllByStaffUsername(string username,[FromQuery] PageParaModel pageParaModel)
+        {
+            try
+            {
+                var result = await _taskService.GetAllByUsername(username, pageParaModel);
+                var metadata = new
+                {
+                    result.TotalCount,
+                    result.PageSize,
+                    result.CurrentPage,
+                    result.TotalPages,
+                    result.HasNext,
+                    result.HasPrevious
+                };
+                Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
+                return Ok(result);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        [HttpGet("GetAllByCurrentUser")]
+        [Authorize(Roles = "CHECKINGSTAFF")]
+        public async Task<IActionResult> GetAllByCurrentUser([FromQuery] PageParaModel pageParaModel)
+        {
+            try
+            {
+                var username = _authenService.GetCurrentLogin;
+                var result = await _taskService.GetAllByUsername(username, pageParaModel);
                 var metadata = new
                 {
                     result.TotalCount,
