@@ -51,12 +51,12 @@ namespace FEventopia.Services.Services
             var analysisModel = new AnalysisModel
             {
                 InitialCapital = @event.InitialCapital,
-                SponsorCaptital = @event.Status.Equals(EventStatus.CANCELED.ToString()) ? 0 : @event.SponsorCapital,
+                SponsorCaptital = @event.SponsorCapital,
                 NumTicketSold = ticketList.Count,
                 NumTicketCheckedIn = ticketList.Where(t => t.CheckInStatus).ToList().Count,
-                TicketIncome = @event.Status.Equals(EventStatus.CANCELED.ToString()) ? 0 : @event.TicketSaleIncome,
+                TicketIncome = @event.TicketSaleIncome,
                 NumStallSold = stallList.Count,
-                StallIncome = @event.Status.Equals(EventStatus.CANCELED.ToString()) ? 0 : @event.StallSaleIncome,
+                StallIncome = @event.StallSaleIncome,
                 AverageFeedback = !feedbackList.IsNullOrEmpty() ? feedbackList.Sum(feedback => feedback.Rate) / feedbackList.Count : 0,
                 ActualExpense = taskList.Sum(task => task.ActualCost)
             };

@@ -13,5 +13,6 @@ namespace FEventopia.Repositories.Repositories.Interfaces
         public Task<List<Ticket>> GetAllTicketWithDetailCurrentEvent(string eventId);
         public Task<List<Ticket>> GetAllTicketWithDetailCurrentUser(string userId);
         public Task<Ticket?> GetTicketDetailById(string ticketId);
+        public Task<List<Ticket>> GetAllTicketDetailCheckedInCurrentUser(string userId);
     }
 }

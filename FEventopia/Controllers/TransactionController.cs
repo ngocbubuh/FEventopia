@@ -108,7 +108,7 @@ namespace FEventopia.Controllers.Controllers
         }
 
         [HttpGet("GetAllUserTransaction")]
-        [Authorize]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> GetAllUserTransactionAsync([FromQuery] PageParaModel model, string username)
         {
             try

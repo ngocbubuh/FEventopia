@@ -23,7 +23,7 @@ namespace FEventopia.Controllers.Controllers
         }
 
         [HttpGet("GetAllByCurrentEvent")]
-        [Authorize(Roles = "ADMIN,EVENTOPERATOR")]
+        [Authorize(Roles = "ADMIN, EVENTOPERATOR, CHECKINGSTAFF")]
         public async Task<IActionResult> GetAllByEventDetailId(string eventdetailid, [FromQuery] PageParaModel pageParaModel)
         {
             try
@@ -114,12 +114,29 @@ namespace FEventopia.Controllers.Controllers
 
         [HttpPost("AddEventAssignee")]
         [Authorize(Roles = "ADMIN,EVENTOPERATOR")]
-        public async Task<IActionResult> AddEventStall(string accountId, string eventDetailId)
+        public async Task<IActionResult> AddEventAssignee(string accountId, string eventDetailId)
         {
             try
             {
                 var result = await _eventAssigneeService.AddEventAssignee(accountId, eventDetailId);
-                return Ok(result);
+                if (result)
+                {
+                    var response = new ResponseModel
+                    {
+                        Status = true,
+                        Message = "Add Event Assignee Successfully!"
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    var response = new ResponseModel
+                    {
+                        Status = false,
+                        Message = "Add Event Assignee Failed!"
+                    };
+                    return BadRequest(response);
+                }
             }
             catch
             {

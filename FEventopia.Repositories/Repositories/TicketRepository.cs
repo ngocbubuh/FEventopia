@@ -39,5 +39,11 @@ namespace FEventopia.Repositories.Repositories
         {
             return await _ticketDAO.GetTicketDetail(ticketId);
         }
+
+        public async Task<List<Ticket>> GetAllTicketDetailCheckedInCurrentUser(string userId)
+        {
+            var result = await _ticketDAO.GetAllTicketDetail();
+            return result.Where(t => t.VisitorID.ToString().ToLower().Equals(userId.ToLower()) && t.CheckInStatus).ToList();
+        }
     }
 }

@@ -10,6 +10,7 @@ namespace FEventopia.Services.Services.Interfaces
     public interface IEventDetailService
     {
         public Task<PageModel<EventDetailModel>> GetAllEventDetailByEventIdAsync(string eventId, PageParaModel pagePara);
+        public Task<PageModel<EventDetailModel>> GetAllEventDetailAtLocation(string locationId, DateTime startDate, DateTime endDate, PageParaModel pagePara);
         public Task<EventDetailModel> GetEventDetailByIdAsync(string id);
         public Task<EventDetailOperatorModel> GetEventDetailOperatorByIdAsync(string id);
         public Task<EventDetailOperatorModel> AddEventDetailAsync(EventDetailProcessModel eventDetailModel);

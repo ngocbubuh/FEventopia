@@ -6,9 +6,7 @@ namespace FEventopia.Services.BussinessModels
 {
     public class AccountModel
     {
-        [JsonIgnore]
-        [Ignore]
-        public string? Id { get; set; } //Fix bug AutoMapper ::))))) Just ignore this ::33
+        public string? Id { get; set; }
 
         [Required(AllowEmptyStrings = false,
           ErrorMessage = "Display Name required!")]

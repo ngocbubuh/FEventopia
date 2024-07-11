@@ -159,7 +159,24 @@ namespace FEventopia.Controllers.Controllers
             try
             {
                 var result = await _eventService.CancelEventAsync(id);
-                return Ok(result);
+                if (result)
+                {
+                    var response = new ResponseModel
+                    {
+                        Status = true,
+                        Message = "Canceled Event Successfully!"
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    var response = new ResponseModel
+                    {
+                        Status = false,
+                        Message = "Canceled Event Failed!"
+                    };
+                    return BadRequest(response);
+                }
             } catch
             {
                 throw;
