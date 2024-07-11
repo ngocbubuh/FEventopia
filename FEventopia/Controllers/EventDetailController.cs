@@ -42,6 +42,29 @@ namespace FEventopia.Controllers.Controllers
             }
         }
 
+        [HttpGet("GetEventDetailAtLocation")]
+        public async Task<IActionResult> GetEventDetailAtLocation(string locationId, DateTime startDate, DateTime endDate,[FromQuery] PageParaModel pagePara)
+        {
+            try
+            {
+                var result = await _eventDetailService.GetAllEventDetailAtLocation(locationId, startDate, endDate, pagePara);
+                var metadata = new
+                {
+                    result.TotalCount,
+                    result.PageSize,
+                    result.CurrentPage,
+                    result.TotalPages,
+                    result.HasNext,
+                    result.HasPrevious
+                };
+                Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
+                return Ok(result);
+            } catch 
+            {
+                throw; 
+            }
+        }
+
         [HttpGet("GetEventDetailById")]
         public async Task<IActionResult> GetEventDetailByIdAsync(string id)
         {

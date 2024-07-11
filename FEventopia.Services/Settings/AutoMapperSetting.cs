@@ -9,7 +9,7 @@ namespace FEventopia.Services.Settings
     {
         public AutoMapperSetting()
         {
-            CreateMap<Account, AccountModel>().ForMember("Id", opt => opt.Ignore());
+            CreateMap<Account, AccountModel>().ReverseMap();
             CreateMap<AccountProcessModel, Account>().ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                                               .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
                                               .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))

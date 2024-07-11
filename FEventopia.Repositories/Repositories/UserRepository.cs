@@ -41,6 +41,12 @@ namespace FEventopia.Repositories.Repositories
             return acc.Where(a => email.Equals(a.Email)).ToList();
         }
 
+        public async Task<List<Account>> GetAllStaffAccount()
+        {
+            var acc = await _userDAO.GetAllAccountAsync();
+            return acc.Where(a => a.Role.Equals("CHECKINGSTAFF")).ToList();
+        }
+
         public async Task<bool> UnactivateAccountAsync(string username)
         {
             var acc = await _userDAO.GetAccountByUsernameAsync(username);

@@ -275,5 +275,29 @@ namespace FEventopia.Controllers.Controllers
                 throw;
             }
         }
+
+        [HttpGet("GetAllStaffAccount")]
+        [Authorize(Roles = "ADMIN, EVENTOPERATOR")]
+        public async Task<IActionResult> GetAllStaffAccount([FromQuery] PageParaModel pageParaModel)
+        {
+            try
+            {
+                var result = await _userService.GetAllStaffAccountAsync(pageParaModel);
+                var metadata = new
+                {
+                    result.TotalCount,
+                    result.PageSize,
+                    result.CurrentPage,
+                    result.TotalPages,
+                    result.HasNext,
+                    result.HasPrevious
+                };
+                Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
+                return Ok(result);
+            } catch
+            {
+                throw;
+            }
+        }
     }
 }

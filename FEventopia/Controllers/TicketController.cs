@@ -223,5 +223,55 @@ namespace FEventopia.Controllers.Controllers
                 throw;
             }
         }
+
+        [HttpGet("GetAllTicketCheckedInCurrentUser")]
+        [Authorize(Roles = "VISITOR")]
+        public async Task<IActionResult> GetAllTicketCheckedInCurrentUser([FromQuery] PageParaModel pageParaModel)
+        {
+            try
+            {
+                var username = _authenService.GetCurrentLogin;
+                var result = await _ticketService.GetAllTicketWithDetailCheckedInAsync(username, pageParaModel);
+                var metadata = new
+                {
+                    result.TotalCount,
+                    result.PageSize,
+                    result.CurrentPage,
+                    result.TotalPages,
+                    result.HasNext,
+                    result.HasPrevious
+                };
+                Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
+                return Ok(result);
+            } catch
+            {
+                throw;
+            }
+        }
+
+        [HttpGet("GetAllTicketCheckedInByUsername")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> GetAllTicketCheckedInByUsername([FromQuery] PageParaModel pageParaModel, string username)
+        {
+            try
+            {
+                var result = await _ticketService.GetAllTicketWithDetailCheckedInAsync(username, pageParaModel);
+                var metadata = new
+                {
+                    result.TotalCount,
+                    result.PageSize,
+                    result.CurrentPage,
+                    result.TotalPages,
+                    result.HasNext,
+                    result.HasPrevious
+                };
+                Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
+                return Ok(result);
+            }
+            catch
+            {
+                throw;
+            }
+        }
     }
 }

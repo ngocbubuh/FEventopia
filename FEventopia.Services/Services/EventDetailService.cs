@@ -88,6 +88,15 @@ namespace FEventopia.Services.Services
             return await _eventDetailRepository.DeleteAsync(result);
         }
 
+        public async Task<PageModel<EventDetailModel>> GetAllEventDetailAtLocation(string locationId, DateTime startDate, DateTime endDate, PageParaModel pagePara)
+        {
+            var eventDetailList = await _eventDetailRepository.GetAllEventDetailAtLocation(locationId, startDate, endDate);
+            var result = _mapper.Map<List<EventDetailModel>>(eventDetailList);
+            return PageModel<EventDetailModel>.ToPagedList(result,
+                pagePara.PageNumber,
+                pagePara.PageSize);
+        }
+
         public async Task<PageModel<EventDetailModel>> GetAllEventDetailByEventIdAsync(string eventId, PageParaModel pagePara)
         {
             var eventDetails = await _eventDetailRepository.GetAllEventDetailWithLocationById(eventId);
@@ -139,6 +148,31 @@ namespace FEventopia.Services.Services
             {
                 return null;
             }
+
+            //Get Location info
+            var location = await _locationRepository.GetByIdAsync(eventDetail.LocationID.ToString());
+            if (location == null)
+            {
+                return null;
+            }
+
+            //Calculate Estimate Cost base on Event and Location
+            switch (@event.Category)
+            {
+                case "TALKSHOW":
+                    eventDetail.EstimateCost = location.Capacity * 200000;
+                    break;
+                case "MUSICSHOW":
+                    eventDetail.EstimateCost = location.Capacity * 300000;
+                    break;
+                case "FESTIVAL":
+                    eventDetail.EstimateCost = location.Capacity * 400000;
+                    break;
+                case "COMPETITION":
+                    eventDetail.EstimateCost = location.Capacity * 500000;
+                    break;
+            }
+
             var eventDetailUpdate = _mapper.Map(eventDetailModel, eventDetail);
             var result = await _eventDetailRepository.UpdateAsync(eventDetailUpdate);
             if (!result)
