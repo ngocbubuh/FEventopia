@@ -105,8 +105,8 @@ namespace FEventopia.DAO.DbContext
                       .HasForeignKey(se => se.SponsorID).OnDelete(DeleteBehavior.Restrict);
                 entity.HasOne(se => se.Transaction).WithOne(t => t.SponsorEvent)
                       .HasForeignKey<SponsorEvent>(se => se.TransactionID).OnDelete(DeleteBehavior.Restrict);
-                entity.HasOne(se => se.Event).WithOne(e => e.SponsorEvent)
-                      .HasForeignKey<SponsorEvent>(se => se.EventID).OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(se => se.Event).WithMany(e => e.SponsorEvent)
+                      .HasForeignKey(se => se.EventID).OnDelete(DeleteBehavior.Restrict);
             });
 
             builder.Entity<Event>(entity =>
