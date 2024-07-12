@@ -200,7 +200,7 @@ namespace FEventopia.Services.Services
                 return null;
             }
 
-            if (!eventCurrent.Status.Equals(EventStatus.INITIAL.ToString()))
+            if (eventCurrent.Status.Equals(EventStatus.EXECUTE.ToString()) || eventCurrent.Status.Equals(EventStatus.POST.ToString()) || eventCurrent.Status.Equals(EventStatus.CANCELED.ToString()))
             {
                 return null;
             }
