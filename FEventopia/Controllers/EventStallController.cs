@@ -2,6 +2,7 @@
 using FEventopia.Services.BussinessModels;
 using FEventopia.Services.Services;
 using FEventopia.Services.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -22,31 +23,8 @@ namespace FEventopia.Controllers.Controllers
             _authenService = authenService;
         }
 
-        [HttpGet("GetAllEventStall")]
-        public async Task<IActionResult> GetAll([FromQuery] PageParaModel pageParaModel) 
-        {
-            try
-            {
-                var result = await _eventStallService.GetAllEventStall(pageParaModel);
-                var metadata = new
-                {
-                    result.TotalCount,
-                    result.PageSize,
-                    result.CurrentPage,
-                    result.TotalPages,
-                    result.HasNext,
-                    result.HasPrevious
-                };
-                Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
-                return Ok(result);
-            }
-            catch
-            {
-                throw;
-            }
-        }
-
         [HttpGet("GetEventStallBySponsorUsername")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult>GetBySponsorUsername(string username, [FromQuery] PageParaModel pageParaModel)
         {
             try
@@ -71,6 +49,7 @@ namespace FEventopia.Controllers.Controllers
         }
 
         [HttpGet("GetEventStallCurrentUser")]
+        [Authorize(Roles = "VISITOR, SPONSOR")]
         public async Task<IActionResult> GetByCurrentUser([FromQuery] PageParaModel pageParaModel)
         {
             try
@@ -96,6 +75,7 @@ namespace FEventopia.Controllers.Controllers
         }
 
         [HttpGet("GetByEventStallNumber")]
+        [Authorize]
         public async Task<IActionResult> Get(string stallnumber, [FromQuery] PageParaModel pageParaModel)
         {
             try
@@ -120,6 +100,7 @@ namespace FEventopia.Controllers.Controllers
         }
 
         [HttpGet("GetStallById")]
+        [Authorize]
         public async Task<IActionResult> GetStallById(string id)
         {
             try
@@ -132,7 +113,22 @@ namespace FEventopia.Controllers.Controllers
             }
         }
 
+        [HttpGet("GetAllStallCurrentEvent")]
+        [Authorize(Roles = "EVENTOPERATOR, ADMIN")]
+        public async Task<IActionResult> GetAllCurrentEvent(string eventDetailId)
+        {
+            try
+            {
+                var result = await _eventStallService.GetAllEventStallCurrentEvent(eventDetailId);
+                return Ok(result);
+            } catch
+            {
+                throw;
+            }
+        }
+
         [HttpPost("AddEventStall")]
+        [Authorize(Roles = "VISITOR, SPONSOR")]
         public async Task<IActionResult> AddEventStall(string eventDetailId, string stallnumber)
         {
             try

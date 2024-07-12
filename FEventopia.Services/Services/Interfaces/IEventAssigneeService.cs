@@ -14,6 +14,7 @@ namespace FEventopia.Services.Services.Interfaces
         public Task<PageModel<EventAssigneeModel>> GetAllByEventDetailId(string eventdetailid,PageParaModel pageParaModel);
         public Task<PageModel<EventAssigneeModel>> GetAllByAccountUsername(string username, PageParaModel pageParaModel);
         public Task<bool> AddEventAssignee(string accountId, string eventDetailId);
+        public Task<bool> AddRangeEventAssignee(List<string> accountId, string eventDetailId);
         public Task<bool> DeleteEventAssignee(string eventDetailId, string accountId);
     }
 }

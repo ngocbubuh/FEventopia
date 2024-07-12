@@ -42,7 +42,7 @@ namespace FEventopia.Services.Services
 
             var feedback = _mapper.Map<Feedback>(feedBackModel);
             var result = await _feedBackRepository.AddAsync(feedback);
-            return _mapper.Map<FeedBackModel>(result);
+            return _mapper.Map<FeedBackModel>(result); 
         }
 
         public async Task<bool> DeleteFeedBack(string Id)

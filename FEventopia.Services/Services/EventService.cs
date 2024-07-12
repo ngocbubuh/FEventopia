@@ -27,9 +27,10 @@ namespace FEventopia.Services.Services
         private readonly ITicketRepository _ticketRepository;
         private readonly ISponsorManagementRepository _sponsorManagementRepository;
         private readonly ITransactionRepository _transactionRepository;
+        private readonly ITaskRepository _taskRepository;
         private readonly IMapper _mapper;
 
-        public EventService(IEventRepository eventRepository, IMapper mapper, IUserRepository userRepository, ITicketRepository ticketRepository, ISponsorManagementRepository sponsorManagementRepository, ITransactionRepository transactionRepository, IEventStallRepository eventStallRepository, ISponsorEventRepository sponsorEventRepository, IEventDetailRepository eventDetailRepository)
+        public EventService(IEventRepository eventRepository, IMapper mapper, IUserRepository userRepository, ITicketRepository ticketRepository, ISponsorManagementRepository sponsorManagementRepository, ITransactionRepository transactionRepository, IEventStallRepository eventStallRepository, ISponsorEventRepository sponsorEventRepository, IEventDetailRepository eventDetailRepository, ITaskRepository taskRepository)
         {
             _eventRepository = eventRepository;
             _mapper = mapper;
@@ -40,6 +41,7 @@ namespace FEventopia.Services.Services
             _eventStallRepository = eventStallRepository;
             _sponsorEventRepository = sponsorEventRepository;
             _eventDetailRepository = eventDetailRepository;
+            _taskRepository = taskRepository;
         }
 
         public async Task<EventOperatorModel> AddEventAsync(EventProcessModel eventProcessModel)
@@ -221,7 +223,8 @@ namespace FEventopia.Services.Services
             {
                 return false;
             }
-
+            //Lấy các eventDetail
+            var eventDetailList = await _eventDetailRepository.GetAllEventDetailWithLocationById(eventModel.Id.ToString());
             EventStatus status = (EventStatus)System.Enum.Parse(typeof(EventStatus), eventModel.Status);
             switch (status)
             {
@@ -237,7 +240,10 @@ namespace FEventopia.Services.Services
                         if(!sponsor.Status.Equals(SponsorsManagementStatus.FULL.ToString()))
                         {
                             sponsor.SetAmount(sponsor.ActualAmount);
-                            await _sponsorManagementRepository.UpdateAsync(sponsor);
+                            if (sponsor.Rank.Equals(SponsorRank.FAILEDCREDIT))
+                            {
+                                await _sponsorManagementRepository.DeleteAsync(sponsor);
+                            } else await _sponsorManagementRepository.UpdateAsync(sponsor);
                         }
                     }
                     eventModel.Status = EventStatus.PREPARATION.ToString();
@@ -248,9 +254,24 @@ namespace FEventopia.Services.Services
                     {
                         return false;
                     }
+                    
+                    foreach(var eventDetail in eventDetailList)
+                    {
+                        //Nếu các task của sự kiện chưa done => từ chối
+                        var taskList = await _taskRepository.GetAllByEventDetailId(eventDetail.Id.ToString());
+                        foreach (var task in taskList)
+                        {
+                            if (task.Status.Equals(Enum.TaskStatus.DONE.ToString())) return false;
+                        }
+                    }
                     eventModel.Status = EventStatus.EXECUTE.ToString();
                     break;
                 case EventStatus.EXECUTE:
+                    foreach(var eventDetail in eventDetailList)
+                    {
+                        //Sự kiện chỉ được POST khi đã xong hết các EventDetail
+                        if (TimeUtils.GetTimeVietNam() <= eventDetail.EndDate) return false;
+                    }
                     eventModel.Status = EventStatus.POST.ToString();
                     break;
                 default:

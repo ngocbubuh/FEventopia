@@ -32,7 +32,7 @@ namespace FEventopia.Repositories.Repositories
 
         public async Task<List<EventStall>> GetAllEventStallByEventDetailId(string eventDetailId)
         {
-            var result = await _eventStallDAO.GetAllAsync();
+            var result = await _eventStallDAO.GetAllEventStallWithDetail();
             return result.Where(es => es.EventDetailID.ToString().ToLower().Equals(eventDetailId.ToLower())).ToList();
         }
 

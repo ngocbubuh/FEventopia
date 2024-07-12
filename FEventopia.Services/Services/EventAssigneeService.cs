@@ -13,6 +13,8 @@ using System.Drawing.Text;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Identity.Client;
+using System.Data;
 
 namespace FEventopia.Services.Services
 {
@@ -54,7 +56,7 @@ namespace FEventopia.Services.Services
                 Id = Guid.NewGuid(),                
                 AccountId = account.Id,
                 EventDetailId = eventdetail.Id,
-                Role = account.Role,
+                Role = Role.CHECKINGSTAFF.ToString(),
             };
             await _eventAssigneeRepository.AddAsync(eventAssignee);
 
@@ -66,6 +68,27 @@ namespace FEventopia.Services.Services
             //}
             //else return false;
             //return _mapper.Map<EventAssigneeModel>(result);
+        }
+
+        public async Task<bool> AddRangeEventAssignee(List<string> accountId, string eventDetailId)
+        {
+            //lay eventdetail, kiem tra eventdetail có ton tai khum
+            var eventdetail = await _eventDetailRepository.GetByIdAsync(eventDetailId);
+            if (eventdetail == null) { return false; } //chinh lai null
+
+            //Lay event - Nếu sự kiện đang ở giai đoạn EXECUTION trở đi, ko được add
+            var @event = await _eventRepository.GetByIdAsync(eventdetail.EventID.ToString());
+            if (@event.Status.Equals(EventStatus.EXECUTE.ToString()) || @event.Status.Equals(EventStatus.POST.ToString())) return false;
+
+            var assignees = accountId.Select(accountId => new EventAssignee
+            {
+                AccountId = accountId,
+                EventDetailId = eventdetail.Id,
+                Role = Role.CHECKINGSTAFF.ToString(),
+            }).ToList();
+
+            await _eventAssigneeRepository.AddRangeAsync(assignees);
+            return true;
         }
 
         public async Task<bool> DeleteEventAssignee(string eventDetailId, string accountId)
