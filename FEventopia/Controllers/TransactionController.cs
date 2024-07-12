@@ -25,7 +25,7 @@ namespace FEventopia.Controllers.Controllers
         }
 
         [HttpPost("Recharge")]
-        [Authorize]
+        [Authorize(Roles = "VISITOR, SPONSOR")]
         public async Task<IActionResult> Recharge(double amount)
         {
             try

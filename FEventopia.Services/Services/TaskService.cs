@@ -38,7 +38,7 @@ namespace FEventopia.Services.Services
 
             //Nếu sự kiện đã tới giai đoạn EXECUTE trở đi => Hủy
             var @event = await _eventRepository.GetByIdAsync(eventdetail.EventID.ToString());
-            if (@event.Status.Equals(EventStatus.EXECUTE.ToString()) || @event.Status.Equals(EventStatus.POST.ToString())) return null;
+            if (!@event.Status.Equals(EventStatus.PREPARATION.ToString())) return null;
 
             var task = _mapper.Map<DAO.EntityModels.Task>(taskmodel);
             task.Status = Enum.TaskStatus.TODO.ToString();
