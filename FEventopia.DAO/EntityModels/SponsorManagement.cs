@@ -32,19 +32,23 @@ namespace FEventopia.DAO.EntityModels
         {
             if (amount >= 50000000)
             {
-                return "Platinum";
+                return SponsorRank.PLATINUM.ToString();
             }
             else if (amount >= 30000000)
             {
-                return "Gold";
+                return SponsorRank.GOLD.ToString();
             }
             else if (amount >= 15000000)
             {
-                return "Silver";
+                return SponsorRank.SILVER.ToString();
+            }
+            else if (amount > 0)
+            {
+                return SponsorRank.BRONZE.ToString();
             }
             else
             {
-                return "Bronze"; // Default rank for amounts below thresholds
+                return SponsorRank.FAILEDCREDIT.ToString(); // Default rank for amounts below thresholds
             }
         }
 
@@ -53,5 +57,14 @@ namespace FEventopia.DAO.EntityModels
             PledgeAmount = newAmount;
             Rank = SetRank(PledgeAmount);
         }
+    }
+
+    public enum SponsorRank
+    {
+        PLATINUM,
+        GOLD,
+        SILVER,
+        BRONZE,
+        FAILEDCREDIT
     }
 }

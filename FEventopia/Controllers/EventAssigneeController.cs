@@ -144,6 +144,38 @@ namespace FEventopia.Controllers.Controllers
             }
         }
 
+        [HttpPost("AddRangeEventAssignee")]
+        [Authorize(Roles = "ADMIN,EVENTOPERATOR")]
+        public async Task<IActionResult> AddRangeEventAssignee(List<string> accountId, string eventDetailId)
+        {
+            try
+            {
+                var result = await _eventAssigneeService.AddRangeEventAssignee(accountId, eventDetailId);
+                if (result)
+                {
+                    var response = new ResponseModel
+                    {
+                        Status = true,
+                        Message = "Add Range Event Assignee Successfully!"
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    var response = new ResponseModel
+                    {
+                        Status = false,
+                        Message = "Add Range Event Assignee Failed!"
+                    };
+                    return BadRequest(response);
+                }
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
         [HttpDelete]
         public async Task<IActionResult> DeleteEventAssignee(string eventDetailId, string accountId)
         {

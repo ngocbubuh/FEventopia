@@ -10,7 +10,6 @@ namespace FEventopia.Services.Enum
     {
         TODO,
         INPROGRESS,
-        DONE,
-        CANCELED
+        DONE
     }
 }

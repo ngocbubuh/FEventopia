@@ -113,6 +113,19 @@ namespace FEventopia.Services.Services
             {
                 return false;
             }
+
+            //Nếu sự kiện đã done, ko cho cập nhật nữa
+            if (task.Status.Equals(Enum.TaskStatus.DONE.ToString()))
+            {
+                return false;
+            }
+
+            //Nếu sự kiện cập nhật sang done, thì phải có Actual Cost Input
+            if (taskmodel.Status.Equals(Enum.TaskStatus.DONE.ToString()))
+            {
+                if (!taskmodel.ActualCost.HasValue) { return false; }
+            }
+
             //var result = _mapper.Map(taskmodel, task);
             task.Status = taskmodel.Status.ToString();
             return await _taskRepository.UpdateAsync(task);

@@ -158,6 +158,14 @@ namespace FEventopia.Services.Services
                 pageParaModel.PageSize);
         }
 
+        public async Task<List<TicketModel>> GetAllTicketWithDetailCurrentEvent(string eventId)
+        {
+            var ticketList = await _ticketRepository.GetAllTicketWithDetailCurrentEvent(eventId);
+            ticketList.Sort((t1, t2) => t2.CreatedDate.CompareTo(t1.CreatedDate));
+            if (ticketList == null) { return null; }
+            return _mapper.Map<List<TicketModel>>(ticketList);
+        }
+
         public async Task<PageModel<TicketModel>> GetAllTicketWithDetailCurrentUser(string username, PageParaModel pageParaModel)
         {
             var account = await _userRepository.GetAccountByUsernameAsync(username);

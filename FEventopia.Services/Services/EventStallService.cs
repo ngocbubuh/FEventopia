@@ -140,5 +140,11 @@ namespace FEventopia.Services.Services
             var result = await _eventStallRepository.GetEventStallByIdWithDetail(stallid);
             return _mapper.Map<EventStallModel>(result);
         }
+
+        public async Task<List<EventStallModel>> GetAllEventStallCurrentEvent(string eventDetailId)
+        {
+            var result = await _eventStallRepository.GetAllEventStallByEventDetailId(eventDetailId);
+            return _mapper.Map<List<EventStallModel>>(result);
+        }
     }
 }

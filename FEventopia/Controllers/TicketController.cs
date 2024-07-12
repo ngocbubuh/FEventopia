@@ -164,21 +164,11 @@ namespace FEventopia.Controllers.Controllers
 
         [HttpGet("GetEventAllTicketInfo")]
         [Authorize(Roles = "EVENTOPERATOR, ADMIN")]
-        public async Task<IActionResult> GetAllEventTicketInfo([FromQuery] PageParaModel pageParaModel, string eventId)
+        public async Task<IActionResult> GetAllEventTicketInfo(string eventId)
         {
             try
             {
-                var result = await _ticketService.GetAllTicketWithDetailCurrentEvent(eventId, pageParaModel);
-                var metadata = new
-                {
-                    result.TotalCount,
-                    result.PageSize,
-                    result.CurrentPage,
-                    result.TotalPages,
-                    result.HasNext,
-                    result.HasPrevious
-                };
-                Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
+                var result = await _ticketService.GetAllTicketWithDetailCurrentEvent(eventId);
                 return Ok(result);
             } catch
             {
