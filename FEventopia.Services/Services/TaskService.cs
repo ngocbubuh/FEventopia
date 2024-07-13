@@ -73,6 +73,12 @@ namespace FEventopia.Services.Services
             return PageModel<TaskModel>.ToPagedList(result, pageParaModel.PageNumber, pageParaModel.PageSize);
         }
 
+        public async Task<List<TaskModel>> GetAllByEventDetailId(string eventDetailId)
+        {
+            var tasks = await _taskRepository.GetAllByEventDetailId(eventDetailId);
+            return _mapper.Map<List<TaskModel>>(tasks);
+        }
+
         public async Task<PageModel<TaskModel>> GetAllByUsername(string username, PageParaModel pageParaModel)
         {
             var account = await _userRepository.GetAccountByUsernameAsync(username);
