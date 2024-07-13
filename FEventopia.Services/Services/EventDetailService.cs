@@ -35,8 +35,6 @@ namespace FEventopia.Services.Services
             var existEventDetailAtLocation = await _eventDetailRepository.GetAllEventDetailAtLocation(eventDetailModel.LocationID.ToString(), 
                                                                                                         eventDetailModel.StartDate, 
                                                                                                         eventDetailModel.EndDate);
-            //Tạo sự kiện => có thời gian bắt đầu phải cách thời gian hiện tại ít nhất 1 tuần
-            if (TimeUtils.GetTimeVietNam().Date > eventDetailModel.StartDate.AddDays(7).Date) return null;
 
             //Kiểm tra có sự kiện ở vị trí đó cùng thời gian chưa
             foreach (var item in existEventDetailAtLocation)
@@ -125,8 +123,6 @@ namespace FEventopia.Services.Services
             var existEventDetailAtLocation = await _eventDetailRepository.GetAllEventDetailAtLocation(eventDetailModel.LocationID.ToString(),
                                                                                                         eventDetailModel.StartDate,
                                                                                                         eventDetailModel.EndDate);
-            //Tạo sự kiện => có thời gian bắt đầu phải cách thời gian hiện tại ít nhất 1 tuần
-            if (TimeUtils.GetTimeVietNam().Date > eventDetailModel.StartDate.AddDays(7).Date) return null;
 
             //Kiểm tra có sự kiện ở vị trí đó cùng thời gian chưa
             foreach (var item in existEventDetailAtLocation)
