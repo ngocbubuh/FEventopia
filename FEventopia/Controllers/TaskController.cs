@@ -107,7 +107,7 @@ namespace FEventopia.Controllers.Controllers
 
         [HttpPost("AddTask")]
         [Authorize(Roles = "ADMIN,EVENTOPERATOR")]
-        public async Task<IActionResult> AddTask(TaskModel model)
+        public async Task<IActionResult> AddTask(TaskProcessModel model)
         {
             try
             {
@@ -122,7 +122,7 @@ namespace FEventopia.Controllers.Controllers
 
         [HttpPut("UpdateTask")]
         [Authorize(Roles = "ADMIN,EVENTOPERATOR")]
-        public async Task<IActionResult> UpdateTask([Required] string id, TaskModel model)
+        public async Task<IActionResult> UpdateTask([Required] string id, TaskProcessModel model)
         {
             try
             {

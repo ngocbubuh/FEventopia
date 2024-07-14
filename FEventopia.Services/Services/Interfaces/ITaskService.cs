@@ -14,8 +14,8 @@ namespace FEventopia.Services.Services.Interfaces
         public Task<PageModel<TaskModel>> GetAllByEventDetailId(string eventDetailId, PageParaModel pageParaModel);
         public Task<List<TaskModel>> GetAllByEventDetailId(string eventDetailId);
         public Task<TaskModel> GetById(string taskId);
-        public Task<TaskModel> CreateTask(TaskModel taskmodel);
-        public Task<bool> UpdateTask(string taskid, TaskModel taskModel);
+        public Task<TaskModel> CreateTask(TaskProcessModel taskmodel);
+        public Task<bool> UpdateTask(string taskid, TaskProcessModel taskModel);
         public Task<bool> DeleteTask(string taskId);
         public Task<bool> UpdateTaskStatus(string taskid, TaskStatusModel taskmodel);
     }
