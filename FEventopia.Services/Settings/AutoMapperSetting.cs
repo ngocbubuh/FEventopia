@@ -112,6 +112,7 @@ namespace FEventopia.Services.Settings
 
             CreateMap<DAO.EntityModels.Task,TaskModel>().ReverseMap();
             CreateMap<DAO.EntityModels.Task,TaskStatusModel>().ReverseMap();
+            CreateMap<DAO.EntityModels.Task,TaskProcessModel>().ReverseMap();
 
             CreateMap<EventStall,EventStallModel>().
                 ForMember(dest => dest.Event, opt => opt.MapFrom(src => src.EventDetail.Event)); ;

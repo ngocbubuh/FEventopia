@@ -31,7 +31,7 @@ namespace FEventopia.Services.Services
             _userRepository = userRepository;
         }
 
-        public async Task<TaskModel> CreateTask(TaskModel taskmodel)
+        public async Task<TaskModel> CreateTask(TaskProcessModel taskmodel)
         {
             var eventdetail = await _eventDetailRepository.GetByIdAsync(taskmodel.EventDetailId.ToString());
             if (eventdetail == null) { return null; }
@@ -93,15 +93,13 @@ namespace FEventopia.Services.Services
             return _mapper.Map<TaskModel>(task);
         }
 
-        public async Task<bool> UpdateTask(string taskid, TaskModel taskModel)
+        public async Task<bool> UpdateTask(string taskid, TaskProcessModel taskModel)
         {
             var task = await _taskRepository.GetByIdAsync(taskid);
             if (task == null)
             {
                 return false;
             }
-
-            taskModel.Id = taskid;
 
             var eventdetail = await _eventDetailRepository.GetByIdAsync(task.EventDetailID.ToString());
             if (eventdetail == null) { return false; }
