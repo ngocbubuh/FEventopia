@@ -23,7 +23,7 @@ namespace FEventopia.Controllers.ExceptionHandlers
             var problemDetails = new ProblemDetails
             {
                 Status = StatusCodes.Status500InternalServerError,
-                Title = "Server error"
+                Title = "Server error: " + exception.Message,
             };
 
             httpContext.Response.StatusCode = problemDetails.Status.Value;

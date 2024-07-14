@@ -120,6 +120,12 @@ namespace FEventopia.Services.Services
             return PageModel<EventAssigneeModel>.ToPagedList(result, pageParaModel.PageNumber, pageParaModel.PageSize);
         }
 
+        public async Task<List<EventAssigneeModel>> GetAllByEventDetailId(string eventdetailid)
+        {
+            var eventAssignees = await _eventAssigneeRepository.GetAllByEventDetail(eventdetailid);
+            return _mapper.Map<List<EventAssigneeModel>>(eventAssignees);
+        }
+
         public async Task<EventAssigneeModel> GetById(string id, PageParaModel pageParaModel)
         {
             var eventAssignee = await _eventAssigneeRepository.GetByIdAsync(id);

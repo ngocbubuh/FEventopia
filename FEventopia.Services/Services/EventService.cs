@@ -261,7 +261,7 @@ namespace FEventopia.Services.Services
                         var taskList = await _taskRepository.GetAllByEventDetailId(eventDetail.Id.ToString());
                         foreach (var task in taskList)
                         {
-                            if (task.Status.Equals(Enum.TaskStatus.DONE.ToString())) return false;
+                            if (!task.Status.Equals(Enum.TaskStatus.DONE.ToString())) return false;
                         }
                     }
                     eventModel.Status = EventStatus.EXECUTE.ToString();

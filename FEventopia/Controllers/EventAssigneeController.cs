@@ -24,21 +24,11 @@ namespace FEventopia.Controllers.Controllers
 
         [HttpGet("GetAllByCurrentEvent")]
         [Authorize(Roles = "ADMIN, EVENTOPERATOR, CHECKINGSTAFF")]
-        public async Task<IActionResult> GetAllByEventDetailId(string eventdetailid, [FromQuery] PageParaModel pageParaModel)
+        public async Task<IActionResult> GetAllByEventDetailId(string eventdetailid)
         {
             try
             {
-                var result = await _eventAssigneeService.GetAllByEventDetailId(eventdetailid, pageParaModel);
-                var metadata = new
-                {
-                    result.TotalCount,
-                    result.PageSize,
-                    result.CurrentPage,
-                    result.TotalPages,
-                    result.HasNext,
-                    result.HasPrevious
-                };
-                Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
+                var result = await _eventAssigneeService.GetAllByEventDetailId(eventdetailid);
                 return Ok(result);
             }
             catch

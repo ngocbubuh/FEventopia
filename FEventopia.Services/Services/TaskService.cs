@@ -101,6 +101,8 @@ namespace FEventopia.Services.Services
                 return false;
             }
 
+            taskModel.Id = taskid;
+
             var eventdetail = await _eventDetailRepository.GetByIdAsync(task.EventDetailID.ToString());
             if (eventdetail == null) { return false; }
 
