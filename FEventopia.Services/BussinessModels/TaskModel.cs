@@ -19,6 +19,8 @@ namespace FEventopia.Services.BussinessModels
         public float PlanCost {  get; set; }
         [Range(0,float.MaxValue)]
         public float ActualCost {  get; set; }
-        public string Status { get; set; }
+        public string? Status { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
     }
 }

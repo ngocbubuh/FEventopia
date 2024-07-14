@@ -16,6 +16,8 @@ namespace FEventopia.Services.BussinessModels
         public int? StallForSaleInventory { get; set; } = 0;
         public double? TicketPrice { get; set; } = 0;
         public double? EstimateCost { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
 
         public LocationModel? Location { get; set; }
     }
