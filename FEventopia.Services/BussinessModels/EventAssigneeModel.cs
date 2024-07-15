@@ -15,5 +15,6 @@ namespace FEventopia.Services.BussinessModels
         [Required(AllowEmptyStrings = false)]
         public required string Role {get; set; }
         public DateTime CreatedDate { get; set; }
+        public EventDetailModel EventDetail { get; set; }
     }
 }

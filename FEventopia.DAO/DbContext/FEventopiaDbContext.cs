@@ -18,6 +18,7 @@ namespace FEventopia.DAO.DbContext
         public DbSet<EventStall> EventStall { get; set; }
         public DbSet<Event> Event { get; set; }
         public DbSet<EventDetail> EventDetail { get; set; }
+        public DbSet<EventAssignee> EventAssignee { get; set; }
         public DbSet<Location> Location { get; set; }
         public DbSet<EntityModels.Task> Task { get; set; }
         public DbSet<Feedback> Feedback { get; set; }

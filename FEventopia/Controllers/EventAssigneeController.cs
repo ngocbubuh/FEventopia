@@ -37,6 +37,31 @@ namespace FEventopia.Controllers.Controllers
             }
         }
 
+        [HttpGet("GetAllAssigneeDetailCurrentUser")]
+        [Authorize(Roles = "CHECKINGSTAFF")]
+        public async Task<IActionResult> GetAllDetailCurrentUser([FromQuery] PageParaModel pageParaModel)
+        {
+            try
+            {
+                var username = _authenService.GetCurrentLogin;
+                var result = await _eventAssigneeService.GetAllAsigneeDetailByUsername(username, pageParaModel);
+                var metadata = new
+                {
+                    result.TotalCount,
+                    result.PageSize,
+                    result.CurrentPage,
+                    result.TotalPages,
+                    result.HasNext,
+                    result.HasPrevious
+                };
+                Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
+                return Ok(result);
+            } catch
+            {
+                throw;
+            }
+        }
+
         [HttpGet("GetAllByCurrentUser")]
         [Authorize(Roles = "ADMIN, EVENTOPERATOR, CHECKINGSTAFF")]
         public async Task<IActionResult> GetAllByAcocuntUsername([FromQuery] PageParaModel pagePara)
