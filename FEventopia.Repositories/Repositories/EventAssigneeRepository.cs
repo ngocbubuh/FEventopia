@@ -11,9 +11,9 @@ namespace FEventopia.Repositories.Repositories
 {
     public class EventAssigneeRepository : GenericRepository<EventAssignee>, IEventAssigneeRepository
     {
-        private readonly IGenericDAO<EventAssignee>  _EventAssigneeDAO;
+        private readonly IEventAssigneeDAO  _EventAssigneeDAO;
 
-        public EventAssigneeRepository(IGenericDAO<EventAssignee> eventAssigneeDAO) : base(eventAssigneeDAO)
+        public EventAssigneeRepository(IEventAssigneeDAO eventAssigneeDAO) : base(eventAssigneeDAO)
         {
             _EventAssigneeDAO = eventAssigneeDAO;
         }
@@ -24,6 +24,12 @@ namespace FEventopia.Repositories.Repositories
             string eventDetailId = eventDetailIdSAMPLE.ToLower();
             return eventassignees.Where(e => e.EventDetailId.ToString().Equals(eventDetailId)).ToList();
         }
+
+        public async Task<List<EventAssignee>> GetAllEventAssigneeDetailByAccountId(string accountid)
+        {
+            return await _EventAssigneeDAO.GetAllEventAssigneeDetailByAccountId(accountid);
+        }
+
         public async Task<EventAssignee> GetByED_AC(string eventdetailIdSAMPLE, string accountId)
         {
             var eventassignee = await _EventAssigneeDAO.GetAllAsync();

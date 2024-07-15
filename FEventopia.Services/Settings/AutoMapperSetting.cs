@@ -116,8 +116,12 @@ namespace FEventopia.Services.Settings
 
             CreateMap<EventStall,EventStallModel>().
                 ForMember(dest => dest.Event, opt => opt.MapFrom(src => src.EventDetail.Event)); ;
-
-            CreateMap<EventAssignee,EventAssigneeModel>().ReverseMap();
+            CreateMap<Event, EventAssigneeEventModel>().ReverseMap();
+            CreateMap<EventAssignee,EventAssigneeModel>()
+                .ForMember(dest => dest.EventDetail, opt => opt.MapFrom(src => src.EventDetail));
+            CreateMap<EventAssignee, EventAssigneeDetailModel>()
+                .ForMember(dest => dest.EventAssigneeModel, opt => opt.MapFrom(src => src))
+                .ForMember(dest => dest.Event, opt => opt.MapFrom(src => src.EventDetail.Event));
 
             CreateMap<SponsorEvent, SponsorEventModel>().ReverseMap();
             CreateMap<SponsorManagement, SponsorManagementModel>().ReverseMap();

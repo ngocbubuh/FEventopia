@@ -13,7 +13,7 @@ namespace FEventopia.DAO.EntityModels
         public required Guid EventDetailId { get; set; }
         public required string Role { get; set; }
 
-        public Account? Account { get; }
-        public EventDetail? EventDetail { get; }
+        public Account Account { get; set; }
+        public EventDetail EventDetail { get; set; }
     }
 }
