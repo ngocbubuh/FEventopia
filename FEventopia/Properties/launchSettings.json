@@ -26,7 +26,8 @@
       "launchUrl": "swagger",
       "applicationUrl": "https://localhost:7101;http://localhost:5191",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "AZURE_SQL_CONNECTION_STRING": "Data Source=tcp:feventopiadbdbserver.database.windows.net,1433;Initial Catalog=FEventopia_db;User Id=FEventopia@feventopiadbdbserver;Password=Abc@12345"
       }
     },
     "IIS Express": {

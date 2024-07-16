@@ -7,8 +7,10 @@ using FEventopia.Services.Services;
 using System.Diagnostics;
 using FEventopia.DAO.DAO.Interfaces;
 using FEventopia.DAO.DAO;
-using FEventopia.Repositories.Repositories;
 using Microsoft.EntityFrameworkCore;
+using FEventopia.DAO.DbContext;
+using FEventopia.DAO.EntityModels;
+using Microsoft.AspNetCore.Identity;
 
 namespace FEventopia.Controllers
 {
@@ -73,6 +75,12 @@ namespace FEventopia.Controllers
             services.AddSingleton<Stopwatch>();
 
             services.AddProblemDetails();
+            services.AddDbContext<FEventopiaDbContext>(options =>
+            {
+                options.UseSqlServer(Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION_STRING"));
+            });
+            services.AddIdentity<Account, IdentityRole>()
+                    .AddEntityFrameworkStores<FEventopiaDbContext>().AddDefaultTokenProviders();
 
             return services;
         }

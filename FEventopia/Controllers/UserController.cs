@@ -83,14 +83,17 @@ namespace FEventopia.Controllers.Controllers
                 {
                     var username = _authenService.GetCurrentLogin;
                     var account = await _userService.GetAccountByUsernameAsync(username);
-                    if (!model.Email.ToLower().Equals(account.Email.ToLower()))
+                    if (account.EmailConfirmed)
                     {
-                        var response = new ResponseModel
+                        if (!model.Email.ToLower().Equals(account.Email.ToLower()))
                         {
-                            Status = false,
-                            Message = "You cannot change email after confirmation!"
-                        };
-                        return BadRequest(response);
+                            var response = new ResponseModel
+                            {
+                                Status = false,
+                                Message = "You cannot change email after confirmation!"
+                            };
+                            return BadRequest(response);
+                        }
                     }
                     var result = await _userService.UpdateAccountAsync(username, model);
                     if (result)
