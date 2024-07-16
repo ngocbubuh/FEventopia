@@ -59,23 +59,6 @@ namespace FEventopia.Services.Services
                 return null;
             }
 
-            //Calculate Estimate Cost base on Event and Location
-            EventCategory status = (EventCategory)System.Enum.Parse(typeof(EventCategory), @event.Category);
-            switch (status)
-            {
-                case EventCategory.TALKSHOW:
-                    eventDetail.EstimateCost = location.Capacity * 200000;
-                    break;
-                case EventCategory.MUSICSHOW:
-                    eventDetail.EstimateCost = location.Capacity * 300000;
-                    break;
-                case EventCategory.FESTIVAL:
-                    eventDetail.EstimateCost = location.Capacity * 400000;
-                    break;
-                case EventCategory.COMPETITION:
-                    eventDetail.EstimateCost = location.Capacity * 500000;
-                    break;
-            }
             var result = await _eventDetailRepository.AddAsync(eventDetail);
             return _mapper.Map<EventDetailOperatorModel>(result);
         }
@@ -151,24 +134,6 @@ namespace FEventopia.Services.Services
             if (location == null)
             {
                 return null;
-            }
-
-            //Calculate Estimate Cost base on Event and Location
-            EventCategory status = (EventCategory)System.Enum.Parse(typeof(EventCategory), @event.Category);
-            switch (status)
-            {
-                case EventCategory.TALKSHOW:
-                    eventDetail.EstimateCost = location.Capacity * 200000;
-                    break;
-                case EventCategory.MUSICSHOW:
-                    eventDetail.EstimateCost = location.Capacity * 300000;
-                    break;
-                case EventCategory.FESTIVAL:
-                    eventDetail.EstimateCost = location.Capacity * 400000;
-                    break;
-                case EventCategory.COMPETITION:
-                    eventDetail.EstimateCost = location.Capacity * 500000;
-                    break;
             }
 
             var eventDetailUpdate = _mapper.Map(eventDetailModel, eventDetail);

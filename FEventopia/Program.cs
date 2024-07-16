@@ -1,9 +1,5 @@
-﻿using FEventopia.DAO.DbContext;
-using FEventopia.DAO.EntityModels;
-using FEventopia.Controllers;
+﻿using FEventopia.Controllers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -56,34 +52,6 @@ builder.Services.AddSwaggerGen(c =>
 
 // Add Dependency Injection
 builder.Services.AddWebAPIService();
-
-// Add ConnectionStrings
-var connection = String.Empty;
-if (builder.Environment.IsDevelopment())
-{
-    /// --------------WARNING------------------ ///
-    ///   SELECT CONNECTIONSTRING CAREFULLY    ///
-    // ---------------------------------------- //
-
-    //If test in LocalDB
-    //connection = builder.Configuration.GetConnectionString("LOCAL_CONNECTION_STRING");
-    //If test in AzureDB
-    connection = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
-
-    // ---------------------------------------- //
-    ///   SELECT CONNECTIONSTRING CAREFULLY    ///
-    /// --------------WARNING------------------ ///
-}
-else
-{
-    connection = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION_STRING");
-}
-
-builder.Services.AddDbContext<FEventopiaDbContext>(options => { options.UseSqlServer(connection); });
-
-// Add Authentication
-builder.Services.AddIdentity<Account, IdentityRole>()
-        .AddEntityFrameworkStores<FEventopiaDbContext>().AddDefaultTokenProviders();
 
 builder.Services.AddAuthentication(options =>
 {

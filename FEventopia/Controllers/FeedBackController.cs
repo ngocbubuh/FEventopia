@@ -3,6 +3,7 @@ using FEventopia.DAO.EntityModels;
 using FEventopia.Services.BussinessModels;
 using FEventopia.Services.Services;
 using FEventopia.Services.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -60,6 +61,7 @@ namespace FEventopia.Controllers.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "VISITOR")]
         public async Task<IActionResult> AddFeedBack(FeedBackModel model)
         {
             try
@@ -113,6 +115,7 @@ namespace FEventopia.Controllers.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> DeleteFeedback([Required] string id)
         {
             try

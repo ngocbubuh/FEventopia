@@ -59,43 +59,49 @@ namespace FEventopia.Services.Services
             //Nếu số lượng vé ko còn => ko được đặt tiếp
             if (eventDetail.TicketForSaleInventory == 0) { return null; }
 
-            //Cập nhật số dư tài khoản
-            account.CreditAmount -= eventDetail.TicketPrice;
-            await _userRepository.UpdateAccountAsync(account);
-
             //Cập nhật số lượng vé
             eventDetail.TicketForSaleInventory -= 1;
-            await _eventDetailRepository.UpdateAsync(eventDetail);
+            var flag = await _eventDetailRepository.UpdateAsync(eventDetail);
 
-            //Cập nhật doanh thu bán vé
-            @event.TicketSaleIncome += eventDetail.TicketPrice;
-            await _eventRepository.UpdateAsync(@event);
-
-            //Tạo transaction OUT, ghi nhận giao dịch
-            var transaction = new Transaction
+            if (flag)
             {
-                Id = Guid.NewGuid(),
-                AccountID = account.Id,
-                TransactionType = TransactionType.OUT.ToString(),
-                TransactionDate = TimeUtils.GetTimeVietNam(),
-                Amount = eventDetail.TicketPrice,
-                Description = $"FEventopia {username.ToUpper()}: Purchase {@event.EventName} Ticket -{eventDetail.TicketPrice}.",
-                Status = true
-            };
-            await _transactionRepository.AddAsync(transaction);
+                //Cập nhật doanh thu bán vé
+                @event.TicketSaleIncome += eventDetail.TicketPrice;
+                await _eventRepository.UpdateAsync(@event);
 
-            //Tạo Ticket, lưu vào database
-            var ticket = new Ticket
+                //Cập nhật số dư tài khoản
+                account.CreditAmount -= eventDetail.TicketPrice;
+                await _userRepository.UpdateAccountAsync(account);
+
+                //Tạo transaction OUT, ghi nhận giao dịch
+                var transaction = new Transaction
+                {
+                    Id = Guid.NewGuid(),
+                    AccountID = account.Id,
+                    TransactionType = TransactionType.OUT.ToString(),
+                    TransactionDate = TimeUtils.GetTimeVietNam(),
+                    Amount = eventDetail.TicketPrice,
+                    Description = $"FEventopia {username.ToUpper()}: Purchase {@event.EventName} Ticket -{eventDetail.TicketPrice}.",
+                    Status = true
+                };
+                await _transactionRepository.AddAsync(transaction);
+
+                //Tạo Ticket, lưu vào database
+                var ticket = new Ticket
+                {
+                    Id = Guid.NewGuid(),
+                    EventDetailID = eventDetail.Id,
+                    TransactionID = transaction.Id,
+                    VisitorID = account.Id,
+                };
+                await _ticketRepository.AddAsync(ticket);
+
+                var result = await _ticketRepository.GetTicketDetailById(ticket.Id.ToString());
+                return _mapper.Map<TicketModel>(result);
+            } else
             {
-                Id = Guid.NewGuid(),
-                EventDetailID = eventDetail.Id, 
-                TransactionID = transaction.Id,
-                VisitorID = account.Id,
-            };
-            await _ticketRepository.AddAsync(ticket);
-
-            var result = await _ticketRepository.GetTicketDetailById(ticket.Id.ToString());
-            return _mapper.Map<TicketModel>(result);
+                return null;
+            }
         }
 
         public async Task<bool> CheckInAsync(string ticketId, string eventDetailId)

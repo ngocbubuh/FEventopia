@@ -72,44 +72,50 @@ namespace FEventopia.Services.Services
                 return null;
             }
 
-            //Cập nhật số dư tài khoản
-            account.CreditAmount -= eventdetail.StallPrice;
-            await _userRepository.UpdateAccountAsync(account);
-
             //cap nhat so luong stall trong eventdetail
             eventdetail.StallForSaleInventory -= 1;
-            await _eventDetailRepository.UpdateAsync(eventdetail);
+            var flag = await _eventDetailRepository.UpdateAsync(eventdetail);
 
-            //Cập nhật doanh thu stall
-            @event.StallSaleIncome += eventdetail.StallPrice;
-            await _eventRepository.UpdateAsync(@event);
-
-            //cap nhat transaction
-            var transaction = new Transaction
+            if (flag)
             {
-                Id = Guid.NewGuid(),
-                AccountID = account.Id,
-                TransactionType = TransactionType.OUT.ToString(),
-                TransactionDate = TimeUtils.GetTimeVietNam(),
-                Amount = eventdetail.StallPrice,
-                Description = $"FEventopia {username.ToUpper()}: Purchase {@event.EventName} Stall -{eventdetail.StallPrice}.",
-                Status = true
-            };
-            await _transactionRepository.AddAsync(transaction);
+                //Cập nhật số dư tài khoản
+                account.CreditAmount -= eventdetail.StallPrice;
+                await _userRepository.UpdateAccountAsync(account);
 
-            //tao event stall - luu vao database
-            var eventstall = new EventStall
+                //Cập nhật doanh thu stall
+                @event.StallSaleIncome += eventdetail.StallPrice;
+                await _eventRepository.UpdateAsync(@event);
+
+                //cap nhat transaction
+                var transaction = new Transaction
+                {
+                    Id = Guid.NewGuid(),
+                    AccountID = account.Id,
+                    TransactionType = TransactionType.OUT.ToString(),
+                    TransactionDate = TimeUtils.GetTimeVietNam(),
+                    Amount = eventdetail.StallPrice,
+                    Description = $"FEventopia {username.ToUpper()}: Purchase {@event.EventName} Stall -{eventdetail.StallPrice}.",
+                    Status = true
+                };
+                await _transactionRepository.AddAsync(transaction);
+
+                //tao event stall - luu vao database
+                var eventstall = new EventStall
+                {
+                    Id = Guid.NewGuid(),
+                    SponsorID = account.Id,
+                    EventDetailID = eventdetail.Id,
+                    TransactionID = transaction.Id,
+                    StallNumber = stallnumber,
+                };
+                await _eventStallRepository.AddAsync(eventstall);
+
+                var result = await _eventStallRepository.GetByIdAsync(eventstall.Id.ToString());
+                return _mapper.Map<EventStallModel>(result);
+            } else
             {
-                Id = Guid.NewGuid(),
-                SponsorID = account.Id,
-                EventDetailID = eventdetail.Id,
-                TransactionID = transaction.Id,     
-                StallNumber = stallnumber,
-            };
-            await _eventStallRepository.AddAsync(eventstall);
-
-            var result = await _eventStallRepository.GetByIdAsync(eventstall.Id.ToString());
-            return _mapper.Map<EventStallModel>(result);
+                return null;
+            }
         }
 
         public async Task<PageModel<EventStallModel>> GetAllEventStall(PageParaModel pageParaModel)
