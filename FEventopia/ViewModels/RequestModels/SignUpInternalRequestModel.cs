@@ -14,19 +14,14 @@ namespace FEventopia.Controllers.ViewModels.RequestModels
         [StringLength(15, MinimumLength = 4, ErrorMessage = "Username must be 4-15 Characters")]
         public required string Username { get; set; } //Username
 
-        [Required(ErrorMessage = "Password is required!")]
-        [Display(Name = "Password")]
-        [DataType(DataType.Password)]
-        [StringLength(30, MinimumLength = 7, ErrorMessage = "Password must be 7-30 Characters")]
-        [PasswordPropertyText]
-        public required string Password { get; set; } //Password
-
-        [Required(ErrorMessage = "Confirm Password is required!")]
-        [Display(Name = "Confirm Password")]
-        [DataType(DataType.Password)]
-        [Compare("Password", ErrorMessage = "Password and confirmation does not match!")]
-        [StringLength(30, MinimumLength = 7, ErrorMessage = "Password must be 7-30 Characters")]
-        [PasswordPropertyText]
-        public required string ConfirmPassword { get; set; } //Confirm Password
+        [DataType(DataType.EmailAddress,
+                  ErrorMessage = "Email Address is not valid")]
+        [EmailAddress(ErrorMessage = "Email Address is not valid")]
+        [RegularExpression(@"^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$",
+                  ErrorMessage = "Email Address is not valid")]
+        [Required(AllowEmptyStrings = false,
+                  ErrorMessage = "Email Address required!")]
+        [Display(Name = "Email Address")]
+        public required string Email { get; set; } //Email Address
     }
 }

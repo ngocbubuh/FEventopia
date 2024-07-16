@@ -76,9 +76,8 @@ namespace FEventopia.Controllers.Controllers
                             Status = true,
                             Message = "Email Verification Successfully!"
                         };
-                        //var urlParameter = response.ToUrlParameters();
-                        //return Redirect("https://feventopia.vercel.app/confirmEmail?" + urlParameter);
-                        return Ok(response);
+                        var urlParameter = response.ToUrlParameters();
+                        return Redirect("https://feventopia.vercel.app/confirmEmail?" + urlParameter);
                     }
                     else
                     {
@@ -87,9 +86,8 @@ namespace FEventopia.Controllers.Controllers
                             Status = false,
                             Message = "Email Verification Failed!"
                         };
-                        //var urlParameter = response.ToUrlParameters();
-                        //return Redirect("https://feventopia.vercel.app/confirmEmail?" + urlParameter);
-                        return BadRequest(response);
+                        var urlParameter = response.ToUrlParameters();
+                        return Redirect("https://feventopia.vercel.app/confirmEmail?" + urlParameter);
                     }
                 }
                 else
@@ -99,9 +97,8 @@ namespace FEventopia.Controllers.Controllers
                         Status = false,
                         Message = "User does not existed!"
                     };
-                    //var urlParameter = response.ToUrlParameters();
-                    //return Redirect("https://feventopia.vercel.app/confirmEmail?" + urlParameter);
-                    return BadRequest(response);
+                    var urlParameter = response.ToUrlParameters();
+                    return Redirect("https://feventopia.vercel.app/confirmEmail?" + urlParameter);
                 }
             }
             catch
@@ -294,11 +291,14 @@ namespace FEventopia.Controllers.Controllers
                         {
                             Name = model.Name,
                             UserName = model.Username,
+                            Email = model.Email,
                             Role = role.ToString()
                         };
 
+                        string password = PasswordUtils.GenerateRandomPassword();
+
                         //Create user in database
-                        var result = await accountManager.CreateAsync(user, model.Password);
+                        var result = await accountManager.CreateAsync(user, password);
 
                         //Add role
                         if (result.Succeeded)
@@ -365,6 +365,14 @@ namespace FEventopia.Controllers.Controllers
                                 Status = true,
                                 Message = $"Sign Up {role} Account Successfully!"
                             };
+
+                            var messageRequest = new MailRequestSetting
+                            {
+                                ToEmail = model.Email,
+                                Subject = "FEventopia Welcome Email",
+                                Body = AccountEmail.EmailContent(model.Name, model.Username, password)
+                            };
+                            await mailService.SendEmailAsync(messageRequest);
                             return Ok(response);
                         }
                         else
