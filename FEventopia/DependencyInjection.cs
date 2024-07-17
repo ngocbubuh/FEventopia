@@ -56,6 +56,7 @@ namespace FEventopia.Controllers
             services.AddScoped<ISponsorEventRepository, SponsorEventRepository>();
             services.AddScoped<ISponsorEventService, SponsorEventService>();
             services.AddScoped<IAnalysisService, AnalysisService>();
+            services.AddScoped<IAccountService, AccountService>();
 
             services.AddScoped<IUserDAO, UserDAO>();
             services.AddScoped<IEventDAO, EventDAO>();

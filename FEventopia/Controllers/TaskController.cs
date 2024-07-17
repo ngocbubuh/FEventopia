@@ -201,36 +201,36 @@ namespace FEventopia.Controllers.Controllers
         }
 
 
-        //[HttpDelete("DeleteTask")]
-        //public async Task<IActionResult> DeleteFeedback([Required] string id)
-        //{
-        //    try
-        //    {
-        //        var result = await _taskService.DeleteTask(id);
-        //        if (result)
-        //        {
-        //            var response = new ResponseModel
-        //            {
-        //                Status = result,
-        //                Message = "Delete task Successfully!"
-        //            };
-        //            return Ok(response);
-        //        }
-        //        else
-        //        {
-        //            var response = new ResponseModel
-        //            {
-        //                Status = result,
-        //                Message = "Delete task Failed!"
-        //            };
-        //            return BadRequest(response);
-        //        }
-        //    }
-        //    catch
-        //    {
-        //        throw;
-        //    }
-        //}
+        [HttpDelete("DeleteTask")]
+        public async Task<IActionResult> DeleteFeedback([Required] string taskId)
+        {
+            try
+            {
+                var result = await _taskService.DeleteTask(taskId);
+                if (result)
+                {
+                    var response = new ResponseModel
+                    {
+                        Status = result,
+                        Message = "Delete task Successfully!"
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    var response = new ResponseModel
+                    {
+                        Status = result,
+                        Message = "Delete task Failed!"
+                    };
+                    return BadRequest(response);
+                }
+            }
+            catch
+            {
+                throw;
+            }
+        }
 
     }
 }
