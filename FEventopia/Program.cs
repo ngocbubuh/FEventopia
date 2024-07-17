@@ -5,10 +5,13 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using FEventopia.Services.Settings;
 using FEventopia.Controllers.Middlewares;
+using AspNetCoreRateLimit;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+// Add Brute Force limit setting
+builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
 // Add Mail Services
 builder.Services.Configure<MailSetting>(builder.Configuration.GetSection("MailSettings"));
 

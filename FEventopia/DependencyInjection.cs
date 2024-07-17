@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using FEventopia.DAO.DbContext;
 using FEventopia.DAO.EntityModels;
 using Microsoft.AspNetCore.Identity;
+using AspNetCoreRateLimit;
 
 namespace FEventopia.Controllers
 {
@@ -66,10 +67,10 @@ namespace FEventopia.Controllers
             services.AddScoped<IEventAssigneeDAO, EventAssigneeDAO>();
 
             //Add Exception Handler
-            services.AddExceptionHandler<GlobalExceptionHandler>();
             services.AddExceptionHandler<BadRequestExceptionHandler>();
             services.AddExceptionHandler<NotFoundExceptionHandler>();
-            
+            services.AddExceptionHandler<GlobalExceptionHandler>();
+
             //Add Middleware
             services.AddSingleton<PerformanceMiddleware>();
             services.AddSingleton<Stopwatch>();
@@ -82,6 +83,13 @@ namespace FEventopia.Controllers
             services.AddIdentity<Account, IdentityRole>()
                     .AddEntityFrameworkStores<FEventopiaDbContext>().AddDefaultTokenProviders();
 
+            //Add Brute Force setting
+            services.AddMemoryCache();
+            services.AddHttpContextAccessor();
+            services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+            services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+            services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+            
             return services;
         }
     }
