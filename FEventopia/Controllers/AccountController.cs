@@ -14,6 +14,7 @@ using System.Security.Claims;
 using System.Text;
 using FEventopia.Controllers.ViewModels.RequestModels;
 using FEventopia.Services.Utils;
+using Newtonsoft.Json.Linq;
 
 namespace FEventopia.Controllers.Controllers
 {
@@ -21,43 +22,14 @@ namespace FEventopia.Controllers.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly IMailService mailService;
-        private readonly UserManager<Account> accountManager;
-        private readonly SignInManager<Account> signInManager;
-        private readonly IConfiguration configuration;
-        private readonly RoleManager<IdentityRole> roleManager;
-        private readonly IAuthenService authenService;
+        private readonly IAccountService _accountService;
+        private readonly IAuthenService _authenService;
 
-        public AccountController(
-            IMailService mailService,
-            UserManager<Account> accountManager,
-            SignInManager<Account> signInManager,
-            IConfiguration configuration,
-            RoleManager<IdentityRole> roleManager,
-            IAuthenService authenService)
+        public AccountController(IAuthenService authenService,
+            IAccountService accountService)
         {
-            this.mailService = mailService;
-            this.accountManager = accountManager;
-            this.signInManager = signInManager;
-            this.configuration = configuration;
-            this.roleManager = roleManager;
-            this.authenService = authenService;
-        }
-
-        private string CreateToken(List<Claim> authClaims)
-        {
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:SecretKey"]));
-            _ = int.TryParse(configuration["JWT:TokenValidityInMinutes"], out int tokenValidityInMinutes);
-
-            var token = new JwtSecurityToken(
-                issuer: configuration["JWT:ValidIssuer"],
-                audience: configuration["JWT:ValidAudience"],
-                expires: TimeUtils.GetTimeVietNam().AddMinutes(tokenValidityInMinutes),
-                claims: authClaims,
-                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-                );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            this._authenService = authenService;
+            this._accountService = accountService;
         }
 
         [HttpGet("ConfirmEmail")]
@@ -65,32 +37,17 @@ namespace FEventopia.Controllers.Controllers
         {
             try
             {
-                var user = await accountManager.FindByNameAsync(username);
-                if (user != null)
+                var result = await _accountService.ConfirmEmailAsync(token, username);
+                if (result)
                 {
-                    var result = await accountManager.ConfirmEmailAsync(user, token);
-                    if (result.Succeeded)
+                    var response = new ResponseModel
                     {
-                        var response = new ResponseModel
-                        {
-                            Status = true,
-                            Message = "Email Verification Successfully!"
-                        };
-                        var urlParameter = response.ToUrlParameters();
-                        return Redirect("https://feventopia.vercel.app/confirmEmail?" + urlParameter);
-                    }
-                    else
-                    {
-                        var response = new ResponseModel
-                        {
-                            Status = false,
-                            Message = "Email Verification Failed!"
-                        };
-                        var urlParameter = response.ToUrlParameters();
-                        return Redirect("https://feventopia.vercel.app/confirmEmail?" + urlParameter);
-                    }
-                }
-                else
+                        Status = true,
+                        Message = "Email Verification Successfully!"
+                    };
+                    var urlParameter = response.ToUrlParameters();
+                    return Redirect("https://feventopia.vercel.app/confirmEmail?" + urlParameter);
+                } else
                 {
                     var response = new ResponseModel
                     {
@@ -114,59 +71,18 @@ namespace FEventopia.Controllers.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var acc = authenService.GetCurrentLogin;
-                    if (acc != null)
+                    var result = await _accountService.SignInAsync(model.Username, model.Password);
+                    if (!result.IsNullOrEmpty())
                     {
+                        Response.Headers["JSON-Web-Token"] = result;
+
                         var response = new ResponseModel
                         {
-                            Status = false,
-                            Message = "You are logged in!"
+                            Status = true,
+                            Message = "Login Successfully!"
                         };
-                        return BadRequest(response);
-                    }
-                    var result = await signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
-                    if (result.Succeeded)
-                    {
-                        var account = await accountManager.FindByNameAsync(model.Username);
-
-                        //If account has been disable, then no login
-                        if (!account.DeleteFlag)
-                        {
-                            var roles = await accountManager.GetRolesAsync(account);
-
-                            var authClaims = new List<Claim>
-                        {
-                            new Claim(ClaimTypes.Name, model.Username),
-                            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                        };
-
-                            foreach (var role in roles)
-                            {
-                                authClaims.Add(new Claim(ClaimTypes.Role, role));
-                            }
-
-                            var token = CreateToken(authClaims);
-
-                            Response.Headers["JSON-Web-Token"] = token;
-
-                            var response = new ResponseModel
-                            {
-                                Status = true,
-                                Message = "Login Successfully!"
-                            };
-                            return Ok(response);
-                        }
-                        else
-                        {
-                            var response = new ResponseModel
-                            {
-                                Status = false,
-                                Message = "Login Failed! Your account has been disable!"
-                            };
-                            return BadRequest(response);
-                        }
-                    }
-                    else
+                        return Ok(response);
+                    } else
                     {
                         var response = new ResponseModel
                         {
@@ -195,77 +111,23 @@ namespace FEventopia.Controllers.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var userExist = await accountManager.FindByNameAsync(model.Username);
-                    if (userExist == null)
+                    var result= await _accountService.SignUpAsync(model.Name, model.Email, model.PhoneNumber, model.Username, model.Password);
+                    if (result)
                     {
-                        var user = new Account
+                        var response = new ResponseModel
                         {
-                            Name = model.Name,
-                            PhoneNumber = model.PhoneNumber,
-                            Email = model.Email,
-                            UserName = model.Username,
-                            Role = Role.VISITOR.ToString()
+                            Status = true,
+                            Message = "Sign Up Successfully!"
                         };
-                        //Create user in database
-                        var result = await accountManager.CreateAsync(user, model.Password);
-
-                        //Add role
-                        if (result.Succeeded)
-                        {
-                            if (!await roleManager.RoleExistsAsync(Role.VISITOR.ToString()))
-                            {
-                                await roleManager.CreateAsync(new IdentityRole(Role.VISITOR.ToString()));
-                            }
-                            if (await roleManager.RoleExistsAsync(Role.VISITOR.ToString()))
-                            {
-                                await accountManager.AddToRoleAsync(user, Role.VISITOR.ToString());
-                            }
-
-                            //Send confirmation email
-                            var tokenConfirm = accountManager.GenerateEmailConfirmationTokenAsync(user);
-
-                            var confirmationURL = Url.Action(nameof(ConfirmEmailAsync), "Account", new { token = tokenConfirm.Result, username = model.Username }, Request.Scheme);
-
-                            var messageRequest = new MailRequestSetting
-                            {
-                                ToEmail = model.Email,
-                                Subject = "FEventopia Confirmation Email",
-                                Body = ConfirmationEmail.EmailContent(user.Name, confirmationURL)
-                            };
-
-                            await mailService.SendEmailAsync(messageRequest);
-
-                            //Response
-                            var response = new ResponseModel
-                            {
-                                Status = true,
-                                Message = "Sign Up Successfully!"
-                            };
-                            return Ok(response);
-                        }
-                        else
-                        {
-                            string errorMessage = string.Empty;
-                            foreach (var error in result.Errors)
-                            {
-                                errorMessage = error.Description;
-                            }
-                            var response = new ResponseModel
-                            {
-                                Status = false,
-                                Message = errorMessage
-                            };
-                            return BadRequest(response);
-                        }
-                    }
-                    else
+                        return Ok(response);
+                    } else
                     {
                         var response = new ResponseModel
                         {
                             Status = false,
-                            Message = "Username already existed!"
+                            Message = "Sign Up Failed!"
                         };
-                        return Unauthorized(response);
+                        return BadRequest(response);
                     }
                 }
                 else
@@ -278,124 +140,27 @@ namespace FEventopia.Controllers.Controllers
 
         [HttpPost("SignUp-Inernal")]
         [Authorize(Roles = "ADMIN")]
-        public async Task<IActionResult> SignUpInternal(SignUpInternalRequestModel model, Role role)
+        public async Task<IActionResult> SignUpInternalAsync(SignUpInternalRequestModel model, Role role)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var userExist = await accountManager.FindByNameAsync(model.Username);
-                    if (userExist == null)
+                    var result = await _accountService.SignUpInternalAsync(model.Name, model.Email, model.Username, role);
+                    if (result)
                     {
-                        var user = new Account
+                        var response = new ResponseModel
                         {
-                            Name = model.Name,
-                            UserName = model.Username,
-                            Email = model.Email,
-                            Role = role.ToString()
+                            Status = true,
+                            Message = $"Sign Up {role} Account Successfully!"
                         };
-
-                        string password = PasswordUtils.GenerateRandomPassword();
-
-                        //Create user in database
-                        var result = await accountManager.CreateAsync(user, password);
-
-                        //Add role
-                        if (result.Succeeded)
-                        {
-                            if (role == Role.VISITOR)
-                            {
-                                if (!await roleManager.RoleExistsAsync(Role.VISITOR.ToString()))
-                                {
-                                    await roleManager.CreateAsync(new IdentityRole(Role.VISITOR.ToString()));
-                                }
-                                if (await roleManager.RoleExistsAsync(Role.VISITOR.ToString()))
-                                {
-                                    await accountManager.AddToRoleAsync(user, Role.VISITOR.ToString());
-                                }
-                            }
-                            if (role == Role.SPONSOR)
-                            {
-                                if (!await roleManager.RoleExistsAsync(Role.SPONSOR.ToString()))
-                                {
-                                    await roleManager.CreateAsync(new IdentityRole(Role.SPONSOR.ToString()));
-                                }
-                                if (await roleManager.RoleExistsAsync(Role.SPONSOR.ToString()))
-                                {
-                                    await accountManager.AddToRoleAsync(user, Role.SPONSOR.ToString());
-                                }
-                            }
-                            else if (role == Role.EVENTOPERATOR)
-                            {
-                                if (!await roleManager.RoleExistsAsync(Role.EVENTOPERATOR.ToString()))
-                                {
-                                    await roleManager.CreateAsync(new IdentityRole(Role.EVENTOPERATOR.ToString()));
-                                }
-                                if (await roleManager.RoleExistsAsync(Role.EVENTOPERATOR.ToString()))
-                                {
-                                    await accountManager.AddToRoleAsync(user, Role.EVENTOPERATOR.ToString());
-                                }
-                            }
-                            else if (role == Role.CHECKINGSTAFF)
-                            {
-                                if (!await roleManager.RoleExistsAsync(Role.CHECKINGSTAFF.ToString()))
-                                {
-                                    await roleManager.CreateAsync(new IdentityRole(Role.CHECKINGSTAFF.ToString()));
-                                }
-                                if (await roleManager.RoleExistsAsync(Role.CHECKINGSTAFF.ToString()))
-                                {
-                                    await accountManager.AddToRoleAsync(user, Role.CHECKINGSTAFF.ToString());
-                                }
-                            }
-                            else if (role == Role.ADMIN)
-                            {
-                                if (!await roleManager.RoleExistsAsync(Role.ADMIN.ToString()))
-                                {
-                                    await roleManager.CreateAsync(new IdentityRole(Role.ADMIN.ToString()));
-                                }
-                                if (await roleManager.RoleExistsAsync(Role.ADMIN.ToString()))
-                                {
-                                    await accountManager.AddToRoleAsync(user, Role.ADMIN.ToString());
-                                }
-                            }
-
-                            //Response
-                            var response = new ResponseModel
-                            {
-                                Status = true,
-                                Message = $"Sign Up {role} Account Successfully!"
-                            };
-
-                            var messageRequest = new MailRequestSetting
-                            {
-                                ToEmail = model.Email,
-                                Subject = "FEventopia Welcome Email",
-                                Body = AccountEmail.EmailContent(model.Name, model.Username, password)
-                            };
-                            await mailService.SendEmailAsync(messageRequest);
-                            return Ok(response);
-                        }
-                        else
-                        {
-                            string errorMessage = string.Empty;
-                            foreach (var error in result.Errors)
-                            {
-                                errorMessage = error.Description;
-                            }
-                            var response = new ResponseModel
-                            {
-                                Status = false,
-                                Message = errorMessage
-                            };
-                            return Unauthorized(response);
-                        }
-                    }
-                    else
+                        return Ok(response);
+                    } else
                     {
                         var response = new ResponseModel
                         {
                             Status = false,
-                            Message = "Username already existed!"
+                            Message = $"Sign Up {role} Account Failed!"
                         };
                         return Unauthorized(response);
                     }
@@ -419,45 +184,24 @@ namespace FEventopia.Controllers.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var username = authenService.GetCurrentLogin;
-                    var account = await accountManager.FindByNameAsync(username);
-                    if (account == null)
+                    var username = _authenService.GetCurrentLogin;
+                    var result = await _accountService.ChangePasswordAsync(username, model.CurrentPassword, model.NewPassword);
+                    if (result)
+                    {
+                        var response = new ResponseModel
+                        {
+                            Status = true,
+                            Message = "Change Password Successfully!"
+                        };
+                        return Ok(response);
+                    } else
                     {
                         var response = new ResponseModel
                         {
                             Status = false,
-                            Message = "Account doesn't exist!"
+                            Message = "Change Password Failed!"
                         };
-                        return BadRequest(response);
-                    }
-                    else
-                    {
-                        var result = await accountManager.ChangePasswordAsync(account, model.CurrentPassword, model.NewPassword);
-
-                        string errorMessage = string.Empty;
-                        if (!result.Succeeded)
-                        {
-                            foreach (var error in result.Errors)
-                            {
-                                errorMessage = error.Description;
-                            }
-
-                            var response = new ResponseModel
-                            {
-                                Status = false,
-                                Message = errorMessage
-                            };
-                            return Unauthorized(response);
-                        }
-                        else
-                        {
-                            var response = new ResponseModel
-                            {
-                                Status = true,
-                                Message = "Change Password Successfully!"
-                            };
-                            return Ok(response);
-                        }
+                        return Unauthorized(response);
                     }
                 }
                 else
@@ -474,47 +218,40 @@ namespace FEventopia.Controllers.Controllers
         {
             try
             {
-                var username = authenService.GetCurrentLogin;
-                var user = await accountManager.FindByNameAsync(username);
-
-                if (user.Email == null)
+                var username = _authenService.GetCurrentLogin;
+                var result = await _accountService.SendConfirmEmailAsync(username);
+                if (!result.IsNullOrEmpty())
                 {
-                    var response = new ResponseModel
+                    var confirmationURL = Url.Action(nameof(ConfirmEmailAsync), "Account", new { token = result, username = username }, Request.Scheme);
+
+                    var emailSent = await _accountService.SendConfirmEmailAsync(username, confirmationURL);
+                    
+                    if (emailSent)
                     {
-                        Status = false,
-                        Message = "Please update your email!"
-                    };
-                    return BadRequest(response);
-                }
-                else if (user.EmailConfirmed == true)
+                        var response = new ResponseModel
+                        {
+                            Status = true,
+                            Message = "Confirmation Email Sent!"
+                        };
+                        return Ok(response);
+                    } else
+                    {
+                        var response = new ResponseModel
+                        {
+                            Status = true,
+                            Message = "Confirmation Email Send Failed!"
+                        };
+                        return BadRequest(response);
+                    }
+                    
+                } else
                 {
-                    var response = new ResponseModel
-                    {
-                        Status = false,
-                        Message = "You are already confirmed your email!"
-                    };
-                    return BadRequest(response);
-                }
-                else
-                {
-                    var tokenConfirm = accountManager.GenerateEmailConfirmationTokenAsync(user);
-
-                    var confirmationURL = Url.Action(nameof(ConfirmEmailAsync), "Account", new { token = tokenConfirm.Result, username = user.UserName }, Request.Scheme);
-
-                    var messageRequest = new MailRequestSetting
-                    {
-                        ToEmail = user.Email,
-                        Subject = "FEventopia Confirmation Email",
-                        Body = ConfirmationEmail.EmailContent(user.Name, confirmationURL)
-                    };
-
-                    await mailService.SendEmailAsync(messageRequest);
                     var response = new ResponseModel
                     {
                         Status = true,
-                        Message = "Confirmation Email Sent!"
+                        Message = "Confirmation Email Send Failed!"
                     };
-                    return Ok(response);
+                    return BadRequest(response);
                 }
             }
             catch
