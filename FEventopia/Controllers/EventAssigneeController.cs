@@ -192,6 +192,7 @@ namespace FEventopia.Controllers.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Roles = "ADMIN, EVENTOPERATOR")]
         public async Task<IActionResult> DeleteEventAssignee(string eventDetailId, string accountId)
         {
             try
