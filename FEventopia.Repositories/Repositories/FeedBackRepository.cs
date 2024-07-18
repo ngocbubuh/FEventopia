@@ -22,7 +22,7 @@ namespace FEventopia.Repositories.Repositories
             var feedBacks = await _feedbackDAO.GetAllAsync();
             string idtoupper = eventDetailId.ToLower();
             //return feedBacks.Where(f => f.EventDetailId.Equals(eventDetailId)).ToList();
-            return feedBacks.Where(f => idtoupper.Equals(f.EventDetailId.ToString().ToLower())).ToList();
+            return feedBacks.Where(f => idtoupper.Equals(f.EventDetailId.ToString().ToLower())).OrderByDescending(f => f.CreatedDate).ToList();
         }
         
     }

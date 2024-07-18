@@ -26,13 +26,13 @@ namespace FEventopia.Repositories.Repositories
         public async Task<List<Ticket>> GetAllTicketWithDetailCurrentEvent(string eventId)
         {
             var result = await _ticketDAO.GetAllTicketDetail();
-            return result.Where(t => t.EventDetailID.ToString().ToLower().Equals(eventId.ToLower())).ToList();
+            return result.Where(t => t.EventDetailID.ToString().ToLower().Equals(eventId.ToLower())).OrderByDescending(t => t.CreatedDate).ToList();
         }
 
         public async Task<List<Ticket>> GetAllTicketWithDetailCurrentUser(string userId)
         {
             var result = await _ticketDAO.GetAllTicketDetail();
-            return result.Where(t => t.VisitorID.ToString().ToLower().Equals(userId.ToLower())).ToList();
+            return result.Where(t => t.VisitorID.ToString().ToLower().Equals(userId.ToLower())).OrderByDescending(t => t.CreatedDate).ToList();
         }
 
         public async Task<Ticket?> GetTicketDetailById(string ticketId)
@@ -43,7 +43,7 @@ namespace FEventopia.Repositories.Repositories
         public async Task<List<Ticket>> GetAllTicketDetailCheckedInCurrentUser(string userId)
         {
             var result = await _ticketDAO.GetAllTicketDetail();
-            return result.Where(t => t.VisitorID.ToString().ToLower().Equals(userId.ToLower()) && t.CheckInStatus).ToList();
+            return result.Where(t => t.VisitorID.ToString().ToLower().Equals(userId.ToLower()) && t.CheckInStatus).OrderByDescending(t => t.CreatedDate).ToList();
         }
     }
 }

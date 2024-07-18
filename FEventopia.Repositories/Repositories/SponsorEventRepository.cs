@@ -26,13 +26,13 @@ namespace FEventopia.Repositories.Repositories
         public async Task<List<SponsorEvent>> GetAllSponsorEventWithDetailCurrentEvent(string eventId)
         {
             var result = await _sponsorEventDAO.GetAllSponsorEventDetail();
-            return result.Where(se => eventId.ToLower().Equals(se.EventID.ToString().ToLower())).ToList();
+            return result.Where(se => eventId.ToLower().Equals(se.EventID.ToString().ToLower())).OrderByDescending(se => se.CreatedDate).ToList();
         }
 
         public async Task<List<SponsorEvent>> GetAllSponsorEventWithDetailCurrentUser(string userId)
         {
             var result = await _sponsorEventDAO.GetAllSponsorEventDetail();
-            return result.Where(se => userId.ToLower().Equals(se.SponsorID.ToString().ToLower())).ToList();
+            return result.Where(se => userId.ToLower().Equals(se.SponsorID.ToString().ToLower())).OrderByDescending(se => se.CreatedDate).ToList();
         }
 
         public async Task<SponsorEvent?> GetSponsorEventDetailById(string sponsorEventId)
