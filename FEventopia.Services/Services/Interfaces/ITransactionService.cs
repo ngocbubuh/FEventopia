@@ -16,5 +16,6 @@ namespace FEventopia.Services.Services.Interfaces
         public Task<TransactionModel> UpdateTransactionByVNPAYStatusAsync (VnPayModel model);
         public Task<PageModel<TransactionModel>> GetAllTransactionsAsync(PageParaModel pageParaModel);
         public Task<PageModel<TransactionModel>> GetAllTransactionByUsernameAsync(string username, PageParaModel pageParaModel);
+        public Task<PageModel<TransactionModel>> GetAllTransactionAccountIdAsync(string id, PageParaModel pageParaModel);
     }
 }

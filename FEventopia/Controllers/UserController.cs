@@ -128,19 +128,19 @@ namespace FEventopia.Controllers.Controllers
 
         [HttpPut("UpdateAllAccount")]
         [Authorize(Roles = "ADMIN")]
-        public async Task<IActionResult> UpdateAllAccountAsync(string username, AccountProcessModel model)
+        public async Task<IActionResult> UpdateAllAccountAsync(string id, AccountProcessModel model)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var result = await _userService.UpdateAccountAsync(username, model);
+                    var result = await _userService.UpdateAccountAsync(id, model);
                     if (result)
                     {
                         var response = new ResponseModel
                         {
                             Status = true,
-                            Message = $"Update {username}'s account successfully!"
+                            Message = $"Update {id}'s account successfully!"
                         };
                         return Ok(response);
                     }
@@ -149,7 +149,7 @@ namespace FEventopia.Controllers.Controllers
                         var response = new ResponseModel
                         {
                             Status = true,
-                            Message = $"Update {username}'s account fail!"
+                            Message = $"Update {id}'s account fail!"
                         };
                         return BadRequest(response);
                     }
@@ -189,14 +189,15 @@ namespace FEventopia.Controllers.Controllers
 
         [HttpDelete("UnactivateAccount")]
         [Authorize(Roles = "ADMIN")]
-        public async Task<IActionResult> UnactivateAccountAsync(string username)
+        public async Task<IActionResult> UnactivateAccountAsync(string id)
         {
             try
             {
                 var CurrentUsername = _authenService.GetCurrentLogin;
-                if (!CurrentUsername.ToLower().Equals(username.ToLower()))
+                var currentUser = await _userService.GetAccountByUsernameAsync(CurrentUsername);
+                if (!currentUser.Id.ToLower().Equals(id.ToLower()))
                 {
-                    var result = await _userService.UnactivateAccountAsync(username);
+                    var result = await _userService.UnactivateAccountAsync(id);
                     if (result)
                     {
                         var response = new ResponseModel
@@ -249,11 +250,11 @@ namespace FEventopia.Controllers.Controllers
 
         [HttpPatch("ReactivateAccount")]
         [Authorize(Roles = "ADMIN")]
-        public async Task<IActionResult> ReactivateAccountAsync(string username)
+        public async Task<IActionResult> ReactivateAccountAsync(string id)
         {
             try
             {
-                var result = await _userService.ActivateAccountAsync(username);
+                var result = await _userService.ActivateAccountAsync(id);
                 if (result)
                 {
                     var response = new ResponseModel

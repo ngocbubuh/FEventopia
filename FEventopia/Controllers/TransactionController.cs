@@ -109,11 +109,11 @@ namespace FEventopia.Controllers.Controllers
 
         [HttpGet("GetAllUserTransaction")]
         [Authorize(Roles = "ADMIN")]
-        public async Task<IActionResult> GetAllUserTransactionAsync([FromQuery] PageParaModel model, string username)
+        public async Task<IActionResult> GetAllUserTransactionAsync([FromQuery] PageParaModel model, string id)
         {
             try
             {
-                var result = await _transactionService.GetAllTransactionByUsernameAsync(username, model);
+                var result = await _transactionService.GetAllTransactionAccountIdAsync(id, model);
                 var metadata = new
                 {
                     result.TotalCount,
