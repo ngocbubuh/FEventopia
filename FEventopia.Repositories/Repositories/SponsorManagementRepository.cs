@@ -32,7 +32,7 @@ namespace FEventopia.Repositories.Repositories
         public async Task<List<SponsorManagement>> GetAllSponsorManagementWithDetailCurrentUser(string userId)
         {
             var result = await _sponsorManagementDAO.GetAllSponsorManagementDetail();
-            return result.Where(se => userId.ToLower().Equals(se.SponsorId.ToString().ToLower())).ToList();
+            return result.Where(se => userId.ToLower().Equals(se.SponsorId.ToString().ToLower())).OrderByDescending(se => se.CreatedDate).ToList();
         }
 
         public async Task<SponsorManagement?> GetSponsorManagementDetailById(string id)
