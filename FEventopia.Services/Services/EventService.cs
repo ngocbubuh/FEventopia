@@ -157,7 +157,7 @@ namespace FEventopia.Services.Services
         public async Task<bool> DeleteEventAsync(string id)
         {
             var result = await _eventRepository.GetByIdAsync(id);
-            if (result == null)
+            if (result == null || !result.Status.Equals(EventStatus.INITIAL.ToString()))
             {
                 return false;
             }
