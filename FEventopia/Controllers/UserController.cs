@@ -224,7 +224,7 @@ namespace FEventopia.Controllers.Controllers
                         Status = false,
                         Message = "Cannot disable ownself!"
                     };
-                    return BadRequest(response);
+                    return Unauthorized(response);
                 }
             }
             catch

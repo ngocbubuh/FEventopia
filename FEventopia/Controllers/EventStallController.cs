@@ -114,7 +114,6 @@ namespace FEventopia.Controllers.Controllers
         }
 
         [HttpGet("GetAllStallCurrentEvent")]
-        [Authorize(Roles = "EVENTOPERATOR, ADMIN")]
         public async Task<IActionResult> GetAllCurrentEvent(string eventDetailId)
         {
             try
