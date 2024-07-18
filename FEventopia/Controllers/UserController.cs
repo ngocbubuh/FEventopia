@@ -95,7 +95,7 @@ namespace FEventopia.Controllers.Controllers
                             return BadRequest(response);
                         }
                     }
-                    var result = await _userService.UpdateAccountAsync(username, model);
+                    var result = await _userService.UpdateAccountAsync(account.Id, model);
                     if (result)
                     {
                         var response = new ResponseModel
