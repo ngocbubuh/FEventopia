@@ -299,33 +299,33 @@ namespace FEventopia.Services.Utils
                                         <div class=""invoice_dts"">
                                             <div class=""row"">
                                                 <div class=""col-md-12"">
-                                                    <h2 class=""invoice_title"">HÓA ĐƠN THANH TOÁN</h2>
-                                                </div>
-                                                <div class=""col-md-6"">
-                                                    <div class=""vhls140"">
-                                                        <ul>
-                                                            <li>
-                                                                <div class=""vdt-list"">Tên khách hàng : {account.Name}</div>
-                                                            </li>
-                                                            <li>
-                                                                <div class=""vdt-list"">Số điện thoại : {account.PhoneNumber}</div>
-                                                            </li>
-                                                            <li>
-                                                                <div class=""vdt-list"">Địa chỉ email : {account.Email}</div>
-                                                            </li>
-                                                        </ul>
+                                                    <div><h2 class=""invoice_title"">HÓA ĐƠN THANH TOÁN</h2></div>
+                                                    <div class=""col-md-6"">
+                                                        <div class=""vhls140"">
+                                                            <ul>
+                                                                <li>
+                                                                    <div class=""vdt-list"">Tên khách hàng : {account.Name}</div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class=""vdt-list"">Số điện thoại : {account.PhoneNumber}</div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class=""vdt-list"">Địa chỉ email : {account.Email}</div>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class=""col-md-6"">
-                                                    <div class=""vhls140"">
-                                                        <ul>
-                                                            <li>
-                                                                <div class=""vdt-list"">Số hóa đơn : {ticketModel.Transaction.Id}</div>
-                                                            </li>
-                                                            <li>
-                                                                <div class=""vdt-list"">Ngày đặt : {ticketModel.Transaction.TransactionDate.ToString("dd/MM/yyyy")}</div>
-                                                            </li>
-                                                        </ul>
+                                                    <div class=""col-md-6"">
+                                                        <div class=""vhls140"">
+                                                            <ul>
+                                                                <li>
+                                                                    <div class=""vdt-list"">Số hóa đơn : {ticketModel.Transaction.Id}</div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class=""vdt-list"">Ngày đặt : {ticketModel.Transaction.TransactionDate.ToString("dd/MM/yyyy")}</div>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
