@@ -60,6 +60,16 @@ namespace FEventopia.Services.Services
             return _mapper.Map<TransactionModel>(result);
         }
 
+        public async Task<PageModel<TransactionModel>> GetAllTransactionAccountIdAsync(string id, PageParaModel pagePara)
+        {
+            var transactionList = await _transactionRepository.GetAllByUserId(id);
+            var result = _mapper.Map<List<TransactionModel>>(transactionList);
+            result.Sort((t1, t2) => t2.TransactionDate.CompareTo(t1.TransactionDate));
+            return PageModel<TransactionModel>.ToPagedList(result,
+                pagePara.PageNumber,
+                pagePara.PageSize);
+        }
+
         public async Task<PageModel<TransactionModel>> GetAllTransactionByUsernameAsync(string username, PageParaModel pagePara)
         {
             var user = await _userRepository.GetAccountByUsernameAsync(username);

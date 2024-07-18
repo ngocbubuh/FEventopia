@@ -13,9 +13,9 @@ namespace FEventopia.Repositories.Repositories
             _userDAO = userDAO;
         }
 
-        public async Task<bool> ActivateAccountAsync(string username)
+        public async Task<bool> ActivateAccountAsync(string id)
         {
-            var acc = await _userDAO.GetAccountByUsernameAsync(username);
+            var acc = await _userDAO.GetAccountByIdAsync(id);
             acc.DeleteFlag = false;
             return await _userDAO.UpdateAccountAsync(acc);
         }
@@ -47,9 +47,9 @@ namespace FEventopia.Repositories.Repositories
             return acc.Where(a => a.Role.Equals("CHECKINGSTAFF")).ToList();
         }
 
-        public async Task<bool> UnactivateAccountAsync(string username)
+        public async Task<bool> UnactivateAccountAsync(string id)
         {
-            var acc = await _userDAO.GetAccountByUsernameAsync(username);
+            var acc = await _userDAO.GetAccountByIdAsync(id);
             acc.DeleteFlag = true;
             return await _userDAO.UpdateAccountAsync(acc);
         }

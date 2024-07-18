@@ -16,9 +16,9 @@ namespace FEventopia.Services.Services
             _mapper = mapper;
         }
 
-        public async Task<bool> ActivateAccountAsync(string username)
+        public async Task<bool> ActivateAccountAsync(string id)
         {
-            return await _userRepository.ActivateAccountAsync(username);
+            return await _userRepository.ActivateAccountAsync(id);
         }
 
         public async Task<AccountModel> GetAccountByUsernameAsync(string username)
@@ -56,14 +56,14 @@ namespace FEventopia.Services.Services
             return _mapper.Map<List<AccountModel>>(resultList);
         }
 
-        public async Task<bool> UnactivateAccountAsync(string username)
+        public async Task<bool> UnactivateAccountAsync(string id)
         {
-            return await _userRepository.UnactivateAccountAsync(username);
+            return await _userRepository.UnactivateAccountAsync(id);
         }
 
-        public async Task<bool> UpdateAccountAsync(string username, AccountProcessModel accountModel)
+        public async Task<bool> UpdateAccountAsync(string id, AccountProcessModel accountModel)
         {
-            var acc = await _userRepository.GetAccountByUsernameAsync(username);
+            var acc = await _userRepository.GetAccountByIdAsync(id);
             if (acc != null)
             {
                 var account = _mapper.Map(accountModel, acc);
