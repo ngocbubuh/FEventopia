@@ -17,7 +17,7 @@ namespace FEventopia.Controllers.Controllers
         }
 
         [HttpGet("{eventId}", Name = "eventId")]
-        [Authorize(Roles = "EVENTOPERATOR, ADMIN")]
+        [Authorize(Roles = "EVENTOPERATOR, ADMIN, SPONSOR")]
         public async Task<IActionResult> GetEventAnalysis(Guid eventId)
         {
             try
