@@ -107,10 +107,10 @@ namespace FEventopia.Services.Services
                                                                                                         eventDetailModel.StartDate,
                                                                                                         eventDetailModel.EndDate);
 
-            //Kiểm tra có sự kiện ở vị trí đó cùng thời gian chưa
+            //Kiểm tra có sự kiện ở vị trí đó cùng thời gian chưa (nhưng không phải eventDetail đang update)
             foreach (var item in existEventDetailAtLocation)
             {
-                if (eventDetailModel.StartDate < item.EndDate && eventDetailModel.EndDate > item.StartDate) return null;
+                if (eventDetailModel.StartDate < item.EndDate && eventDetailModel.EndDate > item.StartDate && !item.Id.ToString().ToLower().Equals(id.ToLower())) return null;
             }
 
             var eventDetail = await _eventDetailRepository.GetByIdAsync(id);
