@@ -147,6 +147,8 @@ namespace FEventopia.Services.Services
                     };
                     await _transactionRepository.AddAsync(transaction);
                 }
+
+                await _eventDetailRepository.DeleteAsync(eventDetail);
             }
             @event.TicketSaleIncome = 0;
             @event.StallSaleIncome = 0;
