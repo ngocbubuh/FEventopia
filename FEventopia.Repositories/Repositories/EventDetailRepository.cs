@@ -22,7 +22,7 @@ namespace FEventopia.Repositories.Repositories
         {
             var result = await _eventDetailDAO.GetAllEventDetailWithLocation();
             return result.Where(ed => locationId.ToLower().Equals(ed.LocationID.ToString().ToLower())
-                                && (ed.StartDate.Date.Equals(startDate.Date) || ed.EndDate.Date.Equals(endDate.Date))).ToList();
+                                && (ed.StartDate.Date.Equals(startDate.Date) || ed.EndDate.Date.Equals(endDate.Date)) && !ed.DeleteFlag).ToList();
         }
 
         public async Task<List<EventDetail>> GetAllEventDetailWithLocationById(string id)
