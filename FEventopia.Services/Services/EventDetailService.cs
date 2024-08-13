@@ -88,6 +88,12 @@ namespace FEventopia.Services.Services
                 pagePara.PageSize);
         }
 
+        public async Task<List<EventDetailModel>> GetAllEventDetailByStartDate(DateTime startDate)
+        {
+            var eventDetails = await _eventDetailRepository.GetAllEventDetailByDate(startDate);
+            return _mapper.Map<List<EventDetailModel>>(eventDetails);
+        }
+
         public async Task<EventDetailModel> GetEventDetailByIdAsync(string id)
         {
             var result = await _eventDetailRepository.GetEventDetailWithLocationById(id);

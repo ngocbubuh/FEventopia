@@ -4,6 +4,7 @@ using FEventopia.Repositories.Repositories.Interfaces;
 using FEventopia.Repositories.Repositories;
 using FEventopia.Services.Services.Interfaces;
 using FEventopia.Services.Services;
+using Quartz;
 using System.Diagnostics;
 using FEventopia.DAO.DAO.Interfaces;
 using FEventopia.DAO.DAO;
@@ -12,6 +13,7 @@ using FEventopia.DAO.DbContext;
 using FEventopia.DAO.EntityModels;
 using Microsoft.AspNetCore.Identity;
 using AspNetCoreRateLimit;
+using FEventopia.Controllers.Scheduling;
 
 namespace FEventopia.Controllers
 {
@@ -83,6 +85,30 @@ namespace FEventopia.Controllers
             });
             services.AddIdentity<Account, IdentityRole>()
                     .AddEntityFrameworkStores<FEventopiaDbContext>().AddDefaultTokenProviders();
+
+            //Add Quartz
+            services.AddQuartz(opt =>
+            {
+                opt.UseMicrosoftDependencyInjectionJobFactory();
+
+                // Create a "key" for the job
+                var jobKey = new JobKey("RemindEvent");
+
+                // Register the job with the DI container
+                opt.AddJob<RemindEvent>(opts => opts.WithIdentity(jobKey));
+
+                // Create a trigger for the job
+                opt.AddTrigger(opts => opts
+                    .ForJob(jobKey) // link to the HelloWorldJob
+                    .WithIdentity("RemindEvent-Trigger") // give the trigger a unique name
+                    //.WithCronSchedule("0/5 * * * * ?")); // run every 5 seconds
+                    .WithCronSchedule("0 0 8 * * ?")); // run everyday at 8:00 AM
+            });
+
+            services.AddQuartzHostedService(opt =>
+            {
+                opt.WaitForJobsToComplete = true;
+            });
 
             //Add Brute Force setting
             services.AddMemoryCache();
