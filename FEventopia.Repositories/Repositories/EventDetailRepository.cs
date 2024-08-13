@@ -25,6 +25,12 @@ namespace FEventopia.Repositories.Repositories
                                 && (ed.StartDate.Date.Equals(startDate.Date) || ed.EndDate.Date.Equals(endDate.Date)) && !ed.DeleteFlag).ToList();
         }
 
+        public async Task<List<EventDetail>> GetAllEventDetailByDate(DateTime date)
+        {
+            var result = await _eventDetailDAO.GetAllEventDetailWithLocation();
+            return result.Where(ed => ed.StartDate.Date.Equals(date.Date) && !ed.DeleteFlag).ToList();
+        }
+
         public async Task<List<EventDetail>> GetAllEventDetailWithLocationById(string id)
         {
             var result = await _eventDetailDAO.GetAllEventDetailWithLocation();
